@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>PubMed Lab Assistant</title>
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@300;400;500;600&family=IBM+Plex+Sans:wght@300;400;600;700&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
 <style>
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 body { font-family: 'IBM Plex Mono', monospace; background: #0a0e1a; color: #e2e8f0; min-height: 100vh; font-size: 14px; }
@@ -87,6 +88,7 @@ input:focus, select:focus, textarea:focus { border-color: #3b82f6; }
 .pdf-btn { display: inline-flex; align-items: center; gap: 4px; font-size: 11px; padding: 2px 10px; border-radius: 20px; border: 1px solid #16a34a; background: #14271a; color: #4ade80; text-decoration: none; white-space: nowrap; font-family: 'IBM Plex Mono', monospace; cursor: pointer; }
 .depth-badge { font-size: 10px; padding: 2px 8px; border-radius: 20px; border: 1px solid; white-space: nowrap; font-weight: 600; display: inline-block; }
 .depth-full { border-color: #7c3aed; background: #1e1040; color: #a78bfa; }
+.depth-pdf { border-color: #0d9488; background: #042f2e; color: #2dd4bf; }
 .depth-abstract { border-color: #374151; background: transparent; color: #4b5563; }
 .depth-scanning { border-color: #1e3a5f; background: transparent; color: #4b5563; font-style: italic; }
 .pdf-btn:hover { background: #166534; text-decoration: none; }
@@ -540,6 +542,7 @@ function renderResults() {
   renderPapers();
   fetchFullTextLinks();
   fetchAndRescanPMCPapers();
+  fetchAndScanPDFs();
 }
 
 function getSorted() {
@@ -618,7 +621,9 @@ function renderPapers() {
             '<div class="paper-meta">'+authorStr+' &middot; '+p.journal+' &middot; '+p.year+(p.doi?' &middot; <a href="https://doi.org/'+p.doi+'" target="_blank" style="color:#374151">DOI</a>':'')+'</div>' +
             '<div style="margin-top:5px">' +
               (p.scanDepth==='full' ? '<span class="depth-badge depth-full" id="db-'+p.pmid+'">&#9670; Full text scanned</span>' :
+               p.scanDepth==='pdf' ? '<span class="depth-badge depth-pdf" id="db-'+p.pmid+'">&#9670; PDF scanned</span>' :
                p.pmcid ? '<span class="depth-badge depth-scanning" id="db-'+p.pmid+'">&#8635; fetching full text…</span>' :
+               p.doi ? '<span class="depth-badge depth-scanning" id="db-'+p.pmid+'">&#8635; checking PDF…</span>' :
                '<span class="depth-badge depth-abstract" id="db-'+p.pmid+'">Abstract only</span>') +
             '</div>' +
             '<div style="margin-top:6px"><span id="ft-'+p.pmid+'" class="pdf-checking">'+(p.doi?'&#8635; checking for free PDF…':'')+'</span>'+(p.fullTextUrl?'<a class="pdf-btn" href="'+p.fullTextUrl+'" target="_blank">&#128196; Free PDF <span style="font-size:9px;opacity:0.7">('+p.fullTextSource+')</span></a>':'')+'</div>' +
@@ -765,7 +770,7 @@ function exportCSV() {
     });
     return [
       p.pmid, p.title, p.authors.join('; '), p.year, p.journal, p.doi, p.studyType,
-      p.score, p.passedCriteria + '/' + p.totalCriteria, p.scanDepth === 'full' ? 'Full text (PMC)' : 'Abstract only'
+      p.score, p.passedCriteria + '/' + p.totalCriteria, p.scanDepth === 'full' ? 'Full text (PMC)' : p.scanDepth === 'pdf' ? 'Full text (PDF)' : 'Abstract only'
     ].concat(critCols).concat([
       p.manualTags.join('; '), p.notes, p.abstract,
       'https://pubmed.ncbi.nlm.nih.gov/' + p.pmid + '/', p.fullTextUrl||'', p.fullTextSource||''
@@ -868,6 +873,127 @@ function fetchAndRescanPMCPapers() {
       });
     }, i * 400); // 400ms stagger between requests
   });
+}
+
+// ══════════════════════════════════════════════
+// PDF.js SETUP
+// ══════════════════════════════════════════════
+if (typeof pdfjsLib !== 'undefined') {
+  pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+}
+
+// Extract all text from a PDF given its URL.
+// Returns a Promise<string|null>. Returns null on any failure (CORS, not a PDF, etc.)
+function extractPdfText(pdfUrl) {
+  if (typeof pdfjsLib === 'undefined') return Promise.resolve(null);
+
+  // We try direct fetch first, then proxy — same pattern as fetchWithFallback
+  function loadViaUrl(url) {
+    return pdfjsLib.getDocument({
+      url: url,
+      verbosity: 0,
+      // Suppress password prompts / errors silently
+      disableAutoFetch: false,
+      disableStream: false
+    }).promise;
+  }
+
+  function tryProxied() {
+    var chain = Promise.reject(new Error('start'));
+    PROXIES.forEach(function(proxy) {
+      chain = chain.catch(function() {
+        var proxied = proxy.url + encodeURIComponent(pdfUrl);
+        return loadViaUrl(proxied);
+      });
+    });
+    return chain;
+  }
+
+  return loadViaUrl(pdfUrl).catch(function() {
+    return tryProxied();
+  }).then(function(pdf) {
+    var pagePromises = [];
+    for (var i = 1; i <= pdf.numPages; i++) {
+      pagePromises.push(
+        pdf.getPage(i).then(function(page) {
+          return page.getTextContent().then(function(tc) {
+            return tc.items.map(function(item) { return item.str; }).join(' ');
+          });
+        })
+      );
+    }
+    return Promise.all(pagePromises).then(function(pages) {
+      return pages.join(' ').replace(/\s+/g, ' ').trim();
+    });
+  }).catch(function() {
+    return null; // CORS or any other failure — silent fallback
+  });
+}
+
+// After full-text links are resolved, attempt to scan any found PDFs
+// that weren't already covered by PMC full text
+function fetchAndScanPDFs() {
+  // Only scan papers that have a PDF URL but haven't been fully scanned yet
+  // We re-check after a short delay to let fetchFullTextLinks populate p.fullTextUrl
+  setTimeout(function() {
+    var toScan = papers.filter(function(p) {
+      return p.fullTextUrl && p.scanDepth !== 'full';
+    });
+    if (toScan.length === 0) return;
+
+    toScan.forEach(function(p, i) {
+      setTimeout(function() {
+        // Update badge to show scanning
+        var db = document.getElementById('db-' + p.pmid);
+        if (db) { db.className = 'depth-badge depth-scanning'; db.textContent = '⟳ scanning PDF…'; }
+
+        extractPdfText(p.fullTextUrl).then(function(text) {
+          if (!text || text.length < 200) {
+            // Too short / failed — revert badge
+            if (db) { db.className = 'depth-badge depth-abstract'; db.textContent = 'Abstract only'; }
+            return;
+          }
+
+          // Store full text and re-scan
+          p.fullText = text;
+          p.scanDepth = 'pdf';
+
+          var savedAbstract = p.abstract;
+          p.abstract = text; // use PDF text as scan body
+          var scan = scanPaper(p);
+          p.abstract = savedAbstract; // restore abstract for display
+          p.scanResults = scan.results;
+          p.score = scan.score;
+          p.passedCriteria = scan.passed;
+          p.totalCriteria = scan.total;
+
+          // Update badge
+          if (db) { db.className = 'depth-badge depth-pdf'; db.innerHTML = '◆ PDF scanned'; }
+
+          // Update score display
+          var card = document.getElementById('card-' + p.pmid);
+          if (card) {
+            var scoreColor = p.score >= 80 ? '#22c55e' : p.score >= 50 ? '#f59e0b' : '#ef4444';
+            var scoreNum = card.querySelector('.score-num');
+            if (scoreNum) { scoreNum.style.color = scoreColor; scoreNum.innerHTML = p.score + '<span style="font-size:11px;color:#4b5563">%</span>'; }
+            var scoreBar = card.querySelector('.score-bar');
+            if (scoreBar) { scoreBar.style.width = p.score + '%'; scoreBar.style.background = scoreColor; }
+            var passCount = card.querySelector('.pass-count');
+            if (passCount) passCount.textContent = p.passedCriteria + '/' + p.totalCriteria + ' pass';
+
+            // Update scan chips
+            var chips = card.querySelectorAll('.scan-chip.pass, .scan-chip.fail');
+            chips.forEach(function(chip, ci) {
+              if (p.scanResults[ci]) {
+                chip.className = 'scan-chip ' + (p.scanResults[ci].pass ? 'pass' : 'fail');
+                chip.innerHTML = (p.scanResults[ci].pass ? '&#10003;' : '&#10007;') + ' ' + p.scanResults[ci].label;
+              }
+            });
+          }
+        });
+      }, i * 600); // 600ms stagger to avoid hammering
+    });
+  }, 4000); // Wait 4s for Unpaywall/OA Button lookups to complete first
 }
 
 // ══════════════════════════════════════════════
