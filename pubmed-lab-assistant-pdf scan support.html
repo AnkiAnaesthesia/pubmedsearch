@@ -1,0 +1,932 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PubMed Lab Assistant</title>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@300;400;500;600&family=IBM+Plex+Sans:wght@300;400;600;700&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'IBM Plex Mono', monospace; background: #0a0e1a; color: #e2e8f0; min-height: 100vh; font-size: 14px; }
+a { color: #93c5fd; text-decoration: none; }
+a:hover { text-decoration: underline; }
+
+/* ── Header ── */
+#header { background: #0d1220; border-bottom: 1px solid #1e2d4a; padding: 16px 28px; display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
+#logo { display: flex; align-items: center; gap: 12px; }
+#logo-icon { width: 34px; height: 34px; background: linear-gradient(135deg, #3b82f6, #8b5cf6); border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 17px; flex-shrink: 0; }
+#logo-title { font-family: 'IBM Plex Sans', sans-serif; font-weight: 700; font-size: 17px; color: #f1f5f9; }
+#logo-sub { font-size: 11px; color: #64748b; margin-top: 1px; }
+#tabs { display: flex; gap: 6px; }
+.tab-btn { padding: 5px 15px; border-radius: 6px; border: 1px solid #1e2d4a; font-size: 11px; cursor: pointer; font-family: 'IBM Plex Mono', monospace; text-transform: uppercase; letter-spacing: 0.06em; background: transparent; color: #94a3b8; }
+.tab-btn.active { background: #3b82f6; border-color: #3b82f6; color: #fff; }
+
+/* ── Layout ── */
+#main { max-width: 1200px; margin: 0 auto; padding: 22px; }
+.card { background: #0d1220; border: 1px solid #1e2d4a; border-radius: 10px; padding: 20px; margin-bottom: 16px; }
+.card-label { font-size: 10px; color: #3b82f6; letter-spacing: 0.12em; text-transform: uppercase; margin-bottom: 11px; font-weight: 600; }
+.sec-label { font-size: 10px; color: #64748b; text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 5px; }
+.tab-panel { display: none; } .tab-panel.active { display: block; }
+
+/* ── Inputs ── */
+input, select, textarea { background: #111827; border: 1px solid #1e2d4a; border-radius: 6px; color: #e2e8f0; font-family: 'IBM Plex Mono', monospace; font-size: 13px; outline: none; }
+input:focus, select:focus, textarea:focus { border-color: #3b82f6; }
+.grid4 { display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap: 10px; margin-top: 12px; }
+.grid4 input, .grid4 select { width: 100%; padding: 7px 10px; }
+
+/* ── Buttons ── */
+.btn { padding: 7px 16px; border-radius: 6px; cursor: pointer; font-family: 'IBM Plex Mono', monospace; font-size: 12px; border: 1px solid transparent; }
+#search-btn { padding: 11px 26px; background: linear-gradient(135deg, #3b82f6, #8b5cf6); color: #fff; font-size: 13px; font-weight: 600; border: none; border-radius: 8px; cursor: pointer; white-space: nowrap; }
+#search-btn:disabled { background: #1e2d4a; cursor: not-allowed; }
+.btn-ghost { background: transparent; border-color: #1e2d4a; color: #94a3b8; }
+.btn-green { background: #14532d; border-color: #16a34a; color: #4ade80; font-weight: 600; }
+.btn-red { background: transparent; border-color: #7f1d1d; color: #f87171; }
+.btn-blue { background: #1e3a5f; border-color: #3b82f6; color: #93c5fd; }
+
+/* ── Search section divider ── */
+.search-divider { display: flex; align-items: center; gap: 12px; margin: 18px 0 14px; }
+.search-divider-line { flex: 1; height: 1px; background: #1e2d4a; }
+.search-divider-label { font-size: 10px; color: #4b5563; text-transform: uppercase; letter-spacing: 0.1em; white-space: nowrap; }
+
+/* ── Scan criteria builder ── */
+.criteria-table { width: 100%; border-collapse: collapse; }
+.criteria-table th { font-size: 10px; color: #4b5563; text-transform: uppercase; letter-spacing: 0.08em; padding: 5px 10px; text-align: left; border-bottom: 1px solid #1e2d4a; }
+.criteria-table td { padding: 6px 10px; border-bottom: 1px solid #0d1220; vertical-align: middle; }
+.criteria-table tr:last-child td { border-bottom: none; }
+.criteria-table tr:hover td { background: #0a0e1a22; }
+.crit-label-input { background: transparent; border: none; color: #e2e8f0; font-size: 13px; width: 100%; padding: 2px 4px; font-family: 'IBM Plex Mono', monospace; }
+.crit-kw-input { width: 100%; padding: 5px 8px; font-size: 12px; background: #0a0e1a; border: 1px solid #1a2540; border-radius: 4px; color: #94a3b8; }
+.crit-kw-input:focus { border-color: #3b82f6; color: #e2e8f0; }
+.crit-type-select { padding: 5px 8px; font-size: 12px; background: #0a0e1a; border: 1px solid #1a2540; border-radius: 4px; color: #94a3b8; }
+.add-crit-row { display: flex; gap: 8px; margin-top: 12px; flex-wrap: wrap; align-items: center; }
+.add-crit-row input { padding: 6px 10px; font-size: 13px; }
+
+/* ── Results controls ── */
+#controls-bar { display: flex; align-items: center; gap: 8px; margin-bottom: 14px; flex-wrap: wrap; }
+#controls-bar select { padding: 6px 9px; font-size: 12px; }
+#paper-count { font-size: 12px; color: #64748b; }
+#controls-right { margin-left: auto; display: flex; gap: 7px; align-items: center; flex-wrap: wrap; }
+
+/* ── Paper card ── */
+.paper-card { background: #0d1220; border: 1px solid #1e2d4a; border-radius: 10px; overflow: hidden; margin-bottom: 8px; }
+.paper-card:hover { border-color: #2d3f5e; }
+.paper-header { padding: 13px 16px; }
+.paper-row { display: flex; align-items: flex-start; gap: 11px; }
+.paper-title-link { color: #93c5fd; font-size: 13px; font-weight: 500; line-height: 1.45; font-family: 'IBM Plex Sans', sans-serif; cursor: pointer; display: block; }
+.paper-title-link:hover { text-decoration: underline; }
+.paper-meta { font-size: 11px; color: #64748b; margin-top: 4px; }
+
+/* ── Scan results chips ── */
+.scan-row { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 9px; }
+.scan-chip { font-size: 11px; padding: 2px 9px; border-radius: 20px; border: 1px solid; white-space: nowrap; display: inline-flex; align-items: center; gap: 4px; }
+.scan-chip.pass { background: #14271a; border-color: #22c55e; color: #4ade80; }
+.scan-chip.fail { background: #1a0f0f; border-color: #7f1d1d; color: #f87171; }
+.scan-chip.unknown { background: #111827; border-color: #374151; color: #6b7280; }
+.scan-chip.manual-tag { background: #1e3a5f; border-color: #3b82f6; color: #60a5fa; cursor: pointer; }
+.scan-chip.manual-tag.off { background: transparent; border-color: #1e2d4a; color: #4b5563; }
+.pdf-btn { display: inline-flex; align-items: center; gap: 4px; font-size: 11px; padding: 2px 10px; border-radius: 20px; border: 1px solid #16a34a; background: #14271a; color: #4ade80; text-decoration: none; white-space: nowrap; font-family: 'IBM Plex Mono', monospace; cursor: pointer; }
+.depth-badge { font-size: 10px; padding: 2px 8px; border-radius: 20px; border: 1px solid; white-space: nowrap; font-weight: 600; display: inline-block; }
+.depth-full { border-color: #7c3aed; background: #1e1040; color: #a78bfa; }
+.depth-abstract { border-color: #374151; background: transparent; color: #4b5563; }
+.depth-scanning { border-color: #1e3a5f; background: transparent; color: #4b5563; font-style: italic; }
+.pdf-btn:hover { background: #166534; text-decoration: none; }
+.pdf-checking { font-size: 11px; color: #4b5563; font-style: italic; }
+
+/* ── Score ── */
+.score-box { flex-shrink: 0; display: flex; flex-direction: column; align-items: center; gap: 2px; min-width: 52px; }
+.score-label { font-size: 9px; color: #4b5563; text-transform: uppercase; letter-spacing: 0.06em; }
+.score-num { font-size: 21px; font-weight: 700; line-height: 1; }
+.score-bar-wrap { width: 44px; height: 3px; background: #1e2d4a; border-radius: 2px; }
+.score-bar { height: 100%; border-radius: 2px; }
+
+.badge { border-radius: 4px; font-size: 9px; padding: 2px 6px; font-weight: 700; letter-spacing: 0.05em; text-transform: uppercase; white-space: nowrap; flex-shrink: 0; display: inline-block; border: 1px solid; margin-top: 2px; }
+.expand-btn { flex-shrink: 0; background: transparent; border: 1px solid #1e2d4a; border-radius: 6px; padding: 3px 9px; color: #64748b; cursor: pointer; font-size: 11px; align-self: flex-start; margin-top: 2px; }
+.paper-body { border-top: 1px solid #1e2d4a; padding: 14px 16px; background: #090d18; display: none; }
+.paper-body.open { display: block; }
+.abstract-text { font-size: 12px; color: #94a3b8; line-height: 1.75; margin-bottom: 12px; font-family: 'IBM Plex Sans', sans-serif; white-space: pre-wrap; }
+.notes-area { width: 100%; padding: 8px 11px; font-size: 12px; resize: vertical; min-height: 66px; margin-top: 5px; }
+
+/* ── Scan detail in expanded view ── */
+.scan-detail { margin-bottom: 14px; }
+.scan-detail-row { display: flex; align-items: flex-start; gap: 10px; padding: 6px 0; border-bottom: 1px solid #0d1220; }
+.scan-detail-row:last-child { border-bottom: none; }
+.scan-detail-name { font-size: 12px; color: #94a3b8; min-width: 160px; flex-shrink: 0; }
+.scan-detail-kws { font-size: 11px; color: #4b5563; flex: 1; }
+.scan-detail-result { font-size: 11px; font-weight: 600; flex-shrink: 0; min-width: 70px; text-align: right; }
+
+/* ── Misc ── */
+.alert-error { background: #1a0a0a; border: 1px solid #7f1d1d; border-radius: 8px; padding: 12px 16px; color: #fca5a5; font-size: 13px; margin-top: 12px; }
+.alert-success { background: #0d1a2d; border: 1px solid #1e3a5f; border-radius: 8px; padding: 12px 18px; color: #60a5fa; font-size: 13px; margin-top: 12px; cursor: pointer; display: flex; align-items: center; justify-content: space-between; }
+.info-box { background: #0a1220; border: 1px solid #1e2d4a; border-radius: 7px; padding: 10px 14px; font-size: 11px; color: #4b5563; line-height: 1.65; margin-bottom: 14px; }
+.info-box b { color: #60a5fa; }
+.empty { text-align: center; padding: 70px 0; color: #4b5563; }
+.empty-icon { font-size: 44px; margin-bottom: 14px; }
+.spinner { display: inline-block; width: 13px; height: 13px; border: 2px solid #4b5563; border-top-color: #3b82f6; border-radius: 50%; animation: spin 0.7s linear infinite; vertical-align: middle; margin-right: 5px; }
+@keyframes spin { to { transform: rotate(360deg); } }
+.history-item { background: #0d1220; border: 1px solid #1e2d4a; border-radius: 8px; padding: 11px 16px; display: flex; align-items: center; gap: 14px; margin-bottom: 7px; }
+.step-num { display: inline-flex; align-items: center; justify-content: center; width: 22px; height: 22px; border-radius: 50%; background: #1e3a5f; color: #60a5fa; font-size: 11px; font-weight: 700; flex-shrink: 0; }
+</style>
+</head>
+<body>
+
+<div id="header">
+  <div id="logo">
+    <div id="logo-icon">⚗</div>
+    <div>
+      <div id="logo-title">PubMed Lab Assistant</div>
+      <div id="logo-sub">Anaesthesiology &amp; Perioperative Research</div>
+    </div>
+  </div>
+  <div id="tabs">
+    <button class="tab-btn active" onclick="switchTab('search')">Search</button>
+    <button class="tab-btn" id="results-tab-btn" onclick="switchTab('results')">Results</button>
+    <button class="tab-btn" onclick="switchTab('criteria')">Scan Criteria</button>
+    <button class="tab-btn" onclick="switchTab('history')">History</button>
+  </div>
+</div>
+
+<div id="main">
+
+  <!-- ══ SEARCH TAB ══════════════════════════════════════ -->
+  <div class="tab-panel active" id="tab-search">
+
+    <!-- Step 1: PubMed Query -->
+    <div class="card">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:11px">
+        <span class="step-num">1</span>
+        <div class="card-label" style="margin-bottom:0">PubMed Database Query</div>
+      </div>
+      <div style="display:flex;gap:9px;">
+        <input type="text" id="query-input" style="flex:1;padding:11px 14px;font-size:13px;" placeholder='"propofol" AND "postoperative outcomes" AND anaesthesia' onkeydown="if(event.key==='Enter') doSearch()" />
+        <button id="search-btn" onclick="doSearch()">&#8594; Search PubMed</button>
+      </div>
+      <div class="grid4">
+        <div>
+          <div class="sec-label">Limit by Study Type</div>
+          <select id="filter-study-type">
+            <option value="">No limit</option>
+            <option value="Randomized Controlled Trial[pt]">RCT only</option>
+            <option value="Systematic Review[pt]">Systematic Review</option>
+            <option value="Meta-Analysis[pt]">Meta-Analysis</option>
+            <option value="Clinical Trial[pt]">Clinical Trial</option>
+            <option value="Review[pt]">Review</option>
+            <option value="Observational Study[pt]">Observational</option>
+            <option value="Case Reports[pt]">Case Reports</option>
+          </select>
+        </div>
+        <div>
+          <div class="sec-label">From Year</div>
+          <input type="number" id="date-from" placeholder="e.g. 2015" min="1900" max="2099" />
+        </div>
+        <div>
+          <div class="sec-label">To Year</div>
+          <input type="number" id="date-to" placeholder="e.g. 2024" min="1900" max="2099" />
+        </div>
+        <div>
+          <div class="sec-label">Max Results</div>
+          <select id="max-results">
+            <option value="20">20 papers</option>
+            <option value="50" selected>50 papers</option>
+            <option value="100">100 papers</option>
+            <option value="200">200 papers</option>
+          </select>
+        </div>
+      </div>
+    </div>
+
+    <!-- Step 2: Document Scanning -->
+    <div class="card">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px">
+        <span class="step-num">2</span>
+        <div class="card-label" style="margin-bottom:0">Document Scanning Criteria</div>
+        <span style="font-size:11px;color:#4b5563;margin-left:4px">— applied to each paper's title &amp; abstract after retrieval</span>
+      </div>
+      <div class="info-box">
+        Each criterion scans the title and abstract for your keywords. <b>Must contain</b> = paper flagged ✓ if any keyword found. <b>Must NOT contain</b> = paper flagged ✓ if no keywords found (e.g. use "animal, rat, mouse" to exclude animal studies). Papers passing more criteria score higher. Configure full criteria in the <b>Scan Criteria</b> tab.
+      </div>
+      <!-- Live preview of active criteria -->
+      <div id="criteria-preview"></div>
+      <div style="margin-top:10px">
+        <button onclick="switchTab('criteria')" style="display:inline-flex;align-items:center;gap:8px;padding:11px 22px;background:linear-gradient(135deg,#1e3a5f,#1e2d4a);border:1px solid #3b82f6;border-radius:8px;color:#93c5fd;font-family:'IBM Plex Mono',monospace;font-size:13px;font-weight:600;cursor:pointer;letter-spacing:0.03em;">&#9881; Edit Scan Criteria &rarr;</button>
+      </div>
+    </div>
+
+    <div id="search-error" class="alert-error" style="display:none"></div>
+    <div id="search-success" class="alert-success" style="display:none" onclick="switchTab('results')">
+      <span id="success-msg"></span><span>&#8594;</span>
+    </div>
+  </div>
+
+  <!-- ══ RESULTS TAB ══════════════════════════════════════ -->
+  <div class="tab-panel" id="tab-results">
+    <div id="empty-results" class="empty">
+      <div class="empty-icon">&#128300;</div>
+      <div>No results yet. Run a search first.</div>
+    </div>
+    <div id="results-content" style="display:none">
+      <div id="controls-bar">
+        <span id="paper-count"></span>
+        <div id="controls-right">
+          <select id="sort-by" onchange="renderPapers()">
+            <option value="score">Sort: Criteria Score &#8595;</option>
+            <option value="date_new">Sort: Newest First</option>
+            <option value="date_old">Sort: Oldest First</option>
+            <option value="type">Sort: Study Type</option>
+          </select>
+          <select id="filter-type" onchange="renderPapers()"><option value="All">All Study Types</option></select>
+          <select id="filter-score" onchange="renderPapers()">
+            <option value="-1">All Papers</option>
+            <option value="100">100% criteria met</option>
+            <option value="75">&#8805;75% criteria met</option>
+            <option value="50">&#8805;50% criteria met</option>
+          </select>
+          <select id="filter-tag" onchange="renderPapers()"><option value="All">All Tags</option></select>
+          <button class="btn btn-green" onclick="exportCSV()">&#8595; Export CSV</button>
+        </div>
+      </div>
+      <div id="papers-list"></div>
+      <div style="margin-top:18px;text-align:center">
+        <button class="btn btn-green" style="padding:11px 28px;font-size:13px" onclick="exportCSV()">&#8595; Export All to CSV</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ SCAN CRITERIA TAB ══════════════════════════════ -->
+  <div class="tab-panel" id="tab-criteria">
+    <div class="card">
+      <div class="card-label">Document Scanning Criteria</div>
+      <div class="info-box">
+        Define what each retrieved paper <b>must contain</b> or <b>must not contain</b>. After a search, every paper's title and abstract is scanned against these rules. Each passing criterion adds to the paper's score. <b>Re-run your search</b> after editing criteria to re-scan all papers.
+      </div>
+      <table class="criteria-table" id="crit-table">
+        <thead>
+          <tr>
+            <th style="width:200px">Criterion Label</th>
+            <th>Keywords to scan for (comma-separated, case-insensitive)</th>
+            <th style="width:160px">Rule type</th>
+            <th style="width:50px"></th>
+          </tr>
+        </thead>
+        <tbody id="crit-body"></tbody>
+      </table>
+      <div class="add-crit-row">
+        <input type="text" id="new-crit-label" placeholder="e.g. Blinded study" style="width:190px" />
+        <input type="text" id="new-crit-kw" placeholder="double-blind, blinded, masking, allocation concealment" style="flex:1;padding:6px 10px" />
+        <select id="new-crit-type" style="padding:6px 9px;font-size:12px;background:#111827;border:1px solid #1e2d4a;border-radius:6px;color:#e2e8f0">
+          <option value="must">Must contain</option>
+          <option value="mustnot">Must NOT contain</option>
+        </select>
+        <button class="btn btn-ghost" onclick="addCriterion()">+ Add</button>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-label">Manual Classification Tags</div>
+      <div class="info-box">These tags appear on every paper in the results and can be toggled manually. They are <b>not</b> used for scoring — they are for your team's workflow (e.g. Include/Exclude decisions, assignments).</div>
+      <div style="display:flex;flex-wrap:wrap;gap:7px;margin-bottom:12px" id="manual-tag-list"></div>
+      <div style="display:flex;gap:8px;">
+        <input type="text" id="new-manual-tag" placeholder="New tag name…" style="width:200px;padding:6px 10px;" onkeydown="if(event.key==='Enter') addManualTag()" />
+        <button class="btn btn-ghost" onclick="addManualTag()">+ Add Tag</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ HISTORY TAB ══════════════════════════════════════ -->
+  <div class="tab-panel" id="tab-history">
+    <div class="card-label" style="margin-bottom:12px">Search History</div>
+    <div id="history-list">
+      <div class="empty" style="padding:40px 0"><div>No searches yet.</div></div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+// ══════════════════════════════════════════════
+// STATE
+// ══════════════════════════════════════════════
+var papers = [];
+var expandedCards = new Set();
+var searchHistory = [];
+
+// Scan criteria — what the document scanner checks
+var scanCriteria = [
+  { label: "Blinded / Masked",         keywords: ["double-blind","double blind","blinded","masking","masked","allocation concealment","single-blind"], type: "must" },
+  { label: "Randomised",               keywords: ["randomis","randomiz","randomly","random allocation","RCT"], type: "must" },
+  { label: "Human subjects",           keywords: ["patient","patients","human","adult","children","participant","volunteer"], type: "must" },
+  { label: "Exclude animal studies",   keywords: ["animal model","rat model","mouse model","murine model","porcine model","ovine model","canine model","rodent model","adult rat","adult mouse","adult mice","male rat","female rat","male mouse","female mouse","sprague-dawley","wistar rat","in vitro","cell culture","cell line"], type: "mustnot" },
+  { label: "Sample size > 50",         keywords: ["n=","n =","sample size","enrolled","recruited","randomised","randomized"], type: "must" },
+
+  { label: "Reports primary outcome",  keywords: ["primary outcome","primary endpoint","primary end point","primary measure"], type: "must" },
+  { label: "Exclude case reports only",keywords: ["case report","case series","single case","we report a case"], type: "mustnot" },
+  { label: "Registered clinical trial", keywords: ["clinicaltrials.gov","isrctn","anzctr","nct","eudract","clinical trial registration","trial registration","registered trial","prospectively registered","chictr","drks","umin"], type: "must" },
+];
+
+// Manual tags (workflow only — not used in scoring)
+var manualTags = ["Include", "Exclude", "Unsure", "Data Extracted", "High Priority"];
+
+var STUDY_TYPE_MAP = {
+  "randomized controlled": "RCT", "meta-analysis": "Meta-Analysis",
+  "systematic review": "Systematic Review", "clinical trial": "Clinical Trial",
+  "observational": "Observational", "review": "Review", "case report": "Case Report"
+};
+var TYPE_COLORS = {
+  "RCT": "#22c55e", "Meta-Analysis": "#8b5cf6", "Systematic Review": "#3b82f6",
+  "Review": "#06b6d4", "Clinical Trial": "#f59e0b", "Observational": "#f97316",
+  "Case Report": "#ec4899", "Other": "#6b7280"
+};
+
+// ══════════════════════════════════════════════
+// TABS
+// ══════════════════════════════════════════════
+function switchTab(name) {
+  document.querySelectorAll('.tab-panel').forEach(function(p){ p.classList.remove('active'); });
+  document.querySelectorAll('.tab-btn').forEach(function(b){ b.classList.remove('active'); });
+  document.getElementById('tab-' + name).classList.add('active');
+  var map = { search:'Search', results:'Results', criteria:'Scan Criteria', history:'History' };
+  document.querySelectorAll('.tab-btn').forEach(function(b){
+    if (b.textContent.trim() === map[name]) b.classList.add('active');
+  });
+  if (name === 'criteria') { renderCriteriaTable(); renderManualTagList(); }
+  if (name === 'search') renderCriteriaPreview();
+}
+
+// ══════════════════════════════════════════════
+// DOCUMENT SCANNER
+// ══════════════════════════════════════════════
+function scanPaper(paper) {
+  var text = ((paper.title||'') + ' ' + (paper.abstract||'')).toLowerCase();
+  var results = [];
+
+  scanCriteria.forEach(function(crit) {
+    var kws = crit.keywords.map(function(k){ return k.trim().toLowerCase(); }).filter(Boolean);
+    var found = kws.some(function(kw){ return text.includes(kw); });
+    var pass = crit.type === 'must' ? found : !found;
+    var matchedKws = found ? kws.filter(function(kw){ return text.includes(kw); }) : [];
+    results.push({ label: crit.label, type: crit.type, pass: pass, matched: matchedKws, keywords: kws });
+  });
+
+  var passed = results.filter(function(r){ return r.pass; }).length;
+  var total = scanCriteria.length;
+  var score = total > 0 ? Math.round((passed / total) * 100) : 0;
+  return { results: results, score: score, passed: passed, total: total };
+}
+
+// ══════════════════════════════════════════════
+// SEARCH
+// ══════════════════════════════════════════════
+function doSearch() {
+  var q = document.getElementById('query-input').value.trim();
+  if (!q) return;
+  var studyType = document.getElementById('filter-study-type').value;
+  var dateFrom = document.getElementById('date-from').value;
+  var dateTo = document.getElementById('date-to').value;
+  var maxResults = document.getElementById('max-results').value;
+
+  var query = q;
+  if (studyType) query += ' AND ' + studyType;
+  if (dateFrom) query += ' AND ("' + dateFrom + '"[PDAT] : "3000"[PDAT])';
+  if (dateTo) query += ' AND ("1000"[PDAT] : "' + dateTo + '"[PDAT])';
+
+  var btn = document.getElementById('search-btn');
+  btn.disabled = true;
+  btn.innerHTML = '<span class="spinner"></span>Fetching\u2026';
+  document.getElementById('search-error').style.display = 'none';
+  document.getElementById('search-success').style.display = 'none';
+
+  fetchPubMed(query, maxResults).then(function(results) {
+    if (results.length === 0) {
+      showError('No results found. Try broadening your search terms.');
+    } else {
+      // Run document scanner on every paper
+      papers = results.map(function(p) {
+        var scan = scanPaper(p);
+        p.scanResults = scan.results;
+        p.score = scan.score;
+        p.passedCriteria = scan.passed;
+        p.totalCriteria = scan.total;
+        p.manualTags = [];
+        return p;
+      });
+      searchHistory.unshift({ query: query, date: new Date().toLocaleString(), count: results.length });
+      renderHistory();
+      renderResults();
+      var allPass = papers.filter(function(p){ return p.score === 100; }).length;
+      document.getElementById('search-success').style.display = 'flex';
+      document.getElementById('success-msg').textContent =
+        '\u2713 ' + results.length + ' papers retrieved \u00b7 scanned against ' + scanCriteria.length + ' criteria \u00b7 ' + allPass + ' passed all criteria \u2014 click to view';
+    }
+    btn.disabled = false; btn.innerHTML = '\u2192 Search PubMed';
+  }).catch(function(e) {
+    console.error(e);
+    showError('Search failed: ' + e.message + '. Ensure you are connected to the internet.');
+    btn.disabled = false; btn.innerHTML = '\u2192 Search PubMed';
+  });
+}
+
+function showError(msg) {
+  var el = document.getElementById('search-error');
+  el.textContent = msg; el.style.display = 'block';
+}
+
+// ══════════════════════════════════════════════
+// PUBMED API — with automatic CORS fallback for mobile
+// ══════════════════════════════════════════════
+
+// Proxies tried in order — allorigins works on iOS Safari
+var PROXIES = [
+  { url: 'https://api.allorigins.win/raw?url=', wrap: false },
+  { url: 'https://corsproxy.io/?url=',          wrap: false },
+  { url: 'https://api.codetabs.com/v1/proxy?quest=', wrap: false }
+];
+
+function fetchWithFallback(url) {
+  // Try direct first
+  return fetch(url).then(function(r) {
+    if (!r.ok) throw new Error('direct ' + r.status);
+    return r;
+  }).catch(function() {
+    // Try each proxy in sequence until one works
+    var chain = Promise.reject(new Error('no proxy yet'));
+    PROXIES.forEach(function(proxy) {
+      chain = chain.catch(function() {
+        return fetch(proxy.url + encodeURIComponent(url)).then(function(r) {
+          if (!r.ok) throw new Error('proxy failed ' + r.status);
+          return r;
+        });
+      });
+    });
+    return chain;
+  });
+}
+
+function fetchPubMed(query, maxResults) {
+  var searchUrl = 'https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi?db=pubmed&term=' + encodeURIComponent(query) + '&retmax=' + maxResults + '&retmode=json';
+  return fetchWithFallback(searchUrl).then(function(r) {
+    return r.json();
+  }).then(function(sd) {
+    var ids = (sd.esearchresult && sd.esearchresult.idlist) || [];
+    if (ids.length === 0) return [];
+    var sumUrl = 'https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esummary.fcgi?db=pubmed&id=' + ids.join(',') + '&retmode=json';
+    return fetchWithFallback(sumUrl).then(function(r) {
+      return r.json();
+    }).then(function(smd) {
+      var fetchUrl = 'https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=pubmed&id=' + ids.join(',') + '&retmode=xml&rettype=abstract';
+      return fetchWithFallback(fetchUrl).then(function(fr) {
+        return fr.text().then(parseAbstracts);
+      }).catch(function(){ return {}; }).then(function(abstracts) {
+        return ids.map(function(pmid) {
+          var s = (smd.result && smd.result[pmid]) || {};
+          var pubTypes = ((s.pubtype || []).join(' ')).toLowerCase();
+          var studyType = 'Other';
+          for (var k in STUDY_TYPE_MAP) { if (pubTypes.indexOf(k) !== -1) { studyType = STUDY_TYPE_MAP[k]; break; } }
+          var doi = '', pmcid = '';
+          if (s.articleids) {
+            var d = s.articleids.find(function(x){ return x.idtype === 'doi'; }); if (d) doi = d.value;
+            var mc = s.articleids.find(function(x){ return x.idtype === 'pmc'; }); if (mc) pmcid = mc.value.replace('PMC','');
+          }
+          if (!doi) doi = (s.elocationid||'').replace('doi: ','').trim();
+          return {
+            pmid: pmid, pmcid: pmcid, studyType: studyType, doi: doi,
+            title: s.title || 'No title',
+            authors: (s.authors||[]).map(function(a){ return a.name; }).filter(Boolean),
+            year: (s.pubdate||'').slice(0,4) || 'N/A',
+            journal: s.fulljournalname || s.source || '',
+            volume: s.volume||'', issue: s.issue||'', pages: s.pages||'',
+            abstract: abstracts[pmid] || '',
+            scanResults: [], score: 0, passedCriteria: 0, totalCriteria: 0,
+            manualTags: [], notes: '', scanDepth: 'abstract', fullText: ''
+          };
+        });
+      });
+    });
+  });
+}
+
+function parseAbstracts(xml) {
+  var result = {};
+  try {
+    var doc = new DOMParser().parseFromString(xml, 'text/xml');
+    doc.querySelectorAll('PubmedArticle').forEach(function(art) {
+      var pmidEl = art.querySelector('PMID');
+      if (!pmidEl) return;
+      var pmid = pmidEl.textContent.trim();
+      var parts = [];
+      art.querySelectorAll('AbstractText').forEach(function(el) {
+        var label = el.getAttribute('Label');
+        parts.push(label ? label + ': ' + el.textContent.trim() : el.textContent.trim());
+      });
+      result[pmid] = parts.join('\n\n');
+    });
+  } catch(e) {}
+  return result;
+}
+
+// ══════════════════════════════════════════════
+// RENDER RESULTS
+// ══════════════════════════════════════════════
+function renderResults() {
+  document.getElementById('empty-results').style.display = 'none';
+  document.getElementById('results-content').style.display = 'block';
+  document.getElementById('results-tab-btn').textContent = 'Results (' + papers.length + ')';
+
+  // Type filter
+  var types = []; papers.forEach(function(p){ if (types.indexOf(p.studyType)===-1) types.push(p.studyType); }); types.sort();
+  document.getElementById('filter-type').innerHTML = '<option value="All">All Study Types</option>' + types.map(function(t){ return '<option>'+t+'</option>'; }).join('');
+
+  // Manual tag filter
+  document.getElementById('filter-tag').innerHTML = '<option value="All">All Tags</option>' + manualTags.map(function(t){ return '<option>'+t+'</option>'; }).join('');
+
+  renderPapers();
+  fetchFullTextLinks();
+  fetchAndRescanPMCPapers();
+}
+
+function getSorted() {
+  var sortBy = document.getElementById('sort-by').value;
+  var filterType = document.getElementById('filter-type').value;
+  var filterScore = parseInt(document.getElementById('filter-score').value);
+  var filterTag = document.getElementById('filter-tag').value;
+
+  return papers.filter(function(p) {
+    if (filterType !== 'All' && p.studyType !== filterType) return false;
+    if (filterTag !== 'All' && p.manualTags.indexOf(filterTag) === -1) return false;
+    if (filterScore > 0 && p.score < filterScore) return false;
+    return true;
+  }).sort(function(a, b) {
+    if (sortBy === 'score') return b.score - a.score;
+    if (sortBy === 'date_new') return (parseInt(b.year)||0) - (parseInt(a.year)||0);
+    if (sortBy === 'date_old') return (parseInt(a.year)||0) - (parseInt(b.year)||0);
+    if (sortBy === 'type') return a.studyType < b.studyType ? -1 : 1;
+    return 0;
+  });
+}
+
+function renderPapers() {
+  var sorted = getSorted();
+  document.getElementById('paper-count').textContent = sorted.length + ' / ' + papers.length + ' papers';
+  var list = document.getElementById('papers-list');
+
+  list.innerHTML = sorted.map(function(p) {
+    var color = TYPE_COLORS[p.studyType] || '#6b7280';
+    var authorStr = p.authors.slice(0,3).join(', ') + (p.authors.length > 3 ? ' et al.' : '');
+    var expanded = expandedCards.has(p.pmid);
+    var scoreColor = p.score >= 80 ? '#22c55e' : p.score >= 50 ? '#f59e0b' : '#ef4444';
+
+    // Scan result chips (compact, show on card)
+    var chipHtml = '';
+    if (p.scanResults && p.scanResults.length) {
+      chipHtml = p.scanResults.map(function(r) {
+        var icon = r.pass ? '&#10003;' : '&#10007;';
+        var cls = r.pass ? 'scan-chip pass' : 'scan-chip fail';
+        return '<span class="'+cls+'">'+icon+' '+r.label+'</span>';
+      }).join('');
+    }
+
+    // Manual tag chips
+    var tagHtml = manualTags.map(function(tag) {
+      var active = p.manualTags.indexOf(tag) !== -1;
+      var safeTag = tag.replace(/'/g,"\\'");
+      return '<span class="scan-chip manual-tag'+(active?'':' off')+'" onclick="toggleManualTag(\''+p.pmid+'\',\''+safeTag+'\')">'+tag+'</span>';
+    }).join('');
+
+    // Expanded scan detail
+    var detailHtml = '';
+    if (p.scanResults && p.scanResults.length) {
+      detailHtml = '<div class="scan-detail">' +
+        '<div class="sec-label" style="margin-bottom:6px">Scan Criteria Results</div>' +
+        p.scanResults.map(function(r) {
+          var col = r.pass ? '#22c55e' : '#ef4444';
+          var icon = r.pass ? '&#10003;' : '&#10007;';
+          var ruleLabel = r.type === 'must' ? 'Must contain' : 'Must NOT contain';
+          var matchedStr = r.matched && r.matched.length ? 'Matched: ' + r.matched.slice(0,3).join(', ') : (r.type==='mustnot' && r.pass ? 'None found ✓' : 'None found');
+          return '<div class="scan-detail-row">' +
+            '<div class="scan-detail-name">'+r.label+'</div>' +
+            '<div class="scan-detail-kws"><span style="color:#374151;font-size:10px">'+ruleLabel+'</span><br>'+matchedStr+'</div>' +
+            '<div class="scan-detail-result" style="color:'+col+'">'+icon+' '+(r.pass?'Pass':'Fail')+'</div>' +
+          '</div>';
+        }).join('') +
+      '</div>';
+    }
+
+    return '<div class="paper-card" id="card-'+p.pmid+'">' +
+      '<div class="paper-header">' +
+        '<div class="paper-row">' +
+          '<span class="badge" style="background:'+color+'22;color:'+color+';border-color:'+color+'44">'+p.studyType+'</span>' +
+          '<div style="flex:1;min-width:0">' +
+            '<div class="paper-title-link" onclick="window.open(\'https://pubmed.ncbi.nlm.nih.gov/'+p.pmid+'/\',\'_blank\')">'+p.title+'</div>' +
+            '<div class="paper-meta">'+authorStr+' &middot; '+p.journal+' &middot; '+p.year+(p.doi?' &middot; <a href="https://doi.org/'+p.doi+'" target="_blank" style="color:#374151">DOI</a>':'')+'</div>' +
+            '<div style="margin-top:5px">' +
+              (p.scanDepth==='full' ? '<span class="depth-badge depth-full" id="db-'+p.pmid+'">&#9670; Full text scanned</span>' :
+               p.pmcid ? '<span class="depth-badge depth-scanning" id="db-'+p.pmid+'">&#8635; fetching full text…</span>' :
+               '<span class="depth-badge depth-abstract" id="db-'+p.pmid+'">Abstract only</span>') +
+            '</div>' +
+            '<div style="margin-top:6px"><span id="ft-'+p.pmid+'" class="pdf-checking">'+(p.doi?'&#8635; checking for free PDF…':'')+'</span>'+(p.fullTextUrl?'<a class="pdf-btn" href="'+p.fullTextUrl+'" target="_blank">&#128196; Free PDF <span style="font-size:9px;opacity:0.7">('+p.fullTextSource+')</span></a>':'')+'</div>' +
+            '<div class="scan-row">'+chipHtml+'</div>' +
+            '<div class="scan-row" style="margin-top:4px">'+tagHtml+'</div>' +
+          '</div>' +
+          '<div class="score-box">' +
+            '<div class="score-label">Criteria</div>' +
+            '<div class="score-num" style="color:'+scoreColor+'">'+p.score+'<span style="font-size:11px;color:#4b5563">%</span></div>' +
+            '<div class="score-bar-wrap"><div class="score-bar" style="width:'+p.score+'%;background:'+scoreColor+'"></div></div>' +
+            '<div class="pass-count" style="font-size:10px;color:#4b5563;margin-top:2px">'+p.passedCriteria+'/'+p.totalCriteria+' pass</div>' +
+          '</div>' +
+          '<button class="expand-btn" onclick="toggleExpand(\''+p.pmid+'\')">'+(expanded?'&#9650;':'&#9660;')+'</button>' +
+        '</div>' +
+      '</div>' +
+      '<div class="paper-body'+(expanded?' open':'')+'" id="body-'+p.pmid+'">' +
+        detailHtml +
+        '<div class="abstract-text">'+(p.abstract||'No abstract available.')+'</div>' +
+        '<div class="sec-label">Notes</div>' +
+        '<textarea class="notes-area" placeholder="Research notes\u2026" onchange="updateNotes(\''+p.pmid+'\', this.value)">'+p.notes+'</textarea>' +
+      '</div>' +
+    '</div>';
+  }).join('');
+}
+
+function toggleExpand(pmid) {
+  if (expandedCards.has(pmid)) expandedCards.delete(pmid); else expandedCards.add(pmid);
+  document.getElementById('body-'+pmid).classList.toggle('open');
+  document.getElementById('card-'+pmid).querySelector('.expand-btn').innerHTML = expandedCards.has(pmid) ? '&#9650;' : '&#9660;';
+}
+
+function toggleManualTag(pmid, tag) {
+  var p = papers.find(function(x){ return x.pmid === pmid; });
+  if (!p) return;
+  var idx = p.manualTags.indexOf(tag);
+  if (idx !== -1) p.manualTags.splice(idx, 1); else p.manualTags.push(tag);
+  var card = document.getElementById('card-'+pmid);
+  card.querySelectorAll('.scan-chip.manual-tag').forEach(function(el) {
+    var isActive = p.manualTags.indexOf(el.textContent) !== -1;
+    el.className = 'scan-chip manual-tag' + (isActive ? '' : ' off');
+  });
+}
+
+function updateNotes(pmid, val) {
+  var p = papers.find(function(x){ return x.pmid === pmid; }); if (p) p.notes = val;
+}
+
+// ══════════════════════════════════════════════
+// CRITERIA TABLE
+// ══════════════════════════════════════════════
+function renderCriteriaTable() {
+  var tbody = document.getElementById('crit-body');
+  tbody.innerHTML = scanCriteria.map(function(c, i) {
+    var safeKws = (c.keywords||[]).join(', ').replace(/"/g,'&quot;');
+    var mustOpt = '<option value="must"'+(c.type==='must'?' selected':'')+'>Must contain</option>';
+    var mustnotOpt = '<option value="mustnot"'+(c.type==='mustnot'?' selected':'')+'>Must NOT contain</option>';
+    return '<tr>' +
+      '<td><input class="crit-label-input" value="'+c.label.replace(/"/g,'&quot;')+'" onchange="scanCriteria['+i+'].label=this.value;renderCriteriaPreview()" /></td>' +
+      '<td><input class="crit-kw-input" value="'+safeKws+'" onchange="scanCriteria['+i+'].keywords=this.value.split(\',\').map(function(k){return k.trim();}).filter(Boolean)" /></td>' +
+      '<td><select class="crit-type-select" onchange="scanCriteria['+i+'].type=this.value">'+mustOpt+mustnotOpt+'</select></td>' +
+      '<td><button class="btn btn-red" style="padding:2px 9px;font-size:11px" onclick="removeCriterion('+i+')">&#10005;</button></td>' +
+    '</tr>';
+  }).join('');
+}
+
+function addCriterion() {
+  var label = document.getElementById('new-crit-label').value.trim();
+  var kw = document.getElementById('new-crit-kw').value;
+  var type = document.getElementById('new-crit-type').value;
+  if (!label) return;
+  scanCriteria.push({ label: label, keywords: kw.split(',').map(function(k){return k.trim();}).filter(Boolean), type: type });
+  document.getElementById('new-crit-label').value = '';
+  document.getElementById('new-crit-kw').value = '';
+  renderCriteriaTable();
+  renderCriteriaPreview();
+}
+
+function removeCriterion(i) { scanCriteria.splice(i,1); renderCriteriaTable(); renderCriteriaPreview(); }
+
+function renderCriteriaPreview() {
+  var el = document.getElementById('criteria-preview');
+  if (!el) return;
+  if (scanCriteria.length === 0) { el.innerHTML = '<div style="color:#4b5563;font-size:12px">No criteria defined yet.</div>'; return; }
+  el.innerHTML = '<div style="display:flex;flex-wrap:wrap;gap:6px">' +
+    scanCriteria.map(function(c) {
+      var col = c.type === 'must' ? '#3b82f6' : '#f59e0b';
+      var icon = c.type === 'must' ? '&#10003;' : '&#8800;';
+      return '<span style="font-size:11px;padding:3px 10px;border-radius:20px;border:1px solid '+col+'44;background:'+col+'11;color:'+col+'">'+icon+' '+c.label+'</span>';
+    }).join('') +
+  '</div>';
+}
+
+// ══════════════════════════════════════════════
+// MANUAL TAGS
+// ══════════════════════════════════════════════
+function renderManualTagList() {
+  var el = document.getElementById('manual-tag-list');
+  el.innerHTML = manualTags.map(function(tag, i) {
+    return '<span style="display:inline-flex;align-items:center;gap:6px;background:#111827;border:1px solid #1e2d4a;border-radius:20px;padding:3px 12px;font-size:12px;color:#94a3b8">' +
+      tag +
+      '<span style="cursor:pointer;color:#4b5563;font-size:14px" onclick="removeManualTag('+i+')">&times;</span>' +
+    '</span>';
+  }).join('');
+}
+
+function addManualTag() {
+  var val = document.getElementById('new-manual-tag').value.trim();
+  if (val && manualTags.indexOf(val) === -1) { manualTags.push(val); renderManualTagList(); }
+  document.getElementById('new-manual-tag').value = '';
+}
+
+function removeManualTag(i) { manualTags.splice(i,1); renderManualTagList(); }
+
+// ══════════════════════════════════════════════
+// HISTORY
+// ══════════════════════════════════════════════
+function renderHistory() {
+  var list = document.getElementById('history-list');
+  if (!searchHistory.length) { list.innerHTML = '<div class="empty" style="padding:40px 0"><div>No searches yet.</div></div>'; return; }
+  list.innerHTML = searchHistory.map(function(h,i) {
+    return '<div class="history-item">' +
+      '<div style="flex:1"><div style="font-size:12px;color:#94a3b8;word-break:break-all">'+h.query+'</div><div style="font-size:11px;color:#4b5563;margin-top:3px">'+h.date+' &middot; '+h.count+' papers</div></div>' +
+      '<button class="btn btn-ghost" style="font-size:11px;white-space:nowrap" onclick="rerunSearch('+i+')">Re-run &rarr;</button>' +
+    '</div>';
+  }).join('');
+}
+
+function rerunSearch(i) { document.getElementById('query-input').value = searchHistory[i].query; switchTab('search'); }
+
+// ══════════════════════════════════════════════
+// CSV EXPORT
+// ══════════════════════════════════════════════
+function exportCSV() {
+  if (!papers.length) return;
+  // Dynamic headers: one column per criterion
+  var critHeaders = scanCriteria.map(function(c){ return c.label; });
+  var headers = ["PMID","Title","Authors","Year","Journal","DOI","Study Type","Criteria Score %","Criteria Passed","Scan Depth"].concat(critHeaders).concat(["Manual Tags","Notes","Abstract","PubMed Link","Free Full Text URL","Full Text Source"]);
+
+  var sorted = papers.slice().sort(function(a,b){ return b.score - a.score; });
+  var rows = sorted.map(function(p) {
+    var critCols = scanCriteria.map(function(c, i) {
+      if (!p.scanResults || !p.scanResults[i]) return 'N/A';
+      return p.scanResults[i].pass ? 'PASS' : 'FAIL';
+    });
+    return [
+      p.pmid, p.title, p.authors.join('; '), p.year, p.journal, p.doi, p.studyType,
+      p.score, p.passedCriteria + '/' + p.totalCriteria, p.scanDepth === 'full' ? 'Full text (PMC)' : 'Abstract only'
+    ].concat(critCols).concat([
+      p.manualTags.join('; '), p.notes, p.abstract,
+      'https://pubmed.ncbi.nlm.nih.gov/' + p.pmid + '/', p.fullTextUrl||'', p.fullTextSource||''
+    ]).map(function(v){ return '"' + String(v||'').replace(/"/g,'""') + '"'; });
+  });
+
+  var csv = [headers.join(',')].concat(rows.map(function(r){ return r.join(','); })).join('\n');
+  var blob = new Blob([csv], {type:'text/csv'});
+  var url = URL.createObjectURL(blob);
+  var a = document.createElement('a'); a.href = url;
+  a.download = 'pubmed_' + new Date().toISOString().slice(0,10) + '.csv';
+  a.click(); URL.revokeObjectURL(url);
+}
+
+// ══════════════════════════════════════════════
+// PMC FULL TEXT — fetch and rescan
+// ══════════════════════════════════════════════
+
+function fetchPMCFullText(pmcid) {
+  var url = 'https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=pmc&id=' + pmcid + '&retmode=xml';
+  return fetchWithFallback(url).then(function(r) {
+    return r.text();
+  }).then(function(xml) {
+    return parsePMCFullText(xml);
+  }).catch(function(){ return null; });
+}
+
+function parsePMCFullText(xml) {
+  try {
+    var doc = new DOMParser().parseFromString(xml, 'text/xml');
+    // Extract all body text — methods, results, discussion etc.
+    var sections = [];
+    doc.querySelectorAll('body sec, body p, abstract p, abstract abstract-text').forEach(function(el) {
+      var t = el.textContent.trim();
+      if (t) sections.push(t);
+    });
+    // Fallback: grab all text nodes if structured sections missing
+    if (sections.length === 0) {
+      var body = doc.querySelector('body');
+      if (body) sections.push(body.textContent.trim());
+    }
+    return sections.join(' ').replace(/\s+/g, ' ');
+  } catch(e) { return null; }
+}
+
+// After initial render, fetch PMC full texts for papers that have a PMCID
+// then re-scan and update their scores and badges
+function fetchAndRescanPMCPapers() {
+  var pmcPapers = papers.filter(function(p){ return p.pmcid && p.scanDepth !== 'full'; });
+  if (pmcPapers.length === 0) return;
+
+  // Stagger requests to avoid hammering the API
+  pmcPapers.forEach(function(p, i) {
+    setTimeout(function() {
+      fetchPMCFullText(p.pmcid).then(function(fullText) {
+        if (!fullText) {
+          // Update badge to abstract only
+          var db = document.getElementById('db-' + p.pmid);
+          if (db) { db.className = 'depth-badge depth-abstract'; db.textContent = 'Abstract only'; }
+          return;
+        }
+        // Store full text and re-scan
+        p.fullText = fullText;
+        p.scanDepth = 'full';
+
+        // Re-scan using full text instead of just abstract
+        var savedAbstract = p.abstract;
+        p.abstract = fullText; // temporarily use full text as scan body
+        var scan = scanPaper(p);
+        p.abstract = savedAbstract; // restore abstract for display
+        p.scanResults = scan.results;
+        p.score = scan.score;
+        p.passedCriteria = scan.passed;
+        p.totalCriteria = scan.total;
+
+        // Update the card in place without full re-render
+        var db = document.getElementById('db-' + p.pmid);
+        if (db) { db.className = 'depth-badge depth-full'; db.innerHTML = '&#9670; Full text scanned'; }
+
+        // Update score display
+        var card = document.getElementById('card-' + p.pmid);
+        if (card) {
+          var scoreColor = p.score >= 80 ? '#22c55e' : p.score >= 50 ? '#f59e0b' : '#ef4444';
+          var scoreNum = card.querySelector('.score-num');
+          if (scoreNum) { scoreNum.style.color = scoreColor; scoreNum.innerHTML = p.score + '<span style="font-size:11px;color:#4b5563">%</span>'; }
+          var scoreBar = card.querySelector('.score-bar');
+          if (scoreBar) { scoreBar.style.width = p.score + '%'; scoreBar.style.background = scoreColor; }
+          var passCount = card.querySelector('.pass-count');
+          if (passCount) passCount.textContent = p.passedCriteria + '/' + p.totalCriteria + ' pass';
+
+          // Update scan chips
+          var chips = card.querySelectorAll('.scan-chip.pass, .scan-chip.fail');
+          chips.forEach(function(chip, ci) {
+            if (p.scanResults[ci]) {
+              chip.className = 'scan-chip ' + (p.scanResults[ci].pass ? 'pass' : 'fail');
+              chip.innerHTML = (p.scanResults[ci].pass ? '&#10003;' : '&#10007;') + ' ' + p.scanResults[ci].label;
+            }
+          });
+        }
+      });
+    }, i * 400); // 400ms stagger between requests
+  });
+}
+
+// ══════════════════════════════════════════════
+// FULL TEXT LOOKUP — Unpaywall + OA Button fallback
+// ══════════════════════════════════════════════
+
+// Lookup a free PDF URL for a given DOI
+// 1st: Unpaywall  2nd: Open Access Button
+function lookupFreeFullText(doi) {
+  if (!doi) return Promise.resolve(null);
+  var unpaywall = 'https://api.unpaywall.org/v2/' + encodeURIComponent(doi) + '?email=pubmedlabassistant@lab.tool';
+  return fetch(unpaywall).then(function(r){ return r.ok ? r.json() : null; }).then(function(data) {
+    if (data && data.best_oa_location && data.best_oa_location.url_for_pdf) {
+      return { url: data.best_oa_location.url_for_pdf, source: 'Unpaywall' };
+    }
+    if (data && data.best_oa_location && data.best_oa_location.url) {
+      return { url: data.best_oa_location.url, source: 'Unpaywall' };
+    }
+    // Fallback: Open Access Button
+    return fetch('https://api.openaccessbutton.org/find?id=' + encodeURIComponent(doi))
+      .then(function(r){ return r.ok ? r.json() : null; })
+      .then(function(oab) {
+        if (oab && oab.url) return { url: oab.url, source: 'OA Button' };
+        return null;
+      }).catch(function(){ return null; });
+  }).catch(function(){
+    // Direct Unpaywall failed — try via proxy then OA Button
+    return fetch('https://api.openaccessbutton.org/find?id=' + encodeURIComponent(doi))
+      .then(function(r){ return r.ok ? r.json() : null; })
+      .then(function(oab) {
+        if (oab && oab.url) return { url: oab.url, source: 'OA Button' };
+        return null;
+      }).catch(function(){ return null; });
+  });
+}
+
+// After papers are rendered, asynchronously fetch full text links
+function fetchFullTextLinks() {
+  papers.forEach(function(p) {
+    if (!p.doi) return;
+    var el = document.getElementById('ft-' + p.pmid);
+    if (!el) return;
+    lookupFreeFullText(p.doi).then(function(result) {
+      p.fullTextUrl = result ? result.url : null;
+      p.fullTextSource = result ? result.source : null;
+      if (!el) return;
+      if (result) {
+        el.innerHTML = '<a class="pdf-btn" href="' + result.url + '" target="_blank">&#128196; Free PDF <span style="font-size:9px;opacity:0.7">(' + result.source + ')</span></a>';
+      } else {
+        el.innerHTML = '<span style="font-size:11px;color:#374151">No free PDF found</span>';
+      }
+    });
+  });
+}
+
+// ══════════════════════════════════════════════
+// INIT
+// ══════════════════════════════════════════════
+renderCriteriaPreview();
+</script>
+</body>
+</html>
