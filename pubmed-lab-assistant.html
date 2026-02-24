@@ -89,6 +89,7 @@ input:focus, select:focus, textarea:focus { border-color: #3b82f6; }
 .depth-badge { font-size: 10px; padding: 2px 8px; border-radius: 20px; border: 1px solid; white-space: nowrap; font-weight: 600; display: inline-block; }
 .depth-full { border-color: #7c3aed; background: #1e1040; color: #a78bfa; }
 .depth-pdf { border-color: #0d9488; background: #042f2e; color: #2dd4bf; }
+.depth-pdf-blocked { border-color: #d9770644; background: #1c100a; color: #fb923c; }
 .depth-abstract { border-color: #374151; background: transparent; color: #4b5563; }
 .depth-scanning { border-color: #1e3a5f; background: transparent; color: #4b5563; font-style: italic; }
 .pdf-btn:hover { background: #166534; text-decoration: none; }
@@ -127,6 +128,70 @@ input:focus, select:focus, textarea:focus { border-color: #3b82f6; }
 @keyframes spin { to { transform: rotate(360deg); } }
 .history-item { background: #0d1220; border: 1px solid #1e2d4a; border-radius: 8px; padding: 11px 16px; display: flex; align-items: center; gap: 14px; margin-bottom: 7px; }
 .step-num { display: inline-flex; align-items: center; justify-content: center; width: 22px; height: 22px; border-radius: 50%; background: #1e3a5f; color: #60a5fa; font-size: 11px; font-weight: 700; flex-shrink: 0; }
+
+/* ── Checklists ── */
+.checklist-status-pill { display: flex; flex-direction: column; align-items: center; gap: 3px; flex-shrink: 0; min-width: 58px; }
+.cl-pill { font-size: 9px; padding: 2px 7px; border-radius: 20px; border: 1px solid; white-space: nowrap; font-weight: 700; text-align: center; letter-spacing: 0.04em; }
+.cl-pill-done  { border-color: #22c55e44; background: #14271a; color: #4ade80; }
+.cl-pill-partial { border-color: #f59e0b44; background: #1c1408; color: #fbbf24; }
+.cl-pill-pending { border-color: #37415144; background: transparent; color: #4b5563; }
+.cl-pill-blocked { border-color: #d9770644; background: #1c100a; color: #fb923c; }
+.cl-pill-label { font-size: 8px; color: #374151; text-transform: uppercase; letter-spacing: 0.07em; }
+.checklist-header { display: flex; align-items: center; gap: 10px; padding: 9px 14px; background: #0a0e1a; cursor: pointer; user-select: none; }
+.checklist-header:hover { background: #0d1220; }
+.checklist-title { font-size: 11px; font-weight: 700; color: #94a3b8; text-transform: uppercase; letter-spacing: 0.08em; flex: 1; }
+.checklist-score-badge { font-size: 10px; padding: 2px 9px; border-radius: 20px; border: 1px solid; font-weight: 700; white-space: nowrap; }
+.checklist-score-high { border-color: #22c55e44; background: #14271a; color: #4ade80; }
+.checklist-score-mid  { border-color: #f59e0b44; background: #1c1408; color: #fbbf24; }
+.checklist-score-low  { border-color: #ef444444; background: #1a0808; color: #f87171; }
+.checklist-score-na   { border-color: #37415144; background: transparent; color: #4b5563; }
+.checklist-toggle-icon { font-size: 10px; color: #4b5563; }
+.checklist-body { padding: 0 14px 10px; display: none; }
+.checklist-body.open { display: block; }
+.checklist-selector-row { display: flex; align-items: center; gap: 8px; padding: 8px 0 6px; border-bottom: 1px solid #1e2d4a; margin-bottom: 6px; }
+.checklist-selector-row select { padding: 4px 8px; font-size: 11px; }
+.checklist-locked-notice { font-size: 10px; color: #4b5563; font-style: italic; }
+.cl-item-row { display: flex; align-items: flex-start; gap: 10px; padding: 5px 0; border-bottom: 1px solid #0a0e1a; }
+.cl-item-row:last-child { border-bottom: none; }
+.cl-item-num { font-size: 10px; color: #374151; min-width: 22px; flex-shrink: 0; padding-top: 1px; }
+.cl-item-text { font-size: 11px; color: #94a3b8; flex: 1; line-height: 1.55; font-family: 'IBM Plex Sans', sans-serif; }
+.cl-item-text b { color: #60a5fa; font-weight: 600; font-family: 'IBM Plex Mono', monospace; }
+.cl-item-evidence { font-size: 10px; color: #374151; margin-top: 2px; font-style: italic; }
+.cl-item-status { flex-shrink: 0; min-width: 68px; text-align: right; }
+.cl-status-select { padding: 3px 6px; font-size: 10px; border-radius: 4px; cursor: pointer; }
+.cl-status-yes  { background: #14271a; border-color: #22c55e; color: #4ade80; }
+.cl-status-no   { background: #1a0808; border-color: #ef4444; color: #f87171; }
+.cl-status-partial { background: #1c1408; border-color: #f59e0b; color: #fbbf24; }
+.cl-status-na   { background: #111827; border-color: #374151; color: #6b7280; }
+.cl-status-unclear { background: #111827; border-color: #374151; color: #6b7280; }
+.rob-domain { margin-bottom: 8px; padding: 8px 10px; border-radius: 6px; background: #0a0e1a; border: 1px solid #1a2540; }
+.rob-domain-title { font-size: 10px; color: #64748b; text-transform: uppercase; letter-spacing: 0.07em; margin-bottom: 4px; }
+.rob-judgement-row { display: flex; align-items: center; gap: 8px; margin-top: 4px; }
+.rob-judgement-label { font-size: 10px; color: #4b5563; min-width: 80px; }
+.rob-judgement-select { padding: 3px 7px; font-size: 10px; border-radius: 4px; cursor: pointer; }
+.rob-low  { background: #14271a; border-color: #22c55e44; color: #4ade80; }
+.rob-high { background: #1a0808; border-color: #ef444444; color: #f87171; }
+.rob-some { background: #1c1408; border-color: #f59e0b44; color: #fbbf24; }
+.rob-na   { background: #111827; border-color: #37415144; color: #6b7280; }
+
+/* ── Checklist Uploader ── */
+.upload-zone { border: 2px dashed #1e3a5f; border-radius: 12px; padding: 48px 24px; text-align: center; cursor: pointer; transition: border-color 0.2s, background 0.2s; background: #070b14; }
+.upload-zone:hover, .upload-zone.drag-over { border-color: #3b82f6; background: #0d1628; }
+.upload-zone-icon { font-size: 40px; margin-bottom: 12px; }
+.upload-zone-title { font-size: 14px; color: #93c5fd; font-weight: 600; margin-bottom: 6px; }
+.upload-zone-sub { font-size: 11px; color: #4b5563; }
+.uploader-meta { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 14px; }
+.uploader-meta input, .uploader-meta select { width: 100%; padding: 8px 11px; }
+.uploader-progress { margin-top: 14px; height: 4px; background: #1e2d4a; border-radius: 4px; overflow: hidden; display: none; }
+.uploader-progress-bar { height: 100%; background: linear-gradient(90deg, #3b82f6, #8b5cf6); border-radius: 4px; transition: width 0.3s; }
+.uploader-status { margin-top: 10px; font-size: 12px; color: #64748b; font-style: italic; text-align: center; min-height: 18px; }
+.ucl-result-header { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px; margin-bottom: 14px; }
+.ucl-title { font-size: 13px; color: #e2e8f0; font-weight: 600; flex: 1; }
+.ucl-score-badge { font-size: 12px; font-weight: 700; padding: 4px 14px; border-radius: 20px; border: 1px solid; }
+.ucl-score-high { border-color: #22c55e44; background: #14271a; color: #4ade80; }
+.ucl-score-mid  { border-color: #f59e0b44; background: #1c1408; color: #fbbf24; }
+.ucl-score-low  { border-color: #ef444444; background: #1a0808; color: #f87171; }
+.ucl-export-btn { padding: 5px 14px; font-size: 11px; }
 </style>
 </head>
 <body>
@@ -144,6 +209,7 @@ input:focus, select:focus, textarea:focus { border-color: #3b82f6; }
     <button class="tab-btn" id="results-tab-btn" onclick="switchTab('results')">Results</button>
     <button class="tab-btn" onclick="switchTab('criteria')">Scan Criteria</button>
     <button class="tab-btn" onclick="switchTab('history')">History</button>
+    <button class="tab-btn" onclick="switchTab('uploader')">&#128203; Checklist Uploader</button>
   </div>
 </div>
 
@@ -208,8 +274,47 @@ input:focus, select:focus, textarea:focus { border-color: #3b82f6; }
       </div>
       <!-- Live preview of active criteria -->
       <div id="criteria-preview"></div>
-      <div style="margin-top:10px">
-        <button onclick="switchTab('criteria')" style="display:inline-flex;align-items:center;gap:8px;padding:11px 22px;background:linear-gradient(135deg,#1e3a5f,#1e2d4a);border:1px solid #3b82f6;border-radius:8px;color:#93c5fd;font-family:'IBM Plex Mono',monospace;font-size:13px;font-weight:600;cursor:pointer;letter-spacing:0.03em;">&#9881; Edit Scan Criteria &rarr;</button>
+      <div style="margin-top:12px">
+        <table class="criteria-table" id="home-crit-table">
+          <thead>
+            <tr>
+              <th style="width:190px">Criterion Label</th>
+              <th>Keywords (comma-separated, case-insensitive)</th>
+              <th style="width:155px">Rule type</th>
+              <th style="width:50px"></th>
+            </tr>
+          </thead>
+          <tbody id="home-crit-body"></tbody>
+        </table>
+        <div class="add-crit-row" style="margin-top:10px">
+          <input type="text" id="home-new-crit-label" placeholder="e.g. Blinded study" style="width:185px" />
+          <input type="text" id="home-new-crit-kw" placeholder="double-blind, blinded, masking" style="flex:1;padding:6px 10px" />
+          <select id="home-new-crit-type" style="padding:6px 9px;font-size:12px;background:#111827;border:1px solid #1e2d4a;border-radius:6px;color:#e2e8f0">
+            <option value="must">Must contain</option>
+            <option value="mustnot">Must NOT contain</option>
+          </select>
+          <button class="btn btn-ghost" onclick="homeAddCriterion()">+ Add</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Step 3: Quality Checklists -->
+    <div class="card">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px">
+        <span class="step-num">3</span>
+        <div class="card-label" style="margin-bottom:0">Automated Quality Checklists</div>
+        <span style="font-size:11px;color:#4b5563;margin-left:4px">— run automatically on any paper with full text available</span>
+      </div>
+      <div class="info-box">
+        Once a paper's full text is retrieved (via PubMed Central or a free PDF), the app will <b>automatically run quality checklists</b> against the text. Each checklist item is keyword-scanned and pre-filled as a starting point — you can review and adjust each item manually inside the paper's expanded view. Checklists are <b>matched to study type</b> by default but can be changed per paper. <b>RoB2 is always assessed alongside the matched checklist.</b>
+      </div>
+      <div style="display:flex;flex-wrap:wrap;gap:7px;margin-top:4px">
+        <span style="font-size:11px;padding:3px 11px;border-radius:20px;border:1px solid #3b82f644;background:#3b82f611;color:#3b82f6">&#10003; CONSORT 2010 — RCTs</span>
+        <span style="font-size:11px;padding:3px 11px;border-radius:20px;border:1px solid #f59e0b44;background:#f59e0b11;color:#f59e0b">&#10003; RoB2 — All trials (risk of bias)</span>
+        <span style="font-size:11px;padding:3px 11px;border-radius:20px;border:1px solid #8b5cf644;background:#8b5cf611;color:#8b5cf6">&#10003; PRISMA 2020 — Systematic Reviews &amp; Meta-Analyses</span>
+        <span style="font-size:11px;padding:3px 11px;border-radius:20px;border:1px solid #f9741644;background:#f9741611;color:#f97416">&#10003; STROBE — Observational Studies</span>
+        <span style="font-size:11px;padding:3px 11px;border-radius:20px;border:1px solid #ec489944;background:#ec489911;color:#ec4899">&#10003; CARE — Case Reports</span>
+        <span style="font-size:11px;padding:3px 11px;border-radius:20px;border:1px solid #06b6d444;background:#06b6d411;color:#06b6d4">&#10003; AGREE II — Clinical Guidelines</span>
       </div>
     </div>
 
@@ -301,6 +406,73 @@ input:focus, select:focus, textarea:focus { border-color: #3b82f6; }
     </div>
   </div>
 
+  <!-- ══ CHECKLIST UPLOADER TAB ════════════════════════════ -->
+  <div class="tab-panel" id="tab-uploader">
+
+    <div class="card">
+      <div class="card-label">&#128203; Standalone Checklist Uploader</div>
+      <div class="info-box">
+        Upload any research paper PDF directly and run a quality checklist against it — no PubMed search needed. The app reads the PDF locally in your browser (nothing is sent to any server). Useful for spot-checking a specific paper or assessing papers outside a formal search.
+      </div>
+
+      <!-- Drop zone -->
+      <div class="upload-zone" id="upload-zone"
+        onclick="document.getElementById('pdf-file-input').click()"
+        ondragover="event.preventDefault(); this.classList.add('drag-over')"
+        ondragleave="this.classList.remove('drag-over')"
+        ondrop="handleUploaderDrop(event)">
+        <div class="upload-zone-icon">&#128196;</div>
+        <div class="upload-zone-title">Drop a PDF here, or click to browse</div>
+        <div class="upload-zone-sub">PDF is read locally — nothing is uploaded to any server</div>
+      </div>
+      <input type="file" id="pdf-file-input" accept=".pdf" style="display:none" onchange="handleUploaderFile(this.files[0])">
+
+      <!-- Metadata inputs -->
+      <div class="uploader-meta">
+        <div>
+          <div class="sec-label">Paper Title (optional)</div>
+          <input type="text" id="ucl-title-input" placeholder="e.g. Effect of propofol on…" />
+        </div>
+        <div>
+          <div class="sec-label">Study Type — selects default checklist</div>
+          <select id="ucl-study-type">
+            <option value="RCT">RCT / Clinical Trial</option>
+            <option value="Systematic Review">Systematic Review</option>
+            <option value="Meta-Analysis">Meta-Analysis</option>
+            <option value="Observational">Observational Study</option>
+            <option value="Case Report">Case Report</option>
+            <option value="Guideline">Clinical Guideline</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Checklist selector -->
+      <div style="margin-top:12px; display:flex; align-items:center; gap:10px; flex-wrap:wrap">
+        <div class="sec-label" style="margin-bottom:0">Checklist to run:</div>
+        <select id="ucl-checklist-select" style="padding:6px 10px; font-size:12px; background:#111827; border:1px solid #1e2d4a; border-radius:6px; color:#e2e8f0;">
+          <option value="CONSORT">CONSORT 2010 — RCTs</option>
+          <option value="ROB2">RoB2 — Risk of Bias</option>
+          <option value="PRISMA">PRISMA 2020 — Systematic Reviews</option>
+          <option value="STROBE">STROBE — Observational Studies</option>
+          <option value="CARE">CARE — Case Reports</option>
+          <option value="AGREE">AGREE II — Clinical Guidelines</option>
+        </select>
+        <label style="font-size:11px; color:#64748b; display:flex; align-items:center; gap:6px; cursor:pointer">
+          <input type="checkbox" id="ucl-also-rob2" checked style="accent-color:#3b82f6"> Also run RoB2
+        </label>
+        <button class="btn btn-blue" onclick="runUploaderChecklist()" style="padding:6px 18px; font-size:12px">&#9654; Run Checklist</button>
+      </div>
+
+      <!-- Progress -->
+      <div class="uploader-progress" id="ucl-progress"><div class="uploader-progress-bar" id="ucl-progress-bar" style="width:0%"></div></div>
+      <div class="uploader-status" id="ucl-status"></div>
+    </div>
+
+    <!-- Results area -->
+    <div id="ucl-results" style="display:none"></div>
+
+  </div>
+
 </div>
 
 <script>
@@ -326,6 +498,498 @@ var scanCriteria = [
 
 // Manual tags (workflow only — not used in scoring)
 var manualTags = ["Include", "Exclude", "Unsure", "Data Extracted", "High Priority"];
+
+// ══════════════════════════════════════════════
+// CHECKLIST DEFINITIONS
+// ══════════════════════════════════════════════
+
+// Each checklist item: { id, label, detail, keywords[] }
+// keywords[] are searched in full text to auto-suggest a status
+
+var CHECKLISTS = {
+
+  ROB2: {
+    name: 'Risk of Bias 2 (RoB2)',
+    short: 'RoB2',
+    color: '#f59e0b',
+    forTypes: ['RCT', 'Clinical Trial'],
+    domains: [
+      {
+        id: 'rob_randomisation', title: 'D1 — Randomisation Process',
+        questions: [
+          { id: 'rob1_1', text: 'Was the allocation sequence randomly generated?', keywords: ['random allocation','randomis','randomiz','computer-generated','random number','lottery','random sequence'] },
+          { id: 'rob1_2', text: 'Was the allocation sequence concealed?', keywords: ['allocation concealment','concealed','sealed envelope','central allocation','sequentially numbered'] },
+          { id: 'rob1_3', text: 'Did baseline differences suggest a problem with randomisation?', keywords: ['baseline','comparable groups','similar at baseline','no significant difference at baseline'] }
+        ]
+      },
+      {
+        id: 'rob_deviations', title: 'D2 — Deviations from Intended Interventions',
+        questions: [
+          { id: 'rob2_1', text: 'Were participants and care providers blinded?', keywords: ['double-blind','double blind','blinded','masking','masked','placebo-controlled','sham'] },
+          { id: 'rob2_2', text: 'Were there deviations from intended interventions?', keywords: ['protocol deviation','cross-over','contamination','non-compliance','per-protocol','intention-to-treat','ITT'] },
+          { id: 'rob2_3', text: 'Was an intention-to-treat (ITT) analysis performed?', keywords: ['intention-to-treat','intent-to-treat','ITT analysis','modified ITT','mITT'] }
+        ]
+      },
+      {
+        id: 'rob_missing', title: 'D3 — Missing Outcome Data',
+        questions: [
+          { id: 'rob3_1', text: 'Were outcome data available for all randomised participants?', keywords: ['complete case','no missing data','all participants','100%','full follow-up'] },
+          { id: 'rob3_2', text: 'Was there evidence of attrition or exclusion?', keywords: ['loss to follow-up','dropout','attrition','excluded','withdrew','withdrawn','missing data','imputation'] },
+          { id: 'rob3_3', text: 'Were missing data handled appropriately?', keywords: ['multiple imputation','last observation carried forward','LOCF','sensitivity analysis','MCAR','MAR','MNAR'] }
+        ]
+      },
+      {
+        id: 'rob_measurement', title: 'D4 — Measurement of the Outcome',
+        questions: [
+          { id: 'rob4_1', text: 'Was the method of measuring the outcome appropriate?', keywords: ['validated','validated scale','validated questionnaire','standardised','primary outcome','outcome measure'] },
+          { id: 'rob4_2', text: 'Were outcome assessors blinded?', keywords: ['assessor blinded','outcome assessor','blinded assessor','blinded outcome','independent assessor'] },
+          { id: 'rob4_3', text: 'Could outcome assessment have been influenced by knowledge of intervention?', keywords: ['unblinded','open-label','not blinded','aware of allocation'] }
+        ]
+      },
+      {
+        id: 'rob_reporting', title: 'D5 — Selection of the Reported Result',
+        questions: [
+          { id: 'rob5_1', text: 'Was the trial pre-registered with a primary outcome specified?', keywords: ['clinicaltrials.gov','ISRCTN','ANZCTR','NCT','prospectively registered','trial registration','pre-registered','primary outcome pre-specified'] },
+          { id: 'rob5_2', text: 'Were all pre-specified outcomes reported?', keywords: ['all outcomes reported','no selective reporting','results consistent with protocol','supplementary','appendix'] },
+          { id: 'rob5_3', text: 'Were analyses consistent with the statistical analysis plan?', keywords: ['statistical analysis plan','SAP','pre-specified analysis','protocol','as planned'] }
+        ]
+      }
+    ]
+  },
+
+  CONSORT: {
+    name: 'CONSORT 2010',
+    short: 'CONSORT',
+    color: '#3b82f6',
+    forTypes: ['RCT'],
+    items: [
+      { id: 'c1',  num: '1a',  label: 'Title/Abstract',    text: 'Identified as RCT in title or abstract', keywords: ['randomized controlled','randomised controlled','RCT','randomized trial','randomised trial'] },
+      { id: 'c2',  num: '2a',  label: 'Background',        text: 'Scientific background and rationale explained', keywords: ['background','rationale','introduction','aim','objective','hypothesis'] },
+      { id: 'c3',  num: '3a',  label: 'Trial Design',      text: 'Description of trial design (parallel, crossover, factorial)', keywords: ['parallel','crossover','cross-over','factorial','cluster','superiority','equivalence','non-inferiority'] },
+      { id: 'c4',  num: '4a',  label: 'Participants',      text: 'Eligibility criteria for participants described', keywords: ['inclusion criteria','exclusion criteria','eligibility','eligible','enrolled','recruited'] },
+      { id: 'c5',  num: '5',   label: 'Interventions',     text: 'Interventions described with sufficient detail', keywords: ['intervention','treatment','dose','regimen','protocol','administered','received'] },
+      { id: 'c6',  num: '6a',  label: 'Outcomes',          text: 'Completely defined primary and secondary outcome measures', keywords: ['primary outcome','secondary outcome','primary endpoint','outcome measure','measured'] },
+      { id: 'c7',  num: '7a',  label: 'Sample Size',       text: 'How sample size was determined', keywords: ['sample size','power calculation','power analysis','powered','80%','90%','alpha','beta','effect size'] },
+      { id: 'c8',  num: '8a',  label: 'Randomisation — Sequence', text: 'Method used to generate the random allocation sequence', keywords: ['random allocation','computer-generated','random number','block randomisation','stratified randomisation'] },
+      { id: 'c9',  num: '9',   label: 'Allocation Concealment', text: 'Mechanism used to implement allocation concealment', keywords: ['allocation concealment','sealed envelope','central allocation','opaque envelope','sequentially numbered'] },
+      { id: 'c10', num: '10',  label: 'Implementation',    text: 'Who generated the sequence, enrolled participants, and assigned interventions', keywords: ['generated','enrolled','assigned','allocation','independent','pharmacy'] },
+      { id: 'c11', num: '11a', label: 'Blinding',          text: 'Whether blinded and how', keywords: ['double-blind','single-blind','blinded','masked','placebo','sham','blinding'] },
+      { id: 'c12', num: '12a', label: 'Statistical Methods', text: 'Statistical methods for comparing groups on primary outcome', keywords: ['statistical analysis','chi-square','t-test','ANOVA','Mann-Whitney','logistic regression','mixed model','intention-to-treat'] },
+      { id: 'c13', num: '13a', label: 'CONSORT Flow Diagram', text: 'Flow of participants at each stage (diagram)', keywords: ['flow diagram','CONSORT diagram','flow chart','screened','assessed for eligibility','enrolled','allocated','analysed'] },
+      { id: 'c14', num: '14a', label: 'Recruitment Dates', text: 'Dates defining the periods of recruitment and follow-up', keywords: ['recruitment','enrolled between','follow-up period','study period','duration','months','years'] },
+      { id: 'c15', num: '15',  label: 'Baseline Data',     text: 'Baseline demographic and clinical characteristics', keywords: ['baseline','demographics','table 1','characteristics','age','gender','sex'] },
+      { id: 'c16', num: '16',  label: 'Numbers Analysed',  text: 'Number of participants analysed in each group', keywords: ['analysed','analysis','n=','per group','each group','ITT population','per-protocol population'] },
+      { id: 'c17', num: '17a', label: 'Outcomes & Estimation', text: 'Results for each group and estimated effect size and precision', keywords: ['relative risk','odds ratio','hazard ratio','mean difference','confidence interval','95% CI','p value','p=','p<'] },
+      { id: 'c18', num: '18',  label: 'Ancillary Analyses', text: 'Results of any other analyses performed (subgroup, sensitivity)', keywords: ['subgroup analysis','sensitivity analysis','secondary analysis','post-hoc','exploratory'] },
+      { id: 'c19', num: '19',  label: 'Harms',             text: 'All important harms or unintended effects in each group', keywords: ['adverse event','side effect','complication','harm','safety','tolerability','AE','SAE','serious adverse'] },
+      { id: 'c20', num: '20',  label: 'Limitations',       text: 'Trial limitations addressing sources of potential bias', keywords: ['limitation','limitations','bias','confound','weakness','generalisability','generalizability'] },
+      { id: 'c21', num: '21',  label: 'Generalisability',  text: 'Generalisability (external validity) of the trial findings', keywords: ['generalisability','generalizability','external validity','applicable','applicability','representative'] },
+      { id: 'c22', num: '22',  label: 'Interpretation',    text: 'Interpretation consistent with results, balancing benefits and harms', keywords: ['conclusion','concluded','discuss','implication','findings suggest','results indicate'] },
+      { id: 'c23', num: '23',  label: 'Registration',      text: 'Registration number and name of trial registry', keywords: ['clinicaltrials.gov','NCT','ISRCTN','ANZCTR','registration number','registered'] },
+      { id: 'c24', num: '24',  label: 'Protocol',          text: 'Where the full trial protocol can be accessed', keywords: ['protocol','supplementary','appendix','available at','online supplement'] },
+      { id: 'c25', num: '25',  label: 'Funding',           text: 'Sources of funding and other support', keywords: ['funded','funding','grant','support','sponsor','pharmaceutical','industry','conflict of interest'] }
+    ]
+  },
+
+  PRISMA: {
+    name: 'PRISMA 2020',
+    short: 'PRISMA',
+    color: '#8b5cf6',
+    forTypes: ['Systematic Review', 'Meta-Analysis'],
+    items: [
+      { id: 'pr1',  num: '1',  label: 'Title',             text: 'Identified as systematic review / meta-analysis in title', keywords: ['systematic review','meta-analysis','meta analysis','literature review'] },
+      { id: 'pr2',  num: '2',  label: 'Abstract',          text: 'Structured summary including background, objectives, data sources, eligibility, results, limitations, conclusions', keywords: ['background','objective','methods','results','conclusion','search','eligibility'] },
+      { id: 'pr3',  num: '3',  label: 'Rationale',         text: 'Rationale for the review in context of what is already known', keywords: ['rationale','background','introduction','current evidence','previous review'] },
+      { id: 'pr4',  num: '4',  label: 'Objectives',        text: 'Explicit statement of questions being addressed (PICO)', keywords: ['objective','aim','research question','PICO','population','intervention','comparison','outcome'] },
+      { id: 'pr5',  num: '5',  label: 'Protocol/Registration', text: 'Review protocol registered and accessible', keywords: ['PROSPERO','OSF','registered','protocol','registration number','pre-registered'] },
+      { id: 'pr6',  num: '6',  label: 'Eligibility Criteria', text: 'Characteristics of sources of evidence used as criteria for eligibility', keywords: ['inclusion criteria','exclusion criteria','eligibility','PICO','study design','language','date'] },
+      { id: 'pr7',  num: '7',  label: 'Information Sources', text: 'All information sources searched including dates', keywords: ['MEDLINE','PubMed','Embase','CINAHL','Cochrane','database','searched','search date','grey literature'] },
+      { id: 'pr8',  num: '8',  label: 'Search Strategy',   text: 'Full search strategy for at least one database', keywords: ['search strategy','search terms','MeSH','Medical Subject Headings','Boolean','AND OR NOT','search string'] },
+      { id: 'pr9',  num: '9',  label: 'Selection Process',  text: 'Process for selecting studies', keywords: ['screening','title abstract','full text','selection','two reviewers','independently','Covidence','Rayyan','Endnote'] },
+      { id: 'pr10', num: '10', label: 'Data Collection',   text: 'Process for collecting data from reports', keywords: ['data extraction','data collection','extracted','pilot tested','independently','discrepancy','consensus'] },
+      { id: 'pr11', num: '11', label: 'Data Items',        text: 'List and definition of all outcomes sought', keywords: ['outcome','endpoint','data item','variable','extracted','outcome measure'] },
+      { id: 'pr12', num: '12', label: 'Risk of Bias',      text: 'Methods for assessing risk of bias in included studies', keywords: ['risk of bias','Cochrane risk','RoB','quality assessment','ROBINS','Newcastle-Ottawa','GRADE'] },
+      { id: 'pr13', num: '13', label: 'Effect Measures',   text: 'Effect measure(s) specified for each outcome', keywords: ['odds ratio','relative risk','hazard ratio','risk ratio','mean difference','standardised mean difference','SMD'] },
+      { id: 'pr14', num: '14', label: 'Synthesis Methods', text: 'Methods for presenting and synthesising results', keywords: ['meta-analysis','pooled','forest plot','random effects','fixed effects','DerSimonian','heterogeneity','I²','I2','narrative synthesis'] },
+      { id: 'pr15', num: '15', label: 'Bias Assessment',   text: 'Methods for assessing bias in the synthesis', keywords: ['publication bias','funnel plot','Egger','Begg','small study effect','reporting bias'] },
+      { id: 'pr16', num: '16', label: 'Certainty of Evidence', text: 'Methods for assessing certainty of the evidence', keywords: ['GRADE','certainty','quality of evidence','level of evidence','strength of evidence','very low','low','moderate','high'] },
+      { id: 'pr17', num: '17', label: 'Study Selection',   text: 'Results of the search and selection process (PRISMA flow diagram)', keywords: ['flow diagram','PRISMA diagram','screened','eligible','included','excluded','PRISMA flow'] },
+      { id: 'pr18', num: '18', label: 'Study Characteristics', text: 'Characteristics of included studies', keywords: ['Table','characteristics','included studies','design','population','intervention','comparator','outcome','follow-up'] },
+      { id: 'pr19', num: '19', label: 'Risk of Bias Results', text: 'Risk of bias in each study', keywords: ['risk of bias','low risk','high risk','unclear risk','some concerns','RoB','quality'] },
+      { id: 'pr20', num: '20', label: 'Individual Results', text: 'Results for all outcomes for each study', keywords: ['forest plot','individual study','study results','effect estimate','confidence interval','n='] },
+      { id: 'pr21', num: '21', label: 'Synthesis Results', text: 'Results of all statistical syntheses', keywords: ['pooled','meta-analysis results','combined estimate','overall effect','I²','I2','heterogeneity','tau'] },
+      { id: 'pr22', num: '22', label: 'Reporting Biases',  text: 'Results of any assessment of bias due to missing results', keywords: ['publication bias','funnel plot','Egger test','trim and fill','contour-enhanced'] },
+      { id: 'pr23', num: '23', label: 'Certainty Results', text: 'Results of assessments of certainty of evidence', keywords: ['GRADE','certainty of evidence','quality of evidence','evidence table','summary of findings'] },
+      { id: 'pr24', num: '24', label: 'Discussion',        text: 'General interpretation of the results in context', keywords: ['discussion','interpretation','implications','clinical practice','future research'] },
+      { id: 'pr25', num: '25', label: 'Limitations',       text: 'Limitations of the evidence included in the review', keywords: ['limitation','limitations','heterogeneity','bias','confound','missing data','grey literature'] },
+      { id: 'pr26', num: '26', label: 'Conclusions',       text: 'General interpretation and implications for practice', keywords: ['conclusion','recommend','practice','future research','evidence supports','evidence suggests'] },
+      { id: 'pr27', num: '27', label: 'Registration',      text: 'Registration information for the review', keywords: ['PROSPERO','CRD','registration','registered','OSF','protocol'] },
+      { id: 'pr28', num: '28', label: 'Support',           text: 'Sources of financial or non-financial support', keywords: ['funded','grant','support','conflict of interest','disclosure','sponsor'] }
+    ]
+  },
+
+  STROBE: {
+    name: 'STROBE',
+    short: 'STROBE',
+    color: '#f97316',
+    forTypes: ['Observational'],
+    items: [
+      { id: 'st1',  num: '1',  label: 'Title/Abstract',    text: 'Study design indicated in title or abstract', keywords: ['cohort','case-control','cross-sectional','observational','prospective','retrospective'] },
+      { id: 'st2',  num: '2',  label: 'Background',        text: 'Scientific background and rationale for study', keywords: ['background','rationale','introduction','hypothesis','aim','objective'] },
+      { id: 'st3',  num: '3',  label: 'Objectives',        text: 'Specific objectives including any pre-specified hypotheses', keywords: ['objective','aim','hypothesis','research question','primary aim'] },
+      { id: 'st4',  num: '4',  label: 'Study Design',      text: 'Key elements of study design early in the paper', keywords: ['cohort study','case-control','cross-sectional','design','prospective','retrospective','longitudinal'] },
+      { id: 'st5',  num: '5',  label: 'Setting',           text: 'Setting, locations and relevant dates including periods of recruitment, exposure, follow-up, and data collection', keywords: ['setting','hospital','clinic','community','country','dates','period','recruitment','follow-up'] },
+      { id: 'st6',  num: '6',  label: 'Participants',      text: 'Eligibility criteria and sources and methods of selection of participants', keywords: ['eligibility','inclusion criteria','exclusion criteria','recruited','selected','enrolled'] },
+      { id: 'st7',  num: '7',  label: 'Variables',         text: 'Clearly define all outcomes, exposures, predictors, potential confounders, and effect modifiers', keywords: ['outcome','exposure','predictor','confounder','variable','defined','measured'] },
+      { id: 'st8',  num: '8',  label: 'Measurement',       text: 'For each variable of interest describe sources of data and methods of assessment/measurement', keywords: ['measurement','measured','assessed','questionnaire','interview','medical records','validated'] },
+      { id: 'st9',  num: '9',  label: 'Bias',              text: 'Describe any efforts to address potential sources of bias', keywords: ['bias','selection bias','information bias','confounding','recall bias','misclassification'] },
+      { id: 'st10', num: '10', label: 'Study Size',        text: 'Explain how the study size was arrived at', keywords: ['sample size','power','powered','study size','effect size','calculation'] },
+      { id: 'st11', num: '11', label: 'Statistical Methods', text: 'Describe all statistical methods, including those used to control for confounding', keywords: ['multivariable','multivariate','logistic regression','Cox regression','linear regression','adjusted','propensity score'] },
+      { id: 'st12', num: '12', label: 'Participants flow',  text: 'Report numbers of individuals at each stage of study', keywords: ['flow','screened','eligible','enrolled','followed','analysed','lost to follow-up'] },
+      { id: 'st13', num: '13', label: 'Descriptive Data',  text: 'Characteristics of study participants and information on exposures and potential confounders', keywords: ['table 1','baseline characteristics','demographics','age','gender','sex','mean','median'] },
+      { id: 'st14', num: '14', label: 'Outcome Data',      text: 'Report numbers of outcome events or summary measures over time', keywords: ['outcome','events','incidence','prevalence','frequency','rate','occurred'] },
+      { id: 'st15', num: '15', label: 'Main Results',      text: 'Report unadjusted and adjusted estimates; give confidence intervals', keywords: ['odds ratio','relative risk','hazard ratio','adjusted','unadjusted','95% CI','confidence interval','p value','p=','p<'] },
+      { id: 'st16', num: '16', label: 'Other Analyses',    text: 'Report other analyses done, e.g. subgroup and sensitivity analyses', keywords: ['subgroup','sensitivity analysis','secondary analysis','interaction','stratified'] },
+      { id: 'st17', num: '17', label: 'Key Results',       text: 'Summary of key results with reference to study objectives', keywords: ['conclusion','key finding','main finding','our results','we found','we observed'] },
+      { id: 'st18', num: '18', label: 'Limitations',       text: 'Discuss limitations considering potential sources of bias or imprecision', keywords: ['limitation','limitations','bias','confound','imprecision','misclassification','unmeasured'] },
+      { id: 'st19', num: '19', label: 'Interpretation',    text: 'Cautious interpretation of results considering objectives, limitations, multiplicity of analyses, and other relevant studies', keywords: ['interpretation','discuss','context','previous studies','literature','consistent with','inconsistent with'] },
+      { id: 'st20', num: '20', label: 'Generalisability',  text: 'Discuss the generalisability (external validity) of the study results', keywords: ['generalisability','generalizability','external validity','applicable','applicability','representative','population'] },
+      { id: 'st21', num: '21', label: 'Funding',           text: 'Give the source of funding and role of the funders', keywords: ['funded','funding','grant','support','sponsor','conflict of interest','disclosure'] }
+    ]
+  },
+
+  CARE: {
+    name: 'CARE (Case Reports)',
+    short: 'CARE',
+    color: '#ec4899',
+    forTypes: ['Case Report'],
+    items: [
+      { id: 'ca1',  num: '1',  label: 'Title',             text: 'Words "case report" in the title', keywords: ['case report','case study','case series'] },
+      { id: 'ca2',  num: '2',  label: 'Key Words',         text: 'Key words that identify diagnoses and interventions', keywords: ['keywords','key words','MeSH'] },
+      { id: 'ca3',  num: '3',  label: 'Abstract',          text: 'Structured abstract including introduction, patient concerns, diagnoses, interventions, outcomes and learning points', keywords: ['introduction','patient','diagnosis','intervention','outcome','learning','conclusion'] },
+      { id: 'ca4',  num: '4',  label: 'Introduction',      text: 'Unique features of this case and why it is reported; literature review references', keywords: ['introduction','unique','rare','unusual','reported previously','literature'] },
+      { id: 'ca5',  num: '5a', label: 'Patient Information', text: 'Demographic information and main symptoms/concerns', keywords: ['year-old','patient','male','female','presented','chief complaint','presenting complaint','symptoms'] },
+      { id: 'ca6',  num: '5b', label: 'Medical History',   text: 'Medical, family, and psychosocial history including relevant genetic information', keywords: ['medical history','past history','family history','surgical history','medication','allergy'] },
+      { id: 'ca7',  num: '5c', label: 'Physical Exam',     text: 'Relevant physical examination (PE) findings', keywords: ['physical examination','examination','vital signs','blood pressure','heart rate','temperature','auscultation','palpation'] },
+      { id: 'ca8',  num: '5d', label: 'Diagnostic Results', text: 'Results of diagnostic tests and other investigations', keywords: ['laboratory','lab results','imaging','CT','MRI','ultrasound','blood test','ECG','biopsy','pathology'] },
+      { id: 'ca9',  num: '5e', label: 'Diagnosis',         text: 'Diagnosis, differential diagnoses, and reasoning', keywords: ['diagnosis','differential diagnosis','diagnosed','diagnosed with','confirmed','established'] },
+      { id: 'ca10', num: '5f', label: 'Interventions',     text: 'Types of interventions including surgical, pharmacological, preventive', keywords: ['treatment','intervention','surgery','surgical','drug','medication','administered','prescribed','procedure'] },
+      { id: 'ca11', num: '5g', label: 'Outcomes',          text: 'Measurable outcomes including follow-up', keywords: ['outcome','follow-up','discharged','recovered','resolved','improved','complication','readmission'] },
+      { id: 'ca12', num: '6',  label: 'Discussion',        text: 'Strengths and limitations of the case management', keywords: ['discussion','strength','limitation','challenge','lesson','learn','similar case'] },
+      { id: 'ca13', num: '7',  label: 'Conclusions',       text: 'Conclusions including rationale for reporting this case', keywords: ['conclusion','learning point','key message','takeaway','lesson','summary'] },
+      { id: 'ca14', num: '8',  label: 'Patient Perspective', text: "Patient perspective or patient own words where appropriate", keywords: ['patient perspective','patient reported','patient felt','patient stated','patient described'] },
+      { id: 'ca15', num: '9',  label: 'Informed Consent',  text: 'Informed consent obtained from the patient', keywords: ['informed consent','consent obtained','patient consent','written consent','consent was obtained'] }
+    ]
+  },
+
+  AGREE: {
+    name: 'AGREE II (Guidelines)',
+    short: 'AGREE II',
+    color: '#06b6d4',
+    forTypes: ['Review'],
+    items: [
+      { id: 'ag1',  num: 'D1-1', label: 'Scope & Purpose',    text: 'Overall objective(s) of the guideline described', keywords: ['objective','aim','purpose','goal','guideline objective','scope'] },
+      { id: 'ag2',  num: 'D1-2', label: 'Clinical Questions',  text: 'Health question(s) covered by the guideline described', keywords: ['clinical question','health question','PICO','research question','question addressed'] },
+      { id: 'ag3',  num: 'D1-3', label: 'Target Population',   text: 'Population to whom the guideline is meant to apply', keywords: ['target population','intended population','patients with','adults','children','population'] },
+      { id: 'ag4',  num: 'D2-4', label: 'Guideline Group',     text: 'Guideline development group includes members from all relevant professional groups', keywords: ['multidisciplinary','working group','committee','expert panel','development group','clinical expert'] },
+      { id: 'ag5',  num: 'D2-5', label: 'Patient Views',       text: 'Views and preferences of the target population sought', keywords: ['patient involvement','consumer','patient views','patient preference','stakeholder','lay representative'] },
+      { id: 'ag6',  num: 'D2-6', label: 'Target Users',        text: 'Target users of the guideline clearly defined', keywords: ['target users','intended users','clinicians','healthcare professionals','intended audience','aimed at'] },
+      { id: 'ag7',  num: 'D3-7', label: 'Systematic Methods',  text: 'Systematic methods used to search for evidence', keywords: ['systematic search','systematic review','database','MEDLINE','Embase','Cochrane','search strategy'] },
+      { id: 'ag8',  num: 'D3-8', label: 'Evidence Criteria',   text: 'Criteria for selecting the evidence clearly described', keywords: ['inclusion criteria','exclusion criteria','eligibility','study design','evidence criteria'] },
+      { id: 'ag9',  num: 'D3-9', label: 'Evidence Strengths',  text: 'Strengths and limitations of the body of evidence described', keywords: ['GRADE','certainty','quality of evidence','strength of evidence','limitation','level of evidence'] },
+      { id: 'ag10', num: 'D3-10', label: 'Recommendation Methods', text: 'Methods for formulating the recommendations described', keywords: ['recommendation','evidence to recommendation','Delphi','consensus','modified Delphi','voting','strong recommendation','weak recommendation'] },
+      { id: 'ag11', num: 'D3-11', label: 'Benefits vs Harms',  text: 'Health benefits, side effects, and risks considered', keywords: ['benefit','harm','risk','side effect','adverse','balance','tradeoff','trade-off'] },
+      { id: 'ag12', num: 'D3-12', label: 'Evidence–Recommendation Link', text: 'Explicit link between the recommendations and the supporting evidence', keywords: ['evidence supports','evidence table','recommendation based on','based on evidence','evidence level','level of evidence'] },
+      { id: 'ag13', num: 'D3-13', label: 'External Review',    text: 'Guideline externally reviewed by experts prior to publication', keywords: ['external review','peer review','expert review','reviewed by','consultation','feedback'] },
+      { id: 'ag14', num: 'D3-14', label: 'Update Procedure',   text: 'Procedure for updating the guideline provided', keywords: ['update','review date','expiry','planned update','will be updated','scheduled review'] },
+      { id: 'ag15', num: 'D4-15', label: 'Recommendations',    text: 'Specific and unambiguous recommendations', keywords: ['we recommend','we suggest','should be','is recommended','is suggested','conditional recommendation','strong recommendation'] },
+      { id: 'ag16', num: 'D4-16', label: 'Options',            text: 'Options for managing the condition clearly presented', keywords: ['option','alternative','can be considered','may be used','first-line','second-line'] },
+      { id: 'ag17', num: 'D4-17', label: 'Identifiable Advice', text: 'Key recommendations easily identifiable', keywords: ['recommendation','key recommendation','summary','box','table','algorithm','flowchart'] },
+      { id: 'ag18', num: 'D5-18', label: 'Facilitators/Barriers', text: 'Facilitators and barriers to application discussed', keywords: ['barrier','facilitator','implementation','challenge','resource','feasibility','adoption'] },
+      { id: 'ag19', num: 'D5-19', label: 'Implementation Advice', text: 'Advice on how the recommendations can be applied in practice', keywords: ['implementation','applying','practice','apply in','clinical setting','how to','step-by-step'] },
+      { id: 'ag20', num: 'D5-20', label: 'Resource Implications', text: 'Potential resource implications of applying the recommendations', keywords: ['cost','resource','economic','cost-effective','budget','financial','resource implication'] },
+      { id: 'ag21', num: 'D5-21', label: 'Monitoring Criteria', text: 'Criteria for monitoring and/or auditing', keywords: ['audit','monitor','quality indicator','outcome measure','performance indicator','surveillance'] },
+      { id: 'ag22', num: 'D6-22', label: 'Funding',            text: 'Funding body had no influence on the content of the guideline', keywords: ['funded','funding','conflict of interest','disclosure','sponsor','no influence','independent'] },
+      { id: 'ag23', num: 'D6-23', label: 'Conflicts of Interest', text: 'Competing interests of guideline development group members recorded and addressed', keywords: ['conflict of interest','COI','competing interest','declaration','disclosed','financial relationship'] }
+    ]
+  }
+};
+
+// Which checklist keys map to which study types (auto-suggest)
+var CHECKLIST_FOR_TYPE = {
+  'RCT':               ['ROB2', 'CONSORT'],
+  'Clinical Trial':    ['ROB2', 'CONSORT'],
+  'Meta-Analysis':     ['PRISMA'],
+  'Systematic Review': ['PRISMA'],
+  'Observational':     ['STROBE'],
+  'Case Report':       ['CARE'],
+  'Review':            ['AGREE'],
+  'Other':             []
+};
+
+// Statuses a user can pick per item
+var CL_STATUSES = [
+  { val: 'unclear', label: '? Unclear' },
+  { val: 'yes',     label: '✓ Yes / Reported' },
+  { val: 'partial', label: '~ Partial' },
+  { val: 'no',      label: '✗ No / Not reported' },
+  { val: 'na',      label: '— N/A' }
+];
+
+// Auto-detect status for a checklist item given full text
+function autoDetectStatus(item, fullText) {
+  if (!fullText) return 'unclear';
+  var text = fullText.toLowerCase();
+  var found = (item.keywords || []).some(function(kw) { return text.includes(kw.toLowerCase()); });
+  return found ? 'yes' : 'unclear';
+}
+
+// Run checklist auto-detection on a paper and store results
+function runChecklistsOnPaper(p) {
+  var fullText = p.fullText || '';
+  if (!fullText) return;
+
+  p.checklists = p.checklists || {};
+  p.selectedChecklist = p.selectedChecklist || null;
+
+  // Auto-pick best checklist for the study type
+  var suggested = (CHECKLIST_FOR_TYPE[p.studyType] || [])[0] || null;
+  if (!p.selectedChecklist) p.selectedChecklist = suggested;
+
+  // For every checklist, auto-populate item statuses if not already set
+  Object.keys(CHECKLISTS).forEach(function(key) {
+    if (!p.checklists[key]) {
+      p.checklists[key] = {};
+      var cl = CHECKLISTS[key];
+      if (cl.items) {
+        cl.items.forEach(function(item) {
+          p.checklists[key][item.id] = autoDetectStatus(item, fullText);
+        });
+      } else if (cl.domains) {
+        cl.domains.forEach(function(domain) {
+          domain.questions.forEach(function(q) {
+            p.checklists[key][q.id] = autoDetectStatus(q, fullText);
+          });
+        });
+        // Also store per-domain manual judgement (for RoB2 summary)
+        p.checklists[key]['__domain_judgements__'] = p.checklists[key]['__domain_judgements__'] || {};
+      }
+    }
+  });
+}
+
+// Compute summary score for a checklist on a paper
+function checklistScore(p, clKey) {
+  var cl = CHECKLISTS[clKey];
+  if (!cl || !p.checklists || !p.checklists[clKey]) return null;
+  var data = p.checklists[clKey];
+  var items = cl.items ? cl.items : [];
+  if (cl.domains) { cl.domains.forEach(function(d){ d.questions.forEach(function(q){ items.push(q); }); }); }
+  var total = 0, yes = 0, partial = 0;
+  items.forEach(function(item) {
+    var s = data[item.id];
+    if (s === 'na') return;
+    total++;
+    if (s === 'yes') yes++;
+    else if (s === 'partial') partial += 0.5;
+  });
+  if (total === 0) return null;
+  var pct = Math.round(((yes + partial) / total) * 100);
+  return { pct: pct, yes: yes, total: total };
+}
+
+// ══════════════════════════════════════════════
+// CHECKLIST UI RENDERING
+// ══════════════════════════════════════════════
+
+function renderChecklistSection(p) {
+  var hasFullText = (p.scanDepth === 'full' || p.scanDepth === 'pdf');
+  if (p.scanDepth === 'pdf-blocked') {
+    return '<div class="checklist-section">' +
+      '<div class="checklist-header" style="cursor:default">' +
+        '<span class="checklist-title">&#128203; Quality Checklists</span>' +
+        '<span style="font-size:10px;color:#fb923c;font-style:italic">&#9888; Free PDF found but could not be read by this app — open it manually using the link above</span>' +
+      '</div>' +
+    '</div>';
+  }
+  if (!hasFullText) {
+    return '<div class="checklist-section">' +
+      '<div class="checklist-header" style="cursor:default">' +
+        '<span class="checklist-title">&#128203; Quality Checklists</span>' +
+        '<span class="checklist-locked-notice">Available after full text scanning</span>' +
+      '</div>' +
+    '</div>';
+  }
+
+  // Build checklist selector options
+  var allOptions = Object.keys(CHECKLISTS).map(function(key) {
+    var cl = CHECKLISTS[key];
+    return '<option value="'+key+'"'+(p.selectedChecklist===key?' selected':'')+'>'+cl.name+'</option>';
+  }).join('');
+  var noneOption = '<option value=""'+(p.selectedChecklist?'':' selected')+'>— Select a checklist —</option>';
+
+  // Score badge for currently selected checklist
+  var sc = p.selectedChecklist ? checklistScore(p, p.selectedChecklist) : null;
+  var scoreBadge = '';
+  if (sc !== null) {
+    var cls = sc.pct >= 75 ? 'checklist-score-high' : sc.pct >= 50 ? 'checklist-score-mid' : 'checklist-score-low';
+    scoreBadge = '<span class="checklist-score-badge '+cls+'">'+sc.pct+'% reported ('+sc.yes+'/'+sc.total+')</span>';
+  } else {
+    scoreBadge = '<span class="checklist-score-badge checklist-score-na">Not assessed</span>';
+  }
+
+  // RoB2 score badge always shown alongside
+  var rob2sc = checklistScore(p, 'ROB2');
+  var rob2Badge = '';
+  if (rob2sc !== null && p.selectedChecklist !== 'ROB2') {
+    var rcls = rob2sc.pct >= 75 ? 'checklist-score-high' : rob2sc.pct >= 50 ? 'checklist-score-mid' : 'checklist-score-low';
+    rob2Badge = ' <span class="checklist-score-badge '+rcls+'" style="margin-left:4px">RoB2: '+rob2sc.pct+'%</span>';
+  }
+
+  var bodyHtml = buildChecklistBody(p);
+
+  return '<div class="checklist-section">' +
+    '<div class="checklist-header" onclick="toggleChecklist(\''+p.pmid+'\')" id="clhdr-'+p.pmid+'">' +
+      '<span class="checklist-title">&#128203; Quality Checklists</span>' +
+      scoreBadge + rob2Badge +
+      '<span class="checklist-toggle-icon" id="cl-toggle-'+p.pmid+'">&#9660;</span>' +
+    '</div>' +
+    '<div class="checklist-body" id="clbody-'+p.pmid+'">' +
+      '<div class="checklist-selector-row">' +
+        '<span style="font-size:11px;color:#64748b">Checklist:</span>' +
+        '<select onchange="changeChecklist(\''+p.pmid+'\',this.value)" style="font-size:11px;padding:4px 8px">'+noneOption+allOptions+'</select>' +
+        '<span style="font-size:10px;color:#4b5563;margin-left:6px">Statuses auto-detected from full text — review and adjust manually</span>' +
+      '</div>' +
+      '<div id="cl-content-'+p.pmid+'">' + bodyHtml + '</div>' +
+    '</div>' +
+  '</div>';
+}
+
+function buildChecklistBody(p) {
+  var clKey = p.selectedChecklist;
+  if (!clKey || !CHECKLISTS[clKey]) return '<div style="color:#4b5563;font-size:12px;padding:10px 0">Select a checklist above.</div>';
+
+  var cl = CHECKLISTS[clKey];
+  var data = (p.checklists && p.checklists[clKey]) ? p.checklists[clKey] : {};
+
+  // ── RoB2: domain-based layout ──────────────────
+  if (cl.domains) {
+    return cl.domains.map(function(domain) {
+      var domJudge = (data['__domain_judgements__'] && data['__domain_judgements__'][domain.id]) || 'unclear';
+      var judgeOpts = [
+        {val:'low', label:'Low Risk'},
+        {val:'some', label:'Some Concerns'},
+        {val:'high', label:'High Risk'},
+        {val:'unclear', label:'Unclear'}
+      ].map(function(o){
+        return '<option value="'+o.val+'"'+(domJudge===o.val?' selected':'')+'>'+o.label+'</option>';
+      }).join('');
+
+      var qRows = domain.questions.map(function(q) {
+        var st = data[q.id] || 'unclear';
+        var opts = CL_STATUSES.map(function(o){
+          return '<option value="'+o.val+'"'+(st===o.val?' selected':'')+'>'+o.label+'</option>';
+        }).join('');
+        var stClass = st==='yes'?'cl-status-yes':st==='partial'?'cl-status-partial':st==='no'?'cl-status-no':st==='na'?'cl-status-na':'cl-status-unclear';
+        return '<div class="cl-item-row">' +
+          '<div class="cl-item-text" style="padding-left:4px">'+q.text+'</div>' +
+          '<div class="cl-item-status"><select class="cl-status-select '+stClass+'" onchange="updateChecklistItem(\''+p.pmid+'\',\''+clKey+'\',\''+q.id+'\',this.value,this)">'+opts+'</select></div>' +
+        '</div>';
+      }).join('');
+
+      return '<div class="rob-domain">' +
+        '<div class="rob-domain-title">'+domain.title+'</div>' +
+        qRows +
+        '<div class="rob-judgement-row">' +
+          '<span class="rob-judgement-label">Domain judgement:</span>' +
+          '<select class="rob-judgement-select rob-'+domJudge+'" onchange="updateRobDomainJudgement(\''+p.pmid+'\',\''+domain.id+'\',this.value,this)">'+judgeOpts+'</select>' +
+        '</div>' +
+      '</div>';
+    }).join('');
+  }
+
+  // ── Item-based layout (CONSORT, PRISMA, STROBE, CARE, AGREE) ──
+  return cl.items.map(function(item) {
+    var st = data[item.id] || 'unclear';
+    var opts = CL_STATUSES.map(function(o){
+      return '<option value="'+o.val+'"'+(st===o.val?' selected':'')+'>'+o.label+'</option>';
+    }).join('');
+    var stClass = st==='yes'?'cl-status-yes':st==='partial'?'cl-status-partial':st==='no'?'cl-status-no':st==='na'?'cl-status-na':'cl-status-unclear';
+    return '<div class="cl-item-row">' +
+      '<div class="cl-item-num">'+item.num+'</div>' +
+      '<div class="cl-item-text"><b>'+item.label+'</b> — '+item.text+'</div>' +
+      '<div class="cl-item-status"><select class="cl-status-select '+stClass+'" onchange="updateChecklistItem(\''+p.pmid+'\',\''+clKey+'\',\''+item.id+'\',this.value,this)">'+opts+'</select></div>' +
+    '</div>';
+  }).join('');
+}
+
+function toggleChecklist(pmid) {
+  var body = document.getElementById('clbody-'+pmid);
+  var icon = document.getElementById('cl-toggle-'+pmid);
+  if (!body) return;
+  var open = body.classList.toggle('open');
+  if (icon) icon.innerHTML = open ? '&#9650;' : '&#9660;';
+}
+
+function changeChecklist(pmid, clKey) {
+  var p = papers.find(function(x){ return x.pmid === pmid; });
+  if (!p) return;
+  p.selectedChecklist = clKey || null;
+  // Rebuild content area
+  var contentEl = document.getElementById('cl-content-'+pmid);
+  if (contentEl) contentEl.innerHTML = buildChecklistBody(p);
+  // Update score badge
+  refreshChecklistBadge(pmid);
+}
+
+function updateChecklistItem(pmid, clKey, itemId, val, selectEl) {
+  var p = papers.find(function(x){ return x.pmid === pmid; });
+  if (!p || !p.checklists || !p.checklists[clKey]) return;
+  p.checklists[clKey][itemId] = val;
+  // Update select colour class
+  var classes = 'cl-status-select ';
+  classes += val==='yes'?'cl-status-yes':val==='partial'?'cl-status-partial':val==='no'?'cl-status-no':val==='na'?'cl-status-na':'cl-status-unclear';
+  selectEl.className = classes;
+  refreshChecklistBadge(pmid);
+}
+
+function updateRobDomainJudgement(pmid, domainId, val, selectEl) {
+  var p = papers.find(function(x){ return x.pmid === pmid; });
+  if (!p || !p.checklists || !p.checklists['ROB2']) return;
+  p.checklists['ROB2']['__domain_judgements__'] = p.checklists['ROB2']['__domain_judgements__'] || {};
+  p.checklists['ROB2']['__domain_judgements__'][domainId] = val;
+  selectEl.className = 'rob-judgement-select rob-' + val;
+  refreshChecklistBadge(pmid);
+}
+
+function refreshChecklistBadge(pmid) {
+  var p = papers.find(function(x){ return x.pmid === pmid; });
+  if (!p) return;
+  var hdr = document.getElementById('clhdr-'+pmid);
+  if (!hdr) return;
+  var sc = p.selectedChecklist ? checklistScore(p, p.selectedChecklist) : null;
+  var badges = hdr.querySelectorAll('.checklist-score-badge');
+  // Remove existing badges and re-add
+  badges.forEach(function(b){ b.remove(); });
+  var title = hdr.querySelector('.checklist-title');
+  var toggleIcon = hdr.querySelector('.checklist-toggle-icon');
+  if (sc !== null) {
+    var cls = sc.pct >= 75 ? 'checklist-score-high' : sc.pct >= 50 ? 'checklist-score-mid' : 'checklist-score-low';
+    var badge = document.createElement('span');
+    badge.className = 'checklist-score-badge ' + cls;
+    badge.textContent = sc.pct + '% reported (' + sc.yes + '/' + sc.total + ')';
+    hdr.insertBefore(badge, toggleIcon);
+  }
+  var rob2sc = checklistScore(p, 'ROB2');
+  if (rob2sc !== null && p.selectedChecklist !== 'ROB2') {
+    var rcls = rob2sc.pct >= 75 ? 'checklist-score-high' : rob2sc.pct >= 50 ? 'checklist-score-mid' : 'checklist-score-low';
+    var rb = document.createElement('span');
+    rb.className = 'checklist-score-badge ' + rcls;
+    rb.style.marginLeft = '4px';
+    rb.textContent = 'RoB2: ' + rob2sc.pct + '%';
+    hdr.insertBefore(rb, toggleIcon);
+  }
+}
 
 var STUDY_TYPE_MAP = {
   "randomized controlled": "RCT", "meta-analysis": "Meta-Analysis",
@@ -565,6 +1229,31 @@ function getSorted() {
   });
 }
 
+function buildChecklistPill(p) {
+  var hasFullText = (p.scanDepth === 'full' || p.scanDepth === 'pdf');
+  var clRan = hasFullText && p.checklists && Object.keys(p.checklists).length > 0;
+  if (p.scanDepth === 'pdf-blocked') {
+    return '<div class="checklist-status-pill" title="PDF found but could not be read — open manually"><div class="cl-pill cl-pill-blocked">&#9888; PDF blocked</div><div class="cl-pill-label">Checklists</div></div>';
+  }
+  if (!hasFullText) {
+    return '<div class="checklist-status-pill" title="Checklists require full text"><div class="cl-pill cl-pill-pending">&#8213; Pending</div><div class="cl-pill-label">Checklists</div></div>';
+  }
+  var selectedSc = (clRan && p.selectedChecklist) ? checklistScore(p, p.selectedChecklist) : null;
+  var rob2Sc = clRan ? checklistScore(p, 'ROB2') : null;
+  if (clRan && selectedSc !== null) {
+    var pct = selectedSc.pct;
+    var pClass = pct >= 75 ? 'cl-pill-done' : pct >= 40 ? 'cl-pill-partial' : 'cl-pill-pending';
+    var clName = (p.selectedChecklist && CHECKLISTS[p.selectedChecklist]) ? CHECKLISTS[p.selectedChecklist].short : '';
+    var rob2Line = '';
+    if (rob2Sc !== null && p.selectedChecklist !== 'ROB2') {
+      var rc = rob2Sc.pct >= 75 ? 'done' : rob2Sc.pct >= 40 ? 'partial' : 'pending';
+      rob2Line = '<div class="cl-pill cl-pill-' + rc + '" style="margin-top:2px">RoB2 ' + rob2Sc.pct + '%</div>';
+    }
+    return '<div class="checklist-status-pill" title="Expand to view full checklist"><div class="cl-pill ' + pClass + '">&#10003; ' + clName + ' ' + pct + '%</div>' + rob2Line + '<div class="cl-pill-label">Checklists</div></div>';
+  }
+  return '<div class="checklist-status-pill" title="Checklists run — expand to view"><div class="cl-pill cl-pill-done">&#10003; Ready</div><div class="cl-pill-label">Checklists</div></div>';
+}
+
 function renderPapers() {
   var sorted = getSorted();
   document.getElementById('paper-count').textContent = sorted.length + ' / ' + papers.length + ' papers';
@@ -622,6 +1311,7 @@ function renderPapers() {
             '<div style="margin-top:5px">' +
               (p.scanDepth==='full' ? '<span class="depth-badge depth-full" id="db-'+p.pmid+'">&#9670; Full text scanned</span>' :
                p.scanDepth==='pdf' ? '<span class="depth-badge depth-pdf" id="db-'+p.pmid+'">&#9670; PDF scanned</span>' :
+               p.scanDepth==='pdf-blocked' ? '<span class="depth-badge depth-pdf-blocked" id="db-'+p.pmid+'">&#9888; PDF unreadable by app</span>' :
                p.pmcid ? '<span class="depth-badge depth-scanning" id="db-'+p.pmid+'">&#8635; fetching full text…</span>' :
                p.doi ? '<span class="depth-badge depth-scanning" id="db-'+p.pmid+'">&#8635; checking PDF…</span>' :
                '<span class="depth-badge depth-abstract" id="db-'+p.pmid+'">Abstract only</span>') +
@@ -636,13 +1326,15 @@ function renderPapers() {
             '<div class="score-bar-wrap"><div class="score-bar" style="width:'+p.score+'%;background:'+scoreColor+'"></div></div>' +
             '<div class="pass-count" style="font-size:10px;color:#4b5563;margin-top:2px">'+p.passedCriteria+'/'+p.totalCriteria+' pass</div>' +
           '</div>' +
-          '<button class="expand-btn" onclick="toggleExpand(\''+p.pmid+'\')">'+(expanded?'&#9650;':'&#9660;')+'</button>' +
+          buildChecklistPill(p) +
+          '<button class="expand-btn" onclick="toggleExpand(\''+p.pmid+'\')" title="Expand to see scan criteria detail, quality checklists, abstract and notes">'+(expanded?'&#9650; Less':'&#9660; Full criteria &amp; checklists')+'</button>' +
         '</div>' +
       '</div>' +
       '<div class="paper-body'+(expanded?' open':'')+'" id="body-'+p.pmid+'">' +
         detailHtml +
-        '<div class="abstract-text">'+(p.abstract||'No abstract available.')+'</div>' +
-        '<div class="sec-label">Notes</div>' +
+        renderChecklistSection(p) +
+        '<div style="margin-top:14px"><div class="abstract-text">'+(p.abstract||'No abstract available.')+'</div></div>' +
+        '<div class="sec-label" style="margin-top:10px">Notes</div>' +
         '<textarea class="notes-area" placeholder="Research notes\u2026" onchange="updateNotes(\''+p.pmid+'\', this.value)">'+p.notes+'</textarea>' +
       '</div>' +
     '</div>';
@@ -652,7 +1344,7 @@ function renderPapers() {
 function toggleExpand(pmid) {
   if (expandedCards.has(pmid)) expandedCards.delete(pmid); else expandedCards.add(pmid);
   document.getElementById('body-'+pmid).classList.toggle('open');
-  document.getElementById('card-'+pmid).querySelector('.expand-btn').innerHTML = expandedCards.has(pmid) ? '&#9650;' : '&#9660;';
+  document.getElementById('card-'+pmid).querySelector('.expand-btn').innerHTML = expandedCards.has(pmid) ? '&#9650; Less' : '&#9660; Full criteria &amp; checklists';
 }
 
 function toggleManualTag(pmid, tag) {
@@ -697,11 +1389,10 @@ function addCriterion() {
   scanCriteria.push({ label: label, keywords: kw.split(',').map(function(k){return k.trim();}).filter(Boolean), type: type });
   document.getElementById('new-crit-label').value = '';
   document.getElementById('new-crit-kw').value = '';
-  renderCriteriaTable();
-  renderCriteriaPreview();
+  syncCriteriaTables();
 }
 
-function removeCriterion(i) { scanCriteria.splice(i,1); renderCriteriaTable(); renderCriteriaPreview(); }
+function removeCriterion(i) { scanCriteria.splice(i,1); syncCriteriaTables(); }
 
 function renderCriteriaPreview() {
   var el = document.getElementById('criteria-preview');
@@ -714,6 +1405,44 @@ function renderCriteriaPreview() {
       return '<span style="font-size:11px;padding:3px 10px;border-radius:20px;border:1px solid '+col+'44;background:'+col+'11;color:'+col+'">'+icon+' '+c.label+'</span>';
     }).join('') +
   '</div>';
+}
+
+function renderHomeCriteriaTable() {
+  var tbody = document.getElementById('home-crit-body');
+  if (!tbody) return;
+  tbody.innerHTML = scanCriteria.map(function(c, i) {
+    var safeKws = (c.keywords||[]).join(', ').replace(/"/g,'&quot;');
+    var mustOpt = '<option value="must"'+(c.type==='must'?' selected':'')+'>Must contain</option>';
+    var mustnotOpt = '<option value="mustnot"'+(c.type==='mustnot'?' selected':'')+'>Must NOT contain</option>';
+    return '<tr>' +
+      '<td><input class="crit-label-input" value="'+c.label.replace(/"/g,'&quot;')+'" onchange="scanCriteria['+i+'].label=this.value;syncCriteriaTables()" /></td>' +
+      '<td><input class="crit-kw-input" value="'+safeKws+'" onchange="scanCriteria['+i+'].keywords=this.value.split(\',\').map(function(k){return k.trim();}).filter(Boolean)" /></td>' +
+      '<td><select class="crit-type-select" onchange="scanCriteria['+i+'].type=this.value">'+mustOpt+mustnotOpt+'</select></td>' +
+      '<td><button class="btn btn-red" style="padding:2px 9px;font-size:11px" onclick="homeRemoveCriterion('+i+')">&#10005;</button></td>' +
+    '</tr>';
+  }).join('');
+}
+
+function syncCriteriaTables() {
+  renderHomeCriteriaTable();
+  renderCriteriaTable();
+  renderCriteriaPreview();
+}
+
+function homeAddCriterion() {
+  var label = document.getElementById('home-new-crit-label').value.trim();
+  var kw = document.getElementById('home-new-crit-kw').value;
+  var type = document.getElementById('home-new-crit-type').value;
+  if (!label) return;
+  scanCriteria.push({ label: label, keywords: kw.split(',').map(function(k){return k.trim();}).filter(Boolean), type: type });
+  document.getElementById('home-new-crit-label').value = '';
+  document.getElementById('home-new-crit-kw').value = '';
+  syncCriteriaTables();
+}
+
+function homeRemoveCriterion(i) {
+  scanCriteria.splice(i, 1);
+  syncCriteriaTables();
 }
 
 // ══════════════════════════════════════════════
@@ -760,7 +1489,8 @@ function exportCSV() {
   if (!papers.length) return;
   // Dynamic headers: one column per criterion
   var critHeaders = scanCriteria.map(function(c){ return c.label; });
-  var headers = ["PMID","Title","Authors","Year","Journal","DOI","Study Type","Criteria Score %","Criteria Passed","Scan Depth"].concat(critHeaders).concat(["Manual Tags","Notes","Abstract","PubMed Link","Free Full Text URL","Full Text Source"]);
+  var clHeaders = Object.keys(CHECKLISTS).map(function(k){ return CHECKLISTS[k].short + ' Score %'; });
+  var headers = ["PMID","Title","Authors","Year","Journal","DOI","Study Type","Criteria Score %","Criteria Passed","Scan Depth"].concat(critHeaders).concat(clHeaders).concat(["Selected Checklist","Manual Tags","Notes","Abstract","PubMed Link","Free Full Text URL","Full Text Source"]);
 
   var sorted = papers.slice().sort(function(a,b){ return b.score - a.score; });
   var rows = sorted.map(function(p) {
@@ -768,10 +1498,15 @@ function exportCSV() {
       if (!p.scanResults || !p.scanResults[i]) return 'N/A';
       return p.scanResults[i].pass ? 'PASS' : 'FAIL';
     });
+    var clCols = Object.keys(CHECKLISTS).map(function(k) {
+      var sc = checklistScore(p, k);
+      return sc !== null ? sc.pct + '%' : '';
+    });
     return [
       p.pmid, p.title, p.authors.join('; '), p.year, p.journal, p.doi, p.studyType,
       p.score, p.passedCriteria + '/' + p.totalCriteria, p.scanDepth === 'full' ? 'Full text (PMC)' : p.scanDepth === 'pdf' ? 'Full text (PDF)' : 'Abstract only'
-    ].concat(critCols).concat([
+    ].concat(critCols).concat(clCols).concat([
+      p.selectedChecklist ? (CHECKLISTS[p.selectedChecklist] ? CHECKLISTS[p.selectedChecklist].name : '') : '',
       p.manualTags.join('; '), p.notes, p.abstract,
       'https://pubmed.ncbi.nlm.nih.gov/' + p.pmid + '/', p.fullTextUrl||'', p.fullTextSource||''
     ]).map(function(v){ return '"' + String(v||'').replace(/"/g,'""') + '"'; });
@@ -817,61 +1552,21 @@ function parsePMCFullText(xml) {
 }
 
 // After initial render, fetch PMC full texts for papers that have a PMCID
-// then re-scan and update their scores and badges
 function fetchAndRescanPMCPapers() {
   var pmcPapers = papers.filter(function(p){ return p.pmcid && p.scanDepth !== 'full'; });
   if (pmcPapers.length === 0) return;
 
-  // Stagger requests to avoid hammering the API
   pmcPapers.forEach(function(p, i) {
     setTimeout(function() {
+      var db = document.getElementById('db-' + p.pmid);
       fetchPMCFullText(p.pmcid).then(function(fullText) {
         if (!fullText) {
-          // Update badge to abstract only
-          var db = document.getElementById('db-' + p.pmid);
           if (db) { db.className = 'depth-badge depth-abstract'; db.textContent = 'Abstract only'; }
           return;
         }
-        // Store full text and re-scan
-        p.fullText = fullText;
-        p.scanDepth = 'full';
-
-        // Re-scan using full text instead of just abstract
-        var savedAbstract = p.abstract;
-        p.abstract = fullText; // temporarily use full text as scan body
-        var scan = scanPaper(p);
-        p.abstract = savedAbstract; // restore abstract for display
-        p.scanResults = scan.results;
-        p.score = scan.score;
-        p.passedCriteria = scan.passed;
-        p.totalCriteria = scan.total;
-
-        // Update the card in place without full re-render
-        var db = document.getElementById('db-' + p.pmid);
-        if (db) { db.className = 'depth-badge depth-full'; db.innerHTML = '&#9670; Full text scanned'; }
-
-        // Update score display
-        var card = document.getElementById('card-' + p.pmid);
-        if (card) {
-          var scoreColor = p.score >= 80 ? '#22c55e' : p.score >= 50 ? '#f59e0b' : '#ef4444';
-          var scoreNum = card.querySelector('.score-num');
-          if (scoreNum) { scoreNum.style.color = scoreColor; scoreNum.innerHTML = p.score + '<span style="font-size:11px;color:#4b5563">%</span>'; }
-          var scoreBar = card.querySelector('.score-bar');
-          if (scoreBar) { scoreBar.style.width = p.score + '%'; scoreBar.style.background = scoreColor; }
-          var passCount = card.querySelector('.pass-count');
-          if (passCount) passCount.textContent = p.passedCriteria + '/' + p.totalCriteria + ' pass';
-
-          // Update scan chips
-          var chips = card.querySelectorAll('.scan-chip.pass, .scan-chip.fail');
-          chips.forEach(function(chip, ci) {
-            if (p.scanResults[ci]) {
-              chip.className = 'scan-chip ' + (p.scanResults[ci].pass ? 'pass' : 'fail');
-              chip.innerHTML = (p.scanResults[ci].pass ? '&#10003;' : '&#10007;') + ' ' + p.scanResults[ci].label;
-            }
-          });
-        }
+        applyFullText(p, fullText, 'full', db);
       });
-    }, i * 400); // 400ms stagger between requests
+    }, i * 400);
   });
 }
 
@@ -882,34 +1577,34 @@ if (typeof pdfjsLib !== 'undefined') {
   pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
 }
 
+// Race a promise against a timeout
+function withTimeout(promise, ms) {
+  var timeout = new Promise(function(_, reject) {
+    setTimeout(function() { reject(new Error('timeout')); }, ms);
+  });
+  return Promise.race([promise, timeout]);
+}
+
 // Extract all text from a PDF given its URL.
-// Returns a Promise<string|null>. Returns null on any failure (CORS, not a PDF, etc.)
+// Returns a Promise<string|null>. Times out after 8 seconds.
 function extractPdfText(pdfUrl) {
   if (typeof pdfjsLib === 'undefined') return Promise.resolve(null);
 
-  // We try direct fetch first, then proxy — same pattern as fetchWithFallback
   function loadViaUrl(url) {
-    return pdfjsLib.getDocument({
-      url: url,
-      verbosity: 0,
-      // Suppress password prompts / errors silently
-      disableAutoFetch: false,
-      disableStream: false
-    }).promise;
+    return pdfjsLib.getDocument({ url: url, verbosity: 0 }).promise;
   }
 
   function tryProxied() {
     var chain = Promise.reject(new Error('start'));
     PROXIES.forEach(function(proxy) {
       chain = chain.catch(function() {
-        var proxied = proxy.url + encodeURIComponent(pdfUrl);
-        return loadViaUrl(proxied);
+        return loadViaUrl(proxy.url + encodeURIComponent(pdfUrl));
       });
     });
     return chain;
   }
 
-  return loadViaUrl(pdfUrl).catch(function() {
+  var pdfWork = loadViaUrl(pdfUrl).catch(function() {
     return tryProxied();
   }).then(function(pdf) {
     var pagePromises = [];
@@ -925,77 +1620,128 @@ function extractPdfText(pdfUrl) {
     return Promise.all(pagePromises).then(function(pages) {
       return pages.join(' ').replace(/\s+/g, ' ').trim();
     });
-  }).catch(function() {
-    return null; // CORS or any other failure — silent fallback
+  }).catch(function() { return null; });
+
+  return withTimeout(pdfWork, 8000).catch(function() { return null; });
+}
+
+// Detect if a URL points to a PMC article (route through XML instead of PDF)
+function extractPmcIdFromUrl(url) {
+  if (!url) return null;
+  // e.g. https://www.ncbi.nlm.nih.gov/pmc/articles/PMC1234567/
+  // or   https://europepmc.org/articles/PMC1234567
+  var m = url.match(/PMC(\d+)/i);
+  return m ? m[1] : null;
+}
+
+// Extract, scan, and update a single paper from its PDF URL
+// Detects PMC links and uses the reliable XML route for those
+function scanPaperFromPDF(p) {
+  if (!p.fullTextUrl) return;
+  var db = document.getElementById('db-' + p.pmid);
+
+  // ── PMC URL? Use the XML full-text route which is CORS-safe ──
+  var pmcIdFromUrl = extractPmcIdFromUrl(p.fullTextUrl);
+  if (pmcIdFromUrl && !p.pmcid) p.pmcid = pmcIdFromUrl; // store for future use
+  if (pmcIdFromUrl) {
+    if (db) { db.className = 'depth-badge depth-scanning'; db.textContent = '⟳ fetching full text…'; }
+    fetchPMCFullText(pmcIdFromUrl).then(function(fullText) {
+      if (!fullText || fullText.length < 200) {
+        setPdfBlocked(p, db);
+        return;
+      }
+      applyFullText(p, fullText, 'full', db);
+    });
+    return;
+  }
+
+  // ── Non-PMC: attempt PDF.js with 8s timeout ──
+  if (db) { db.className = 'depth-badge depth-scanning'; db.textContent = '⟳ scanning PDF…'; }
+
+  extractPdfText(p.fullTextUrl).then(function(text) {
+    if (!text || text.length < 200) {
+      setPdfBlocked(p, db);
+      return;
+    }
+    applyFullText(p, text, 'pdf', db);
   });
+}
+
+// Mark a paper as having a PDF that's available but unreadable by the app
+function setPdfBlocked(p, db) {
+  p.scanDepth = 'pdf-blocked';
+  if (db) { db.className = 'depth-badge depth-pdf-blocked'; db.innerHTML = '&#9888; PDF unreadable by app'; }
+  // Update checklist pill to blocked state
+  var card = document.getElementById('card-' + p.pmid);
+  if (card) {
+    var oldPill = card.querySelector('.checklist-status-pill');
+    if (oldPill) {
+      var wrap = document.createElement('div');
+      wrap.innerHTML = buildChecklistPill(p);
+      oldPill.replaceWith(wrap.firstChild);
+    }
+    // Refresh checklist section if expanded
+    var clSection = card.querySelector('.checklist-section');
+    if (clSection) { clSection.outerHTML = renderChecklistSection(p); }
+  }
+}
+
+// Apply extracted full text to a paper and update all card UI
+function applyFullText(p, text, depthType, db) {
+  p.fullText = text;
+  p.scanDepth = depthType;
+
+  var savedAbstract = p.abstract;
+  p.abstract = text;
+  var scan = scanPaper(p);
+  p.abstract = savedAbstract;
+  p.scanResults = scan.results;
+  p.score = scan.score;
+  p.passedCriteria = scan.passed;
+  p.totalCriteria = scan.total;
+
+  runChecklistsOnPaper(p);
+
+  if (db) {
+    if (depthType === 'full') {
+      db.className = 'depth-badge depth-full'; db.innerHTML = '&#9670; Full text scanned';
+    } else {
+      db.className = 'depth-badge depth-pdf'; db.innerHTML = '&#9670; PDF scanned';
+    }
+  }
+
+  var card = document.getElementById('card-' + p.pmid);
+  if (card) {
+    var scoreColor = p.score >= 80 ? '#22c55e' : p.score >= 50 ? '#f59e0b' : '#ef4444';
+    var scoreNum = card.querySelector('.score-num');
+    if (scoreNum) { scoreNum.style.color = scoreColor; scoreNum.innerHTML = p.score + '<span style="font-size:11px;color:#4b5563">%</span>'; }
+    var scoreBar = card.querySelector('.score-bar');
+    if (scoreBar) { scoreBar.style.width = p.score + '%'; scoreBar.style.background = scoreColor; }
+    var passCount = card.querySelector('.pass-count');
+    if (passCount) passCount.textContent = p.passedCriteria + '/' + p.totalCriteria + ' pass';
+
+    var chips = card.querySelectorAll('.scan-chip.pass, .scan-chip.fail');
+    chips.forEach(function(chip, ci) {
+      if (p.scanResults[ci]) {
+        chip.className = 'scan-chip ' + (p.scanResults[ci].pass ? 'pass' : 'fail');
+        chip.innerHTML = (p.scanResults[ci].pass ? '&#10003;' : '&#10007;') + ' ' + p.scanResults[ci].label;
+      }
+    });
+
+    var clSection = card.querySelector('.checklist-section');
+    if (clSection) { clSection.outerHTML = renderChecklistSection(p); }
+
+    var oldPill = card.querySelector('.checklist-status-pill');
+    if (oldPill) {
+      var wrap = document.createElement('div');
+      wrap.innerHTML = buildChecklistPill(p);
+      oldPill.replaceWith(wrap.firstChild);
+    }
+  }
 }
 
 // After full-text links are resolved, attempt to scan any found PDFs
 // that weren't already covered by PMC full text
-function fetchAndScanPDFs() {
-  // Only scan papers that have a PDF URL but haven't been fully scanned yet
-  // We re-check after a short delay to let fetchFullTextLinks populate p.fullTextUrl
-  setTimeout(function() {
-    var toScan = papers.filter(function(p) {
-      return p.fullTextUrl && p.scanDepth !== 'full';
-    });
-    if (toScan.length === 0) return;
-
-    toScan.forEach(function(p, i) {
-      setTimeout(function() {
-        // Update badge to show scanning
-        var db = document.getElementById('db-' + p.pmid);
-        if (db) { db.className = 'depth-badge depth-scanning'; db.textContent = '⟳ scanning PDF…'; }
-
-        extractPdfText(p.fullTextUrl).then(function(text) {
-          if (!text || text.length < 200) {
-            // Too short / failed — revert badge
-            if (db) { db.className = 'depth-badge depth-abstract'; db.textContent = 'Abstract only'; }
-            return;
-          }
-
-          // Store full text and re-scan
-          p.fullText = text;
-          p.scanDepth = 'pdf';
-
-          var savedAbstract = p.abstract;
-          p.abstract = text; // use PDF text as scan body
-          var scan = scanPaper(p);
-          p.abstract = savedAbstract; // restore abstract for display
-          p.scanResults = scan.results;
-          p.score = scan.score;
-          p.passedCriteria = scan.passed;
-          p.totalCriteria = scan.total;
-
-          // Update badge
-          if (db) { db.className = 'depth-badge depth-pdf'; db.innerHTML = '◆ PDF scanned'; }
-
-          // Update score display
-          var card = document.getElementById('card-' + p.pmid);
-          if (card) {
-            var scoreColor = p.score >= 80 ? '#22c55e' : p.score >= 50 ? '#f59e0b' : '#ef4444';
-            var scoreNum = card.querySelector('.score-num');
-            if (scoreNum) { scoreNum.style.color = scoreColor; scoreNum.innerHTML = p.score + '<span style="font-size:11px;color:#4b5563">%</span>'; }
-            var scoreBar = card.querySelector('.score-bar');
-            if (scoreBar) { scoreBar.style.width = p.score + '%'; scoreBar.style.background = scoreColor; }
-            var passCount = card.querySelector('.pass-count');
-            if (passCount) passCount.textContent = p.passedCriteria + '/' + p.totalCriteria + ' pass';
-
-            // Update scan chips
-            var chips = card.querySelectorAll('.scan-chip.pass, .scan-chip.fail');
-            chips.forEach(function(chip, ci) {
-              if (p.scanResults[ci]) {
-                chip.className = 'scan-chip ' + (p.scanResults[ci].pass ? 'pass' : 'fail');
-                chip.innerHTML = (p.scanResults[ci].pass ? '&#10003;' : '&#10007;') + ' ' + p.scanResults[ci].label;
-              }
-            });
-          }
-        });
-      }, i * 600); // 600ms stagger to avoid hammering
-    });
-  }, 4000); // Wait 4s for Unpaywall/OA Button lookups to complete first
-}
-
 // ══════════════════════════════════════════════
 // FULL TEXT LOOKUP — Unpaywall + OA Button fallback
 // ══════════════════════════════════════════════
@@ -1030,7 +1776,7 @@ function lookupFreeFullText(doi) {
   });
 }
 
-// After papers are rendered, asynchronously fetch full text links
+// After full-text links are resolved, immediately kick off PDF/PMC scanning
 function fetchFullTextLinks() {
   papers.forEach(function(p) {
     if (!p.doi) return;
@@ -1042,6 +1788,9 @@ function fetchFullTextLinks() {
       if (!el) return;
       if (result) {
         el.innerHTML = '<a class="pdf-btn" href="' + result.url + '" target="_blank">&#128196; Free PDF <span style="font-size:9px;opacity:0.7">(' + result.source + ')</span></a>';
+        if (p.scanDepth !== 'full' && p.scanDepth !== 'pdf') {
+          scanPaperFromPDF(p);
+        }
       } else {
         el.innerHTML = '<span style="font-size:11px;color:#374151">No free PDF found</span>';
       }
@@ -1049,10 +1798,333 @@ function fetchFullTextLinks() {
   });
 }
 
+// Safety-net: re-check any papers that resolved a URL but weren't scanned
+function fetchAndScanPDFs() {
+  setTimeout(function() {
+    papers.forEach(function(p) {
+      if (p.fullTextUrl && p.scanDepth !== 'full' && p.scanDepth !== 'pdf' && p.scanDepth !== 'pdf-blocked') {
+        scanPaperFromPDF(p);
+      }
+    });
+  }, 10000);
+}
+
+// ══════════════════════════════════════════════
+// CHECKLIST UPLOADER
+// ══════════════════════════════════════════════
+
+var uploaderFile = null;
+var uploaderText = null;
+
+// Auto-select checklist when study type changes
+document.addEventListener('DOMContentLoaded', function() {
+  var studyTypeSel = document.getElementById('ucl-study-type');
+  var clSel = document.getElementById('ucl-checklist-select');
+  if (studyTypeSel && clSel) {
+    studyTypeSel.addEventListener('change', function() {
+      var map = {
+        'RCT': 'CONSORT', 'Systematic Review': 'PRISMA',
+        'Meta-Analysis': 'PRISMA', 'Observational': 'STROBE',
+        'Case Report': 'CARE', 'Guideline': 'AGREE'
+      };
+      var cl = map[studyTypeSel.value] || 'CONSORT';
+      clSel.value = cl;
+      // Hide RoB2 option when RoB2 is the primary checklist
+      document.getElementById('ucl-also-rob2').parentElement.style.display = (cl === 'ROB2') ? 'none' : 'flex';
+    });
+  }
+});
+
+function handleUploaderDrop(e) {
+  e.preventDefault();
+  document.getElementById('upload-zone').classList.remove('drag-over');
+  var file = e.dataTransfer.files[0];
+  if (file && file.type === 'application/pdf') {
+    handleUploaderFile(file);
+  } else {
+    setUploaderStatus('Please drop a PDF file.', '#ef4444');
+  }
+}
+
+function handleUploaderFile(file) {
+  if (!file) return;
+  uploaderFile = file;
+  uploaderText = null;
+  // Update drop zone to show file name
+  var zone = document.getElementById('upload-zone');
+  zone.innerHTML = '<div class="upload-zone-icon">&#9989;</div>' +
+    '<div class="upload-zone-title">' + file.name + '</div>' +
+    '<div class="upload-zone-sub">' + (file.size / 1024).toFixed(0) + ' KB — click to change</div>';
+  setUploaderStatus('PDF loaded. Set study type and click Run Checklist.', '#4ade80');
+}
+
+function setUploaderStatus(msg, color) {
+  var el = document.getElementById('ucl-status');
+  if (el) { el.textContent = msg; el.style.color = color || '#64748b'; }
+}
+
+function setUploaderProgress(pct) {
+  var bar = document.getElementById('ucl-progress');
+  var fill = document.getElementById('ucl-progress-bar');
+  if (!bar || !fill) return;
+  bar.style.display = pct > 0 && pct < 100 ? 'block' : (pct >= 100 ? 'none' : 'none');
+  fill.style.width = pct + '%';
+}
+
+function runUploaderChecklist() {
+  if (!uploaderFile) {
+    setUploaderStatus('Please select a PDF first.', '#ef4444');
+    return;
+  }
+
+  var clKey = document.getElementById('ucl-checklist-select').value;
+  var alsoRob2 = document.getElementById('ucl-also-rob2').checked && clKey !== 'ROB2';
+  var titleInput = document.getElementById('ucl-title-input').value.trim() || uploaderFile.name.replace(/\.pdf$/i, '');
+  var studyType = document.getElementById('ucl-study-type').value;
+
+  setUploaderStatus('Reading PDF…', '#64748b');
+  setUploaderProgress(20);
+
+  // If we already extracted text for this file, skip re-extraction
+  if (uploaderText) {
+    runUploaderWithText(uploaderText, clKey, alsoRob2, titleInput, studyType);
+    return;
+  }
+
+  // Read file as ArrayBuffer then pass to PDF.js
+  var reader = new FileReader();
+  reader.onload = function(e) {
+    setUploaderProgress(50);
+    setUploaderStatus('Extracting text from PDF…', '#64748b');
+
+    if (typeof pdfjsLib === 'undefined') {
+      setUploaderStatus('PDF.js not loaded. Please check your connection.', '#ef4444');
+      setUploaderProgress(0);
+      return;
+    }
+
+    pdfjsLib.getDocument({ data: e.target.result, verbosity: 0 }).promise.then(function(pdf) {
+      var pagePromises = [];
+      for (var i = 1; i <= pdf.numPages; i++) {
+        pagePromises.push(pdf.getPage(i).then(function(page) {
+          return page.getTextContent().then(function(tc) {
+            return tc.items.map(function(item) { return item.str; }).join(' ');
+          });
+        }));
+      }
+      return Promise.all(pagePromises).then(function(pages) {
+        return pages.join(' ').replace(/\s+/g, ' ').trim();
+      });
+    }).then(function(text) {
+      setUploaderProgress(80);
+      if (!text || text.length < 100) {
+        setUploaderStatus('Could not extract readable text from this PDF. It may be scanned/image-based.', '#ef4444');
+        setUploaderProgress(0);
+        return;
+      }
+      uploaderText = text;
+      runUploaderWithText(text, clKey, alsoRob2, titleInput, studyType);
+    }).catch(function(err) {
+      setUploaderStatus('Failed to read PDF: ' + (err.message || 'unknown error'), '#ef4444');
+      setUploaderProgress(0);
+    });
+  };
+  reader.onerror = function() {
+    setUploaderStatus('Failed to read file.', '#ef4444');
+    setUploaderProgress(0);
+  };
+  reader.readAsArrayBuffer(uploaderFile);
+}
+
+function renderUploaderResults(p, clKey, alsoRob2, title) {
+  var container = document.getElementById('ucl-results');
+  if (!container) return;
+  container.style.display = 'block';
+
+  var clDefs = [clKey];
+  if (alsoRob2 && clKey !== 'ROB2') clDefs.push('ROB2');
+
+  var html = '';
+  clDefs.forEach(function(ck) {
+    var cl = CHECKLISTS[ck];
+    if (!cl) return;
+    var sc = checklistScore(p, ck);
+    var pct = sc ? sc.pct : 0;
+    var scoreClass = pct >= 75 ? 'ucl-score-high' : pct >= 40 ? 'ucl-score-mid' : 'ucl-score-low';
+
+    html += '<div class="card" id="ucl-card-' + ck + '">';
+    html += '<div class="ucl-result-header">';
+    html += '<div class="ucl-title">&#128203; ' + cl.name + ' — <span style="color:#94a3b8;font-weight:400">' + title + '</span></div>';
+    html += '<div style="display:flex;align-items:center;gap:8px">';
+    html += '<span class="ucl-score-badge ' + scoreClass + '">' + pct + '% reported</span>';
+    html += '<button class="btn btn-green ucl-export-btn" onclick="exportUploaderCSV(' + JSON.stringify(ck) + ')">&#8595; Export CSV</button>';
+    html += '</div></div>';
+
+    // Render the checklist items inline
+    html += renderUploaderChecklistItems(p, ck);
+    html += '</div>';
+  });
+
+  container.innerHTML = html;
+}
+
+function renderUploaderChecklistItems(p, ck) {
+  var cl = CHECKLISTS[ck];
+  if (!cl) return '';
+  var items = cl.items || [];
+  var clData = (p.checklists && p.checklists[ck]) ? p.checklists[ck] : {};
+
+  // RoB2 uses domain structure
+  if (ck === 'ROB2' && cl.domains) {
+    var html = '';
+    cl.domains.forEach(function(domain) {
+      html += '<div class="rob-domain">';
+      html += '<div class="rob-domain-title">' + domain.title + '</div>';
+      domain.questions.forEach(function(q) {
+        var val = clData[q.id] || 'unclear';
+        html += '<div class="cl-item-row">';
+        html += '<span class="cl-item-num">Q</span>';
+        html += '<span class="cl-item-text"><b>' + q.text + '</b></span>';
+        html += '<span class="cl-item-status"><select class="cl-status-select cl-status-' + val + '" onchange="updateUploaderItem(' + JSON.stringify(p.pmid) + ',' + JSON.stringify(ck) + ',' + JSON.stringify(q.id) + ',this)">';
+        ['yes','partial','no','unclear','na'].forEach(function(opt) {
+          html += '<option value="' + opt + '"' + (val===opt?' selected':'') + '>' + opt.charAt(0).toUpperCase() + opt.slice(1) + '</option>';
+        });
+        html += '</select></span></div>';
+      });
+      var dj = clData['__domain_judgements__'] && clData['__domain_judgements__'][domain.id] || 'unclear';
+      html += '<div class="rob-judgement-row"><span class="rob-judgement-label">Domain judgement:</span>';
+      html += '<select class="rob-judgement-select rob-' + (dj==='low'?'low':dj==='high'?'high':dj==='some'?'some':'na') + '" onchange="updateUploaderDomainJudgement(' + JSON.stringify(p.pmid) + ',' + JSON.stringify(domain.id) + ',this)">';
+      ['low','some','high','unclear'].forEach(function(opt) {
+        var label = opt==='low'?'Low risk':opt==='some'?'Some concerns':opt==='high'?'High risk':'Unclear';
+        html += '<option value="' + opt + '"' + (dj===opt?' selected':'') + '>' + label + '</option>';
+      });
+      html += '</select></div>';
+      html += '</div>';
+    });
+    return html;
+  }
+
+  // Standard flat item list
+  var html = '<div>';
+  items.forEach(function(item) {
+    var val = clData[item.id] || 'unclear';
+    html += '<div class="cl-item-row">';
+    html += '<span class="cl-item-num">' + item.num + '</span>';
+    html += '<div style="flex:1">';
+    html += '<div class="cl-item-text"><b>' + item.label + '</b> — ' + item.text + '</div>';
+    if (val === 'yes' || val === 'partial') {
+      html += '<div class="cl-item-evidence">&#10003; Auto-detected from text</div>';
+    }
+    html += '</div>';
+    html += '<span class="cl-item-status"><select class="cl-status-select cl-status-' + val + '" onchange="updateUploaderItem(' + JSON.stringify(p.pmid) + ',' + JSON.stringify(ck) + ',' + JSON.stringify(item.id) + ',this)">';
+    ['yes','partial','no','unclear','na'].forEach(function(opt) {
+      html += '<option value="' + opt + '"' + (val===opt?' selected':'') + '>' + opt.charAt(0).toUpperCase() + opt.slice(1) + '</option>';
+    });
+    html += '</select></span>';
+    html += '</div>';
+  });
+  html += '</div>';
+  return html;
+}
+
+// Stored uploader papers by pmid (so we can update live)
+var uploaderPapers = {};
+
+function runUploaderWithText(text, clKey, alsoRob2, title, studyType) {
+  setUploaderStatus('Running checklist…', '#64748b');
+  setUploaderProgress(90);
+
+  var pmid = 'upload_' + Date.now();
+  var fakePaper = {
+    pmid: pmid, title: title, studyType: studyType,
+    fullText: text, abstract: text, scanDepth: 'pdf',
+    checklists: {}, selectedChecklist: clKey
+  };
+  runChecklistsOnPaper(fakePaper);
+  uploaderPapers[pmid] = fakePaper;
+
+  setUploaderProgress(100);
+  setUploaderStatus('');
+  renderUploaderResults(fakePaper, clKey, alsoRob2, title);
+}
+
+function updateUploaderItem(pmid, ck, itemId, selectEl) {
+  var p = uploaderPapers[pmid];
+  if (!p) return;
+  if (!p.checklists[ck]) p.checklists[ck] = {};
+  p.checklists[ck][itemId] = selectEl.value;
+  selectEl.className = 'cl-status-select cl-status-' + selectEl.value;
+  refreshUploaderScore(pmid, ck);
+}
+
+function updateUploaderDomainJudgement(pmid, domainId, selectEl) {
+  var p = uploaderPapers[pmid];
+  if (!p) return;
+  if (!p.checklists['ROB2']) p.checklists['ROB2'] = {};
+  if (!p.checklists['ROB2']['__domain_judgements__']) p.checklists['ROB2']['__domain_judgements__'] = {};
+  p.checklists['ROB2']['__domain_judgements__'][domainId] = selectEl.value;
+  var cls = selectEl.value === 'low' ? 'low' : selectEl.value === 'high' ? 'high' : selectEl.value === 'some' ? 'some' : 'na';
+  selectEl.className = 'rob-judgement-select rob-' + cls;
+  refreshUploaderScore(pmid, 'ROB2');
+}
+
+function refreshUploaderScore(pmid, ck) {
+  var p = uploaderPapers[pmid];
+  if (!p) return;
+  var sc = checklistScore(p, ck);
+  var pct = sc ? sc.pct : 0;
+  var scoreClass = pct >= 75 ? 'ucl-score-high' : pct >= 40 ? 'ucl-score-mid' : 'ucl-score-low';
+  var badge = document.querySelector('#ucl-card-' + ck + ' .ucl-score-badge');
+  if (badge) { badge.className = 'ucl-score-badge ' + scoreClass; badge.textContent = pct + '% reported'; }
+}
+
+function exportUploaderCSV(ck) {
+  // Find the most recent uploader paper using this checklist
+  var pmids = Object.keys(uploaderPapers);
+  if (pmids.length === 0) return;
+  var p = uploaderPapers[pmids[pmids.length - 1]];
+  var cl = CHECKLISTS[ck];
+  if (!cl || !p) return;
+
+  var rows = [['Item', 'Label', 'Description', 'Status', 'Auto-detected']];
+  var clData = (p.checklists && p.checklists[ck]) || {};
+  var items = cl.items || [];
+
+  if (ck === 'ROB2' && cl.domains) {
+    cl.domains.forEach(function(domain) {
+      domain.questions.forEach(function(q) {
+        var val = clData[q.id] || 'unclear';
+        rows.push([domain.title, q.id, q.text, val, '']);
+      });
+      var dj = clData['__domain_judgements__'] && clData['__domain_judgements__'][domain.id] || 'unclear';
+      rows.push([domain.title, 'Domain Judgement', '', dj, '']);
+    });
+  } else {
+    items.forEach(function(item) {
+      var val = clData[item.id] || 'unclear';
+      rows.push([item.num, item.label, item.text, val, (val==='yes'||val==='partial')?'Yes':'']);
+    });
+  }
+
+  var sc = checklistScore(p, ck);
+  rows.push(['', 'TOTAL SCORE', '', (sc ? sc.pct + '%' : 'N/A'), '']);
+
+  var csv = rows.map(function(r) {
+    return r.map(function(c) { return '"' + String(c).replace(/"/g,'""') + '"'; }).join(',');
+  }).join('\n');
+
+  var blob = new Blob([csv], { type: 'text/csv' });
+  var a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = (p.title || 'paper').replace(/[^a-z0-9]/gi,'_').slice(0,40) + '_' + ck + '_checklist.csv';
+  a.click();
+}
+
 // ══════════════════════════════════════════════
 // INIT
 // ══════════════════════════════════════════════
 renderCriteriaPreview();
+renderHomeCriteriaTable();
 </script>
 </body>
 </html>
