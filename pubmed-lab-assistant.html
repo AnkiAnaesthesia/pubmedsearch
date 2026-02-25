@@ -92,8 +92,11 @@ input:focus, select:focus, textarea:focus { border-color: #3b82f6; }
 .depth-pdf-blocked { border-color: #d9770644; background: #1c100a; color: #fb923c; }
 .depth-abstract { border-color: #374151; background: transparent; color: #4b5563; }
 .depth-scanning { border-color: #1e3a5f; background: transparent; color: #4b5563; font-style: italic; }
+.depth-no-pdf { border-color: #7f1d1d; background: #1a0a0a; color: #f87171; }
 .pdf-btn:hover { background: #166534; text-decoration: none; }
 .pdf-checking { font-size: 11px; color: #4b5563; font-style: italic; }
+.libkey-btn { display: inline-flex; align-items: center; gap: 4px; font-size: 11px; padding: 2px 10px; border-radius: 20px; border: 1px solid #2563eb44; background: #0f1f3d; color: #93c5fd; text-decoration: none; white-space: nowrap; font-family: 'IBM Plex Mono', monospace; cursor: pointer; }
+.libkey-btn:hover { background: #1e3a5f; text-decoration: none; }
 
 /* ── Score ── */
 .score-box { flex-shrink: 0; display: flex; flex-direction: column; align-items: center; gap: 2px; min-width: 52px; }
@@ -301,9 +304,6 @@ input:focus, select:focus, textarea:focus { border-color: #3b82f6; }
         <button id="search-btn" onclick="doSearch()">&#8594; Search</button>
       </div>
 
-      <!-- Per-database status pills — shown during/after search -->
-      <div class="db-status-bar" id="db-status-bar" style="display:none"></div>
-
       <div class="grid4" style="margin-top:12px">
         <div>
           <div class="sec-label">Limit by Study Type</div>
@@ -335,6 +335,13 @@ input:focus, select:focus, textarea:focus { border-color: #3b82f6; }
             <option value="200">200 per DB</option>
           </select>
         </div>
+      </div>
+
+      <!-- LibKey institutional access -->
+      <div style="margin-top:10px;display:flex;align-items:center;gap:8px;flex-wrap:wrap">
+        <div class="sec-label" style="margin-bottom:0;white-space:nowrap">&#128218; LibKey Library ID</div>
+        <input type="text" id="libkey-id" placeholder="e.g. 1271  (from libkey.io/libraries/1271)" style="flex:1;min-width:180px;max-width:340px;padding:6px 10px;font-size:12px" oninput="saveLibkeyId()" />
+        <span style="font-size:11px;color:#4b5563">Enter your institution's ID for one-click library access on each result. <a href="https://libkey.io" target="_blank" style="color:#64748b">Find yours at libkey.io</a></span>
       </div>
     </div>
 
@@ -402,6 +409,9 @@ input:focus, select:focus, textarea:focus { border-color: #3b82f6; }
 
   <!-- ══ RESULTS TAB ══════════════════════════════════════ -->
   <div class="tab-panel" id="tab-results">
+    <!-- Per-database status pills — shown during/after search -->
+    <div class="db-status-bar" id="db-status-bar" style="display:none"></div>
+
     <div id="empty-results" class="empty">
       <div class="empty-icon">&#128300;</div>
       <div>No results yet. Run a search first.</div>
@@ -864,7 +874,8 @@ function checklistScore(p, clKey) {
   var cl = CHECKLISTS[clKey];
   if (!cl || !p.checklists || !p.checklists[clKey]) return null;
   var data = p.checklists[clKey];
-  var items = cl.items ? cl.items : [];
+  var items = [];
+  if (cl.items)   { cl.items.forEach(function(item){ items.push(item); }); }
   if (cl.domains) { cl.domains.forEach(function(d){ d.questions.forEach(function(q){ items.push(q); }); }); }
   var total = 0, yes = 0, partial = 0;
   items.forEach(function(item) {
@@ -890,6 +901,14 @@ function renderChecklistSection(p) {
       '<div class="checklist-header" style="cursor:default">' +
         '<span class="checklist-title">&#128203; Quality Checklists</span>' +
         '<span style="font-size:10px;color:#fb923c;font-style:italic">&#9888; Free PDF found but could not be read by this app — open it manually using the link above</span>' +
+      '</div>' +
+    '</div>';
+  }
+  if (p.scanDepth === 'no-pdf') {
+    return '<div class="checklist-section">' +
+      '<div class="checklist-header" style="cursor:default">' +
+        '<span class="checklist-title">&#128203; Quality Checklists</span>' +
+        '<span style="font-size:10px;color:#f87171;font-weight:600">&#10007; Unavailable — no free full text found for this paper</span>' +
       '</div>' +
     '</div>';
   }
@@ -1103,7 +1122,9 @@ function switchTab(name) {
 // DOCUMENT SCANNER
 // ══════════════════════════════════════════════
 function scanPaper(paper) {
-  var text = ((paper.title||'') + ' ' + (paper.abstract||'')).toLowerCase();
+  // Prefer full text when available; fall back to abstract for abstract-only papers
+  var body = (paper.fullText && paper.fullText.length > 200) ? paper.fullText : (paper.abstract || '');
+  var text = ((paper.title||'') + ' ' + body).toLowerCase();
   var results = [];
 
   scanCriteria.forEach(function(crit) {
@@ -1170,6 +1191,12 @@ function doSearch() {
   btn.innerHTML = '<span class="spinner"></span>Searching\u2026';
   document.getElementById('search-error').style.display = 'none';
   document.getElementById('search-success').style.display = 'none';
+
+  // Jump to results tab immediately so the user sees the live status pills
+  switchTab('results');
+  document.getElementById('empty-results').style.display = 'block';
+  document.getElementById('results-content').style.display = 'none';
+  document.getElementById('empty-results').innerHTML = '<div class="empty-icon"><span class="spinner" style="width:32px;height:32px;border-width:3px"></span></div><div style="margin-top:14px">Searching across databases\u2026</div>';
 
   // Show status bar
   var bar = document.getElementById('db-status-bar');
@@ -1239,7 +1266,7 @@ function doSearch() {
     promises.push(
       fetchSemanticScholar(q, maxResults, dateFrom, dateTo)
         .then(function(r) { setPill('semantic', '&#129504; Semantic Scholar — ' + r.length + ' results', 'done'); return r; })
-        .catch(function(e) { setPill('semantic', '&#129504; Semantic Scholar — failed', 'error'); console.error('Semantic:', e); return []; })
+        .catch(function(e) { setPill('semantic', '&#129504; Semantic Scholar — ' + (e.message || 'failed'), 'error'); console.error('Semantic:', e); return []; })
     );
   } else { promises.push(Promise.resolve([])); }
 
@@ -1258,7 +1285,10 @@ function doSearch() {
     }
 
     if (combined.length === 0) {
-      showError('No results found across selected databases. Try broadening your search terms.');
+      var er = document.getElementById('empty-results');
+      er.style.display = 'block';
+      er.innerHTML = '<div class="empty-icon">&#128269;</div><div>No results found. Try broadening your search terms.</div>';
+      document.getElementById('results-content').style.display = 'none';
       btn.disabled = false; btn.innerHTML = '\u2192 Search';
       return;
     }
@@ -1496,19 +1526,46 @@ function fetchEuropePMC(query, maxResults, sourceLabel) {
 // ══════════════════════════════════════════════
 function fetchSemanticScholar(query, maxResults, dateFrom, dateTo) {
   var fields = 'title,authors,year,abstract,externalIds,publicationTypes,journal,venue,citationCount,paperId';
+  // Guard against NaN from a failed parseInt upstream
+  var limit = (isNaN(maxResults) || maxResults < 1) ? 50 : Math.min(maxResults, 100);
   var url = 'https://api.semanticscholar.org/graph/v1/paper/search?query=' +
     encodeURIComponent(query) +
-    '&limit=' + Math.min(maxResults, 100) +  // S2 caps at 100
+    '&limit=' + limit +
     '&fields=' + fields;
-  if (dateFrom) url += '&year=' + dateFrom + '-' + (dateTo || new Date().getFullYear());
+  // Build year range only when it forms a valid low-high pair
+  var yearFrom = dateFrom ? parseInt(dateFrom, 10) : null;
+  var yearTo   = dateTo   ? parseInt(dateTo,   10) : null;
+  if (yearFrom && !yearTo) {
+    url += '&year=' + yearFrom + '-' + new Date().getFullYear();
+  } else if (yearTo && !yearFrom) {
+    url += '&year=1000-' + yearTo;
+  } else if (yearFrom && yearTo) {
+    // Silently swap reversed dates rather than sending an invalid range
+    var lo = Math.min(yearFrom, yearTo);
+    var hi = Math.max(yearFrom, yearTo);
+    url += '&year=' + lo + '-' + hi;
+  }
 
-  return fetch(url, {
-    headers: { 'Accept': 'application/json' }
-  }).then(function(r) {
-    if (r.status === 429) throw new Error('Semantic Scholar rate limit — try again in a moment');
-    if (!r.ok) throw new Error('Semantic Scholar ' + r.status);
+  // Retry helper: if S2 rate-limits (429), wait 2s and try once more
+  function fetchS2WithRetry(targetUrl) {
+    return fetchWithFallback(targetUrl).catch(function(e) {
+      var msg = (e.message || '').toLowerCase();
+      if (msg.indexOf('429') !== -1 || msg.indexOf('rate') !== -1 || msg.indexOf('too many') !== -1) {
+        return new Promise(function(resolve, reject) {
+          setTimeout(function() {
+            fetchWithFallback(targetUrl).then(resolve).catch(reject);
+          }, 2000);
+        });
+      }
+      throw e;
+    });
+  }
+
+  return fetchS2WithRetry(url).then(function(r) {
     return r.json();
   }).then(function(data) {
+    // S2 occasionally returns 200 with an error body
+    if (data.error) throw new Error('Semantic Scholar: ' + (data.error.message || JSON.stringify(data.error)));
     var items = data.data || [];
     var stMap = {
       'ClinicalTrial': 'Clinical Trial',
@@ -1617,6 +1674,9 @@ function buildChecklistPill(p) {
   if (p.scanDepth === 'pdf-blocked') {
     return '<div class="checklist-status-pill" title="PDF found but could not be read — open manually"><div class="cl-pill cl-pill-blocked">&#9888; PDF blocked</div><div class="cl-pill-label">Checklists</div></div>';
   }
+  if (p.scanDepth === 'no-pdf') {
+    return '<div class="checklist-status-pill" title="No free full text found — checklists unavailable"><div class="cl-pill cl-pill-blocked">&#10007; Unavailable</div><div class="cl-pill-label">Checklists</div></div>';
+  }
   if (!hasFullText) {
     return '<div class="checklist-status-pill" title="Checklists require full text"><div class="cl-pill cl-pill-pending">&#8213; Pending</div><div class="cl-pill-label">Checklists</div></div>';
   }
@@ -1661,7 +1721,7 @@ function renderPapers() {
     var tagHtml = manualTags.map(function(tag) {
       var active = p.manualTags.indexOf(tag) !== -1;
       var safeTag = tag.replace(/'/g,"\\'");
-      return '<span class="scan-chip manual-tag'+(active?'':' off')+'" onclick="toggleManualTag(\''+p.pmid+'\',\''+safeTag+'\')">'+tag+'</span>';
+      return '<span class="scan-chip manual-tag'+(active?'':' off')+'" data-tag="'+tag.replace(/"/g,'&quot;')+'" onclick="toggleManualTag(\''+p.pmid+'\',\''+safeTag+'\')">'+tag+'</span>';
     }).join('');
 
     // Expanded scan detail
@@ -1707,7 +1767,7 @@ function renderPapers() {
                 }).join('');
               })() +
             '</div>' +
-            '<div style="margin-top:6px"><span id="ft-'+p.pmid+'" class="pdf-checking">'+(p.doi?'&#8635; checking for free PDF…':'')+'</span>'+(p.fullTextUrl?'<a class="pdf-btn" href="'+p.fullTextUrl+'" target="_blank">&#128196; Free PDF <span style="font-size:9px;opacity:0.7">('+p.fullTextSource+')</span></a>':'')+'</div>' +
+            '<div style="margin-top:6px;display:flex;align-items:center;gap:8px;flex-wrap:wrap"><span id="ft-'+p.pmid+'" class="pdf-checking">'+(p.doi?'&#8635; checking for free PDF…':'')+'</span>'+(p.fullTextUrl?'<a class="pdf-btn" href="'+p.fullTextUrl+'" target="_blank">&#128196; Free PDF <span style="font-size:9px;opacity:0.7">('+p.fullTextSource+')</span></a>':'')+buildLibkeyLink(p)+'</div>' +
             '<div class="scan-row">'+chipHtml+'</div>' +
             '<div class="scan-row" style="margin-top:4px">'+tagHtml+'</div>' +
           '</div>' +
@@ -1750,7 +1810,7 @@ function toggleManualTag(pmid, tag) {
   if (idx !== -1) p.manualTags.splice(idx, 1); else p.manualTags.push(tag);
   var card = document.getElementById('card-'+pmid);
   card.querySelectorAll('.scan-chip.manual-tag').forEach(function(el) {
-    var isActive = p.manualTags.indexOf(el.textContent) !== -1;
+    var isActive = p.manualTags.indexOf(el.dataset.tag) !== -1;
     el.className = 'scan-chip manual-tag' + (isActive ? '' : ' off');
   });
 }
@@ -2030,6 +2090,32 @@ function loadAlerts() {
   try { var d = localStorage.getItem('pla_alerts'); if (d) savedAlerts = JSON.parse(d); } catch(e) {}
 }
 
+// ── LibKey institutional access ──────────────────────────────
+var libkeyId = '';
+
+function saveLibkeyId() {
+  libkeyId = (document.getElementById('libkey-id').value || '').trim().replace(/\D/g, '');
+  try { localStorage.setItem('pla_libkey_id', libkeyId); } catch(e) {}
+}
+
+function loadLibkeyId() {
+  try { libkeyId = localStorage.getItem('pla_libkey_id') || ''; } catch(e) {}
+  if (libkeyId) {
+    var el = document.getElementById('libkey-id');
+    if (el) el.value = libkeyId;
+  }
+}
+
+function buildLibkeyLink(p) {
+  // Need at least a DOI or a real PubMed PMID (not SS_/EP_ prefixed)
+  var pmid = p.pmid && !String(p.pmid).startsWith('SS_') && !String(p.pmid).startsWith('EP_') ? String(p.pmid) : '';
+  var doi  = p.doi || '';
+  if (!doi && !pmid) return '';
+  var base = libkeyId ? 'https://libkey.io/libraries/' + libkeyId + '/' : 'https://libkey.io/';
+  var href = doi ? base + encodeURIComponent(doi) : base + 'pmid/' + pmid;
+  return '<a class="libkey-btn" href="' + href + '" target="_blank" title="Check library access via LibKey">&#128218; Library Access</a>';
+}
+
 function checkAlertForNew(i, btn) {
   var h = searchHistory[i];
   var alert = savedAlerts.find(function(a){ return a.query === h.query; });
@@ -2295,10 +2381,7 @@ function applyFullText(p, text, depthType, db) {
   p.fullText = text;
   p.scanDepth = depthType;
 
-  var savedAbstract = p.abstract;
-  p.abstract = text;
   var scan = scanPaper(p);
-  p.abstract = savedAbstract;
   p.scanResults = scan.results;
   p.score = scan.score;
   p.passedCriteria = scan.passed;
@@ -2383,7 +2466,22 @@ function lookupFreeFullText(doi) {
 // After full-text links are resolved, immediately kick off PDF/PMC scanning
 function fetchFullTextLinks() {
   papers.forEach(function(p) {
-    if (!p.doi) return;
+    if (!p.doi) {
+      // No DOI means no PDF lookup is possible — mark definitively
+      p.scanDepth = 'no-pdf';
+      var db = document.getElementById('db-' + p.pmid);
+      if (db) { db.className = 'depth-badge depth-no-pdf'; db.innerHTML = '&#10007; No free PDF'; }
+      var card = document.getElementById('card-' + p.pmid);
+      if (card) {
+        var oldPill = card.querySelector('.checklist-status-pill');
+        if (oldPill) {
+          var wrap = document.createElement('div');
+          wrap.innerHTML = buildChecklistPill(p);
+          oldPill.replaceWith(wrap.firstChild);
+        }
+      }
+      return;
+    }
     var el = document.getElementById('ft-' + p.pmid);
     if (!el) return;
     lookupFreeFullText(p.doi).then(function(result) {
@@ -2396,7 +2494,24 @@ function fetchFullTextLinks() {
           scanPaperFromPDF(p);
         }
       } else {
-        el.innerHTML = '<span style="font-size:11px;color:#374151">No free PDF found</span>';
+        // Definitively no free PDF — update depth badge and checklist pill
+        p.scanDepth = 'no-pdf';
+        el.innerHTML = '<span style="font-size:11px;color:#f87171;font-weight:600">&#10007; No free PDF available</span>';
+        var db = document.getElementById('db-' + p.pmid);
+        if (db) { db.className = 'depth-badge depth-no-pdf'; db.innerHTML = '&#10007; No free PDF'; }
+        // Update checklist pill
+        var card = document.getElementById('card-' + p.pmid);
+        if (card) {
+          var oldPill = card.querySelector('.checklist-status-pill');
+          if (oldPill) {
+            var wrap = document.createElement('div');
+            wrap.innerHTML = buildChecklistPill(p);
+            oldPill.replaceWith(wrap.firstChild);
+          }
+          // Update checklist section if expanded
+          var clSection = card.querySelector('.checklist-section');
+          if (clSection) { clSection.outerHTML = renderChecklistSection(p); }
+        }
       }
     });
   });
@@ -2423,6 +2538,7 @@ var uploaderText = null;
 // Auto-select checklist when study type changes
 document.addEventListener('DOMContentLoaded', function() {
   loadAlerts();
+  loadLibkeyId();
   var studyTypeSel = document.getElementById('ucl-study-type');
   var clSel = document.getElementById('ucl-checklist-select');
   if (studyTypeSel && clSel) {
