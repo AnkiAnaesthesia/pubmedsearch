@@ -23,7 +23,7 @@ a:hover { text-decoration: underline; }
 .tab-btn.active { background: #3b82f6; border-color: #3b82f6; color: #fff; }
 
 /* ── Layout ── */
-#main { max-width: 1200px; margin: 0 auto; padding: 22px; }
+#main { max-width: 1400px; margin: 0 auto; padding: 22px; }
 .card { background: #0d1220; border: 1px solid #1e2d4a; border-radius: 10px; padding: 20px; margin-bottom: 16px; }
 .card-label { font-size: 10px; color: #3b82f6; letter-spacing: 0.12em; text-transform: uppercase; margin-bottom: 11px; font-weight: 600; }
 .sec-label { font-size: 10px; color: #64748b; text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 5px; }
@@ -37,7 +37,7 @@ input:focus, select:focus, textarea:focus { border-color: #3b82f6; }
 
 /* ── Buttons ── */
 .btn { padding: 7px 16px; border-radius: 6px; cursor: pointer; font-family: 'IBM Plex Mono', monospace; font-size: 12px; border: 1px solid transparent; }
-#search-btn { padding: 11px 26px; background: linear-gradient(135deg, #3b82f6, #8b5cf6); color: #fff; font-size: 13px; font-weight: 600; border: none; border-radius: 8px; cursor: pointer; white-space: nowrap; }
+#search-btn { padding: 13px 28px; background: linear-gradient(135deg, #3b82f6, #8b5cf6); color: #fff; font-size: 13px; font-weight: 600; border: none; border-radius: 8px; cursor: pointer; white-space: nowrap; }
 #search-btn:disabled { background: #1e2d4a; cursor: not-allowed; }
 .btn-ghost { background: transparent; border-color: #1e2d4a; color: #94a3b8; }
 .btn-green { background: #14532d; border-color: #16a34a; color: #4ade80; font-weight: 600; }
@@ -125,6 +125,27 @@ input:focus, select:focus, textarea:focus { border-color: #3b82f6; }
 .empty { text-align: center; padding: 70px 0; color: #4b5563; }
 .empty-icon { font-size: 44px; margin-bottom: 14px; }
 .spinner { display: inline-block; width: 13px; height: 13px; border: 2px solid #4b5563; border-top-color: #3b82f6; border-radius: 50%; animation: spin 0.7s linear infinite; vertical-align: middle; margin-right: 5px; }
+
+/* ── Database selector ── */
+.db-selector { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 13px; align-items: center; }
+.db-selector-label { font-size: 10px; color: #4b5563; text-transform: uppercase; letter-spacing: 0.1em; margin-right: 4px; flex-shrink: 0; }
+.db-chip { display: flex; align-items: center; gap: 6px; padding: 5px 12px; border-radius: 20px; border: 1px solid; cursor: pointer; font-size: 11px; font-family: 'IBM Plex Mono', monospace; font-weight: 600; user-select: none; transition: background 0.15s, border-color 0.15s; }
+.db-chip input[type=checkbox] { display: none; }
+.db-chip-pubmed    { border-color: #3b82f644; background: #0d1628; color: #93c5fd; }
+.db-chip-pubmed.active    { border-color: #3b82f6; background: #1e3a5f; color: #93c5fd; }
+.db-chip-cochrane  { border-color: #22c55e44; background: #0a1a10; color: #4ade80; }
+.db-chip-cochrane.active  { border-color: #22c55e; background: #14271a; color: #4ade80; }
+.db-chip-europepmc { border-color: #8b5cf644; background: #130f2a; color: #c4b5fd; }
+.db-chip-europepmc.active { border-color: #8b5cf6; background: #1e1040; color: #c4b5fd; }
+.db-chip-semantic  { border-color: #f59e0b44; background: #1a1208; color: #fbbf24; }
+.db-chip-semantic.active  { border-color: #f59e0b; background: #1c1408; color: #fbbf24; }
+.db-search-row { display: flex; gap: 9px; align-items: stretch; width: 100%; }
+.db-status-bar { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 9px; min-height: 20px; }
+.db-pill { font-size: 10px; padding: 2px 9px; border-radius: 20px; border: 1px solid; display: flex; align-items: center; gap: 5px; }
+.db-pill-loading { color: #64748b; border-color: #1e2d4a; background: transparent; }
+.db-pill-done    { color: #4ade80; border-color: #22c55e44; background: #0d1a10; }
+.db-pill-error   { color: #f87171; border-color: #7f1d1d44; background: #1a0808; }
+.db-pill-deduped { color: #c4b5fd; border-color: #8b5cf644; background: #130f2a; }
 @keyframes spin { to { transform: rotate(360deg); } }
 .history-item { background: #0d1220; border: 1px solid #1e2d4a; border-radius: 8px; padding: 11px 16px; display: flex; align-items: center; gap: 14px; margin-bottom: 7px; }
 .step-num { display: inline-flex; align-items: center; justify-content: center; width: 22px; height: 22px; border-radius: 50%; background: #1e3a5f; color: #60a5fa; font-size: 11px; font-weight: 700; flex-shrink: 0; }
@@ -174,6 +195,30 @@ input:focus, select:focus, textarea:focus { border-color: #3b82f6; }
 .rob-some { background: #1c1408; border-color: #f59e0b44; color: #fbbf24; }
 .rob-na   { background: #111827; border-color: #37415144; color: #6b7280; }
 
+/* ── Citation count badge ── */
+.cite-badge { display: inline-flex; align-items: center; gap: 3px; font-size: 9px; padding: 1px 7px; border-radius: 20px; border: 1px solid #60a5fa44; background: #0d1628; color: #60a5fa; font-weight: 600; white-space: nowrap; }
+.cite-badge-high { border-color: #22c55e44; background: #0d1a10; color: #4ade80; }
+.cite-badge-med  { border-color: #f59e0b44; background: #1c1408; color: #fbbf24; }
+
+/* ── Related / cited-by panel ── */
+.related-btn { font-size: 10px; padding: 2px 9px; border-radius: 5px; border: 1px solid #1e3a5f; background: transparent; color: #60a5fa; cursor: pointer; white-space: nowrap; }
+.related-btn:hover { background: #0d1628; }
+.related-panel { margin-top: 10px; border-top: 1px solid #1e2d4a; padding-top: 10px; display: none; }
+.related-panel.open { display: block; }
+.related-panel-title { font-size: 10px; color: #64748b; text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 8px; }
+.related-item { padding: 7px 0; border-bottom: 1px solid #0d1220; font-size: 11px; }
+.related-item:last-child { border-bottom: none; }
+.related-item-title { color: #94a3b8; line-height: 1.4; cursor: pointer; }
+.related-item-title:hover { color: #60a5fa; }
+.related-item-meta { font-size: 10px; color: #4b5563; margin-top: 2px; }
+
+/* ── Search alerts ── */
+.alert-chip { display: inline-flex; align-items: center; gap: 5px; font-size: 10px; padding: 2px 9px; border-radius: 20px; border: 1px solid #f59e0b44; background: #1c1408; color: #fbbf24; font-weight: 600; cursor: pointer; }
+.alert-chip.inactive { border-color: #1e2d4a; background: transparent; color: #4b5563; }
+.alert-chip:hover { border-color: #f59e0b88; }
+.alert-new-badge { display: inline-block; font-size: 9px; padding: 1px 6px; border-radius: 20px; border: 1px solid #22c55e44; background: #14271a; color: #4ade80; font-weight: 700; margin-left: 4px; }
+.history-actions { display: flex; gap: 7px; align-items: center; flex-shrink: 0; }
+
 /* ── Checklist Uploader ── */
 .upload-zone { border: 2px dashed #1e3a5f; border-radius: 12px; padding: 48px 24px; text-align: center; cursor: pointer; transition: border-color 0.2s, background 0.2s; background: #070b14; }
 .upload-zone:hover, .upload-zone.drag-over { border-color: #3b82f6; background: #0d1628; }
@@ -218,17 +263,48 @@ input:focus, select:focus, textarea:focus { border-color: #3b82f6; }
   <!-- ══ SEARCH TAB ══════════════════════════════════════ -->
   <div class="tab-panel active" id="tab-search">
 
-    <!-- Step 1: PubMed Query -->
+    <!-- Step 1: Database Query -->
     <div class="card">
       <div style="display:flex;align-items:center;gap:10px;margin-bottom:11px">
         <span class="step-num">1</span>
-        <div class="card-label" style="margin-bottom:0">PubMed Database Query</div>
+        <div class="card-label" style="margin-bottom:0">Database Query</div>
       </div>
-      <div style="display:flex;gap:9px;">
-        <input type="text" id="query-input" style="flex:1;padding:11px 14px;font-size:13px;" placeholder='"propofol" AND "postoperative outcomes" AND anaesthesia' onkeydown="if(event.key==='Enter') doSearch()" />
-        <button id="search-btn" onclick="doSearch()">&#8594; Search PubMed</button>
+
+      <!-- Database selector chips -->
+      <div class="db-selector">
+        <span class="db-selector-label">Search in:</span>
+        <label class="db-chip db-chip-pubmed active" id="chip-pubmed" onclick="toggleDb('pubmed')">
+          <input type="checkbox" id="db-pubmed" checked>
+          &#128300; PubMed / MEDLINE
+        </label>
+        <label class="db-chip db-chip-cochrane" id="chip-cochrane" onclick="toggleDb('cochrane')">
+          <input type="checkbox" id="db-cochrane">
+          &#128218; Cochrane Reviews
+        </label>
+        <label class="db-chip db-chip-europepmc active" id="chip-europepmc" onclick="toggleDb('europepmc')">
+          <input type="checkbox" id="db-europepmc" checked>
+          &#127757; Europe PMC
+        </label>
+        <label class="db-chip db-chip-semantic active" id="chip-semantic" onclick="toggleDb('semantic')">
+          <input type="checkbox" id="db-semantic" checked>
+          &#129504; Semantic Scholar
+        </label>
       </div>
-      <div class="grid4">
+
+      <div class="info-box" id="cochrane-info" style="display:none;border-color:#22c55e44;color:#4ade80;background:#0a1a10">
+        &#128218; <b style="color:#4ade80">Cochrane Reviews</b> searches Europe PMC filtered to the <i>Cochrane Database of Systematic Reviews</i> journal. Results are merged and deduplicated with other selected databases.
+      </div>
+
+      <!-- Query input + button -->
+      <div class="db-search-row">
+        <input type="text" id="query-input" style="flex:1;min-width:0;padding:13px 16px;font-size:14px;border-radius:8px;" placeholder='"propofol" AND "postoperative outcomes" AND anaesthesia' onkeydown="if(event.key==='Enter') doSearch()" />
+        <button id="search-btn" onclick="doSearch()">&#8594; Search</button>
+      </div>
+
+      <!-- Per-database status pills — shown during/after search -->
+      <div class="db-status-bar" id="db-status-bar" style="display:none"></div>
+
+      <div class="grid4" style="margin-top:12px">
         <div>
           <div class="sec-label">Limit by Study Type</div>
           <select id="filter-study-type">
@@ -251,12 +327,12 @@ input:focus, select:focus, textarea:focus { border-color: #3b82f6; }
           <input type="number" id="date-to" placeholder="e.g. 2024" min="1900" max="2099" />
         </div>
         <div>
-          <div class="sec-label">Max Results</div>
+          <div class="sec-label">Max Results <span style="font-size:9px;color:#4b5563">(per database)</span></div>
           <select id="max-results">
-            <option value="20">20 papers</option>
-            <option value="50" selected>50 papers</option>
-            <option value="100">100 papers</option>
-            <option value="200">200 papers</option>
+            <option value="20">20 per DB</option>
+            <option value="50" selected>50 per DB</option>
+            <option value="100">100 per DB</option>
+            <option value="200">200 per DB</option>
           </select>
         </div>
       </div>
@@ -336,6 +412,7 @@ input:focus, select:focus, textarea:focus { border-color: #3b82f6; }
         <div id="controls-right">
           <select id="sort-by" onchange="renderPapers()">
             <option value="score">Sort: Criteria Score &#8595;</option>
+            <option value="citations">Sort: Most Cited &#8595;</option>
             <option value="date_new">Sort: Newest First</option>
             <option value="date_old">Sort: Oldest First</option>
             <option value="type">Sort: Study Type</option>
@@ -400,7 +477,10 @@ input:focus, select:focus, textarea:focus { border-color: #3b82f6; }
 
   <!-- ══ HISTORY TAB ══════════════════════════════════════ -->
   <div class="tab-panel" id="tab-history">
-    <div class="card-label" style="margin-bottom:12px">Search History</div>
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">
+      <div class="card-label" style="margin-bottom:0">Search History &amp; Alerts</div>
+      <div style="font-size:11px;color:#4b5563">🔔 Toggle the bell on any search to save it as an alert. Check for new results any time.</div>
+    </div>
     <div id="history-list">
       <div class="empty" style="padding:40px 0"><div>No searches yet.</div></div>
     </div>
@@ -482,6 +562,7 @@ input:focus, select:focus, textarea:focus { border-color: #3b82f6; }
 var papers = [];
 var expandedCards = new Set();
 var searchHistory = [];
+var savedAlerts = [];
 
 // Scan criteria — what the document scanner checks
 var scanCriteria = [
@@ -1009,9 +1090,10 @@ function switchTab(name) {
   document.querySelectorAll('.tab-panel').forEach(function(p){ p.classList.remove('active'); });
   document.querySelectorAll('.tab-btn').forEach(function(b){ b.classList.remove('active'); });
   document.getElementById('tab-' + name).classList.add('active');
-  var map = { search:'Search', results:'Results', criteria:'Scan Criteria', history:'History' };
+  var map = { search:'Search', results:'Results', criteria:'Scan Criteria', history:'History', uploader:'Checklist Uploader' };
   document.querySelectorAll('.tab-btn').forEach(function(b){
-    if (b.textContent.trim() === map[name]) b.classList.add('active');
+    var label = b.textContent.trim().replace(/\s+/g,' ');
+    if (b.textContent.trim() === map[name] || label.indexOf(map[name]) !== -1) b.classList.add('active');
   });
   if (name === 'criteria') { renderCriteriaTable(); renderManualTagList(); }
   if (name === 'search') renderCriteriaPreview();
@@ -1041,53 +1123,229 @@ function scanPaper(paper) {
 // ══════════════════════════════════════════════
 // SEARCH
 // ══════════════════════════════════════════════
+// ══════════════════════════════════════════════
+// DATABASE SELECTOR
+// ══════════════════════════════════════════════
+function toggleDb(id) {
+  var cb = document.getElementById('db-' + id);
+  var chip = document.getElementById('chip-' + id);
+  // Small delay so the label click registers before we read checkbox state
+  setTimeout(function() {
+    if (cb.checked) chip.classList.add('active');
+    else chip.classList.remove('active');
+    // Show/hide Cochrane info box
+    document.getElementById('cochrane-info').style.display =
+      document.getElementById('db-cochrane').checked ? 'block' : 'none';
+  }, 0);
+}
+
+function dbEnabled(id) {
+  var cb = document.getElementById('db-' + id);
+  return cb && cb.checked;
+}
+
+// ══════════════════════════════════════════════
+// MULTI-DATABASE SEARCH ORCHESTRATOR
+// ══════════════════════════════════════════════
 function doSearch() {
   var q = document.getElementById('query-input').value.trim();
   if (!q) return;
-  var studyType = document.getElementById('filter-study-type').value;
-  var dateFrom = document.getElementById('date-from').value;
-  var dateTo = document.getElementById('date-to').value;
-  var maxResults = document.getElementById('max-results').value;
+  var dateFrom  = document.getElementById('date-from').value;
+  var dateTo    = document.getElementById('date-to').value;
+  var maxResults = parseInt(document.getElementById('max-results').value);
+  var studyType  = document.getElementById('filter-study-type').value;
 
-  var query = q;
-  if (studyType) query += ' AND ' + studyType;
-  if (dateFrom) query += ' AND ("' + dateFrom + '"[PDAT] : "3000"[PDAT])';
-  if (dateTo) query += ' AND ("1000"[PDAT] : "' + dateTo + '"[PDAT])';
+  var usePubmed   = dbEnabled('pubmed');
+  var useCochrane = dbEnabled('cochrane');
+  var useEuropePmc = dbEnabled('europepmc');
+  var useSemantic = dbEnabled('semantic');
+
+  if (!usePubmed && !useCochrane && !useEuropePmc && !useSemantic) {
+    showError('Please select at least one database to search.');
+    return;
+  }
 
   var btn = document.getElementById('search-btn');
   btn.disabled = true;
-  btn.innerHTML = '<span class="spinner"></span>Fetching\u2026';
+  btn.innerHTML = '<span class="spinner"></span>Searching\u2026';
   document.getElementById('search-error').style.display = 'none';
   document.getElementById('search-success').style.display = 'none';
 
-  fetchPubMed(query, maxResults).then(function(results) {
-    if (results.length === 0) {
-      showError('No results found. Try broadening your search terms.');
-    } else {
-      // Run document scanner on every paper
-      papers = results.map(function(p) {
-        var scan = scanPaper(p);
-        p.scanResults = scan.results;
-        p.score = scan.score;
-        p.passedCriteria = scan.passed;
-        p.totalCriteria = scan.total;
-        p.manualTags = [];
-        return p;
-      });
-      searchHistory.unshift({ query: query, date: new Date().toLocaleString(), count: results.length });
-      renderHistory();
-      renderResults();
-      var allPass = papers.filter(function(p){ return p.score === 100; }).length;
-      document.getElementById('search-success').style.display = 'flex';
-      document.getElementById('success-msg').textContent =
-        '\u2713 ' + results.length + ' papers retrieved \u00b7 scanned against ' + scanCriteria.length + ' criteria \u00b7 ' + allPass + ' passed all criteria \u2014 click to view';
+  // Show status bar
+  var bar = document.getElementById('db-status-bar');
+  bar.style.display = 'flex';
+  bar.innerHTML = '';
+
+  function makePill(id, label) {
+    var pill = document.createElement('div');
+    pill.id = 'dbpill-' + id;
+    pill.className = 'db-pill db-pill-loading';
+    pill.innerHTML = '<span class="spinner"></span>' + label;
+    bar.appendChild(pill);
+    return pill;
+  }
+  function setPill(id, text, state) {
+    var pill = document.getElementById('dbpill-' + id);
+    if (!pill) return;
+    pill.className = 'db-pill db-pill-' + state;
+    pill.innerHTML = text;
+  }
+
+  // Build PubMed query (includes date/studyType filters)
+  var pubmedQuery = q;
+  if (studyType) pubmedQuery += ' AND ' + studyType;
+  if (dateFrom) pubmedQuery += ' AND ("' + dateFrom + '"[PDAT] : "3000"[PDAT])';
+  if (dateTo)   pubmedQuery += ' AND ("1000"[PDAT] : "' + dateTo + '"[PDAT])';
+
+  // Cochrane: Europe PMC with journal filter
+  var cochraneQuery = q + ' JOURNAL:"Cochrane Database of Systematic Reviews"';
+  if (dateFrom) cochraneQuery += ' AND FIRST_PDATE:[' + dateFrom + '-01-01 TO 3000-12-31]';
+  if (dateTo)   cochraneQuery += ' AND FIRST_PDATE:[1000-01-01 TO ' + dateTo + '-12-31]';
+
+  var promises = [];
+
+  if (usePubmed) {
+    makePill('pubmed', '&#128300; PubMed');
+    promises.push(
+      fetchPubMed(pubmedQuery, maxResults)
+        .then(function(r) { setPill('pubmed', '&#128300; PubMed — ' + r.length + ' results', 'done'); return r; })
+        .catch(function(e) { setPill('pubmed', '&#128300; PubMed — failed', 'error'); console.error('PubMed:', e); return []; })
+    );
+  } else { promises.push(Promise.resolve([])); }
+
+  if (useCochrane) {
+    makePill('cochrane', '&#128218; Cochrane');
+    promises.push(
+      fetchEuropePMC(cochraneQuery, maxResults, 'Cochrane')
+        .then(function(r) { setPill('cochrane', '&#128218; Cochrane — ' + r.length + ' results', 'done'); return r; })
+        .catch(function(e) { setPill('cochrane', '&#128218; Cochrane — failed', 'error'); console.error('Cochrane:', e); return []; })
+    );
+  } else { promises.push(Promise.resolve([])); }
+
+  if (useEuropePmc) {
+    makePill('europepmc', '&#127757; Europe PMC');
+    var epQuery = q;
+    if (dateFrom) epQuery += ' AND FIRST_PDATE:[' + dateFrom + '-01-01 TO 3000-12-31]';
+    if (dateTo)   epQuery += ' AND FIRST_PDATE:[1000-01-01 TO ' + dateTo + '-12-31]';
+    promises.push(
+      fetchEuropePMC(epQuery, maxResults, 'EuropePMC')
+        .then(function(r) { setPill('europepmc', '&#127757; Europe PMC — ' + r.length + ' results', 'done'); return r; })
+        .catch(function(e) { setPill('europepmc', '&#127757; Europe PMC — failed', 'error'); console.error('EuropePMC:', e); return []; })
+    );
+  } else { promises.push(Promise.resolve([])); }
+
+  if (useSemantic) {
+    makePill('semantic', '&#129504; Semantic Scholar');
+    promises.push(
+      fetchSemanticScholar(q, maxResults, dateFrom, dateTo)
+        .then(function(r) { setPill('semantic', '&#129504; Semantic Scholar — ' + r.length + ' results', 'done'); return r; })
+        .catch(function(e) { setPill('semantic', '&#129504; Semantic Scholar — failed', 'error'); console.error('Semantic:', e); return []; })
+    );
+  } else { promises.push(Promise.resolve([])); }
+
+  Promise.all(promises).then(function(allResults) {
+    // Flatten and deduplicate across sources
+    var combined = deduplicatePapers(
+      allResults[0], allResults[1], allResults[2], allResults[3]
+    );
+
+    var dupeCount = allResults.reduce(function(s, r) { return s + r.length; }, 0) - combined.length;
+    if (dupeCount > 0) {
+      var dpill = document.createElement('div');
+      dpill.className = 'db-pill db-pill-deduped';
+      dpill.textContent = '\u2728 ' + dupeCount + ' duplicate' + (dupeCount > 1 ? 's' : '') + ' removed';
+      bar.appendChild(dpill);
     }
-    btn.disabled = false; btn.innerHTML = '\u2192 Search PubMed';
-  }).catch(function(e) {
-    console.error(e);
-    showError('Search failed: ' + e.message + '. Ensure you are connected to the internet.');
-    btn.disabled = false; btn.innerHTML = '\u2192 Search PubMed';
+
+    if (combined.length === 0) {
+      showError('No results found across selected databases. Try broadening your search terms.');
+      btn.disabled = false; btn.innerHTML = '\u2192 Search';
+      return;
+    }
+
+    papers = combined.map(function(p) {
+      var scan = scanPaper(p);
+      p.scanResults = scan.results;
+      p.score = scan.score;
+      p.passedCriteria = scan.passed;
+      p.totalCriteria = scan.total;
+      p.manualTags = [];
+      return p;
+    });
+
+    var dbsUsed = [
+      usePubmed ? 'PubMed' : null,
+      useCochrane ? 'Cochrane' : null,
+      useEuropePmc ? 'Europe PMC' : null,
+      useSemantic ? 'Semantic Scholar' : null
+    ].filter(Boolean).join(', ');
+
+    searchHistory.unshift({ query: q, date: new Date().toLocaleString(), count: combined.length, sources: dbsUsed });
+    renderHistory();
+    renderResults();
+    var allPass = papers.filter(function(p){ return p.score === 100; }).length;
+    document.getElementById('search-success').style.display = 'flex';
+    document.getElementById('success-msg').textContent =
+      '\u2713 ' + combined.length + ' papers retrieved from ' + dbsUsed +
+      ' \u00b7 scanned against ' + scanCriteria.length + ' criteria \u00b7 ' + allPass + ' passed all \u2014 click to view';
+
+    btn.disabled = false; btn.innerHTML = '\u2192 Search';
   });
+}
+
+// ══════════════════════════════════════════════
+// DEDUPLICATION
+// ══════════════════════════════════════════════
+function normTitle(t) {
+  return (t || '').toLowerCase().replace(/[^a-z0-9]/g, '').slice(0, 60);
+}
+
+function deduplicatePapers(pubmedArr, cochraneArr, europePmcArr, semanticArr) {
+  var seenDoi  = {};
+  var seenPmid = {};
+  var seenTitle = {};
+  var out = [];
+
+  function tryAdd(p) {
+    // DOI match (most reliable)
+    if (p.doi) {
+      var doi = p.doi.toLowerCase().trim();
+      if (seenDoi[doi]) {
+        // Merge source badge onto existing paper
+        var existing = seenDoi[doi];
+        if (existing.sources.indexOf(p.source) === -1) existing.sources.push(p.source);
+        return;
+      }
+      seenDoi[doi] = p;
+    }
+    // PMID match
+    if (p.pmid && !p.pmid.toString().startsWith('EP_') && !p.pmid.toString().startsWith('SS_')) {
+      if (seenPmid[p.pmid]) {
+        var ex = seenPmid[p.pmid];
+        if (ex.sources.indexOf(p.source) === -1) ex.sources.push(p.source);
+        return;
+      }
+      seenPmid[p.pmid] = p;
+    }
+    // Fuzzy title match
+    var nt = normTitle(p.title);
+    if (nt.length > 20 && seenTitle[nt]) {
+      var ex2 = seenTitle[nt];
+      if (ex2.sources.indexOf(p.source) === -1) ex2.sources.push(p.source);
+      return;
+    }
+    if (nt.length > 20) seenTitle[nt] = p;
+
+    p.sources = p.sources || [p.source];
+    out.push(p);
+  }
+
+  // PubMed first (highest quality metadata), then Cochrane, Europe PMC, Semantic
+  [pubmedArr, cochraneArr, europePmcArr, semanticArr].forEach(function(arr) {
+    (arr || []).forEach(tryAdd);
+  });
+
+  return out;
 }
 
 function showError(msg) {
@@ -1096,7 +1354,7 @@ function showError(msg) {
 }
 
 // ══════════════════════════════════════════════
-// PUBMED API — with automatic CORS fallback for mobile
+// PUBMED API — with automatic CORS fallback
 // ══════════════════════════════════════════════
 
 // Proxies tried in order — allorigins works on iOS Safari
@@ -1107,12 +1365,10 @@ var PROXIES = [
 ];
 
 function fetchWithFallback(url) {
-  // Try direct first
   return fetch(url).then(function(r) {
     if (!r.ok) throw new Error('direct ' + r.status);
     return r;
   }).catch(function() {
-    // Try each proxy in sequence until one works
     var chain = Promise.reject(new Error('no proxy yet'));
     PROXIES.forEach(function(proxy) {
       chain = chain.catch(function() {
@@ -1161,10 +1417,135 @@ function fetchPubMed(query, maxResults) {
             volume: s.volume||'', issue: s.issue||'', pages: s.pages||'',
             abstract: abstracts[pmid] || '',
             scanResults: [], score: 0, passedCriteria: 0, totalCriteria: 0,
-            manualTags: [], notes: '', scanDepth: 'abstract', fullText: ''
+            manualTags: [], notes: '', scanDepth: 'abstract', fullText: '',
+            source: 'PubMed', sources: ['PubMed']
           };
         });
       });
+    });
+  });
+}
+
+// ══════════════════════════════════════════════
+// EUROPE PMC API (also used for Cochrane filter)
+// ══════════════════════════════════════════════
+function fetchEuropePMC(query, maxResults, sourceLabel) {
+  sourceLabel = sourceLabel || 'EuropePMC';
+  var url = 'https://www.ebi.ac.uk/europepmc/webservices/rest/search?query=' +
+    encodeURIComponent(query) +
+    '&resultType=core&pageSize=' + maxResults +
+    '&format=json&sort=relevance';
+
+  return fetch(url).then(function(r) {
+    if (!r.ok) throw new Error('Europe PMC ' + r.status);
+    return r.json();
+  }).then(function(data) {
+    var results = (data.resultList && data.resultList.result) || [];
+    return results.map(function(item) {
+      var authors = [];
+      if (item.authorList && item.authorList.author) {
+        authors = item.authorList.author.map(function(a) {
+          return (a.lastName || '') + (a.initials ? ' ' + a.initials : '');
+        }).filter(Boolean);
+      }
+      // Infer study type from publication type list
+      var pubTypeStr = '';
+      if (item.pubTypeList && item.pubTypeList.pubType) {
+        pubTypeStr = item.pubTypeList.pubType.join(' ').toLowerCase();
+      }
+      var studyType = 'Other';
+      var stMap = {
+        'randomized controlled trial': 'RCT',
+        'systematic review': 'Systematic Review',
+        'meta-analysis': 'Meta-Analysis',
+        'clinical trial': 'Clinical Trial',
+        'case report': 'Case Report',
+        'observational study': 'Observational',
+        'review': 'Review'
+      };
+      for (var k in stMap) { if (pubTypeStr.indexOf(k) !== -1) { studyType = stMap[k]; break; } }
+      // For Cochrane, always mark as Systematic Review
+      if (sourceLabel === 'Cochrane') studyType = 'Systematic Review';
+
+      var pmid  = item.pmid  || '';
+      var pmcid = item.pmcid ? item.pmcid.replace('PMC','') : '';
+      var doi   = item.doi   || '';
+
+      return {
+        pmid:    pmid  || ('EP_' + (item.id || Math.random().toString(36).slice(2))),
+        pmcid:   pmcid,
+        doi:     doi,
+        citationCount: typeof item.citedByCount === 'number' ? item.citedByCount : null,
+        studyType: studyType,
+        title:   item.title || 'No title',
+        authors: authors,
+        year:    item.pubYear ? String(item.pubYear) : 'N/A',
+        journal: item.journalTitle || item.bookOrReportDetails && item.bookOrReportDetails.publisher || '',
+        volume: item.journalVolume || '', issue: item.issue || '', pages: item.pageInfo || '',
+        abstract: item.abstractText || '',
+        scanResults: [], score: 0, passedCriteria: 0, totalCriteria: 0,
+        manualTags: [], notes: '', scanDepth: 'abstract', fullText: '',
+        source: sourceLabel, sources: [sourceLabel]
+      };
+    });
+  });
+}
+
+// ══════════════════════════════════════════════
+// SEMANTIC SCHOLAR API
+// ══════════════════════════════════════════════
+function fetchSemanticScholar(query, maxResults, dateFrom, dateTo) {
+  var fields = 'title,authors,year,abstract,externalIds,publicationTypes,journal,venue,citationCount,paperId';
+  var url = 'https://api.semanticscholar.org/graph/v1/paper/search?query=' +
+    encodeURIComponent(query) +
+    '&limit=' + Math.min(maxResults, 100) +  // S2 caps at 100
+    '&fields=' + fields;
+  if (dateFrom) url += '&year=' + dateFrom + '-' + (dateTo || new Date().getFullYear());
+
+  return fetch(url, {
+    headers: { 'Accept': 'application/json' }
+  }).then(function(r) {
+    if (r.status === 429) throw new Error('Semantic Scholar rate limit — try again in a moment');
+    if (!r.ok) throw new Error('Semantic Scholar ' + r.status);
+    return r.json();
+  }).then(function(data) {
+    var items = data.data || [];
+    var stMap = {
+      'ClinicalTrial': 'Clinical Trial',
+      'Review': 'Review',
+      'JournalArticle': 'Other',
+      'CaseReport': 'Case Report',
+      'MetaAnalysis': 'Meta-Analysis',
+      'SystematicReview': 'Systematic Review'
+    };
+    return items.map(function(item) {
+      var ids = item.externalIds || {};
+      var pmid  = ids.PubMed  || '';
+      var doi   = ids.DOI     || '';
+      var pmcid = ids.PubMedCentral ? ids.PubMedCentral.replace('PMC','') : '';
+      var pubTypes = item.publicationTypes || [];
+      var studyType = 'Other';
+      for (var k in stMap) { if (pubTypes.indexOf(k) !== -1) { studyType = stMap[k]; break; } }
+      var authors = (item.authors || []).map(function(a){ return a.name; }).filter(Boolean);
+      var journal = (item.journal && item.journal.name) || item.venue || '';
+
+      return {
+        pmid:    pmid  || ('SS_' + (item.paperId || Math.random().toString(36).slice(2))),
+        pmcid:   pmcid,
+        doi:     doi,
+        s2paperId: item.paperId || '',
+        citationCount: typeof item.citationCount === 'number' ? item.citationCount : null,
+        studyType: studyType,
+        title:   item.title || 'No title',
+        authors: authors,
+        year:    item.year ? String(item.year) : 'N/A',
+        journal: journal,
+        volume: '', issue: '', pages: '',
+        abstract: item.abstract || '',
+        scanResults: [], score: 0, passedCriteria: 0, totalCriteria: 0,
+        manualTags: [], notes: '', scanDepth: 'abstract', fullText: '',
+        source: 'Semantic Scholar', sources: ['Semantic Scholar']
+      };
     });
   });
 }
@@ -1222,6 +1603,7 @@ function getSorted() {
     return true;
   }).sort(function(a, b) {
     if (sortBy === 'score') return b.score - a.score;
+    if (sortBy === 'citations') return (b.citationCount || 0) - (a.citationCount || 0);
     if (sortBy === 'date_new') return (parseInt(b.year)||0) - (parseInt(a.year)||0);
     if (sortBy === 'date_old') return (parseInt(a.year)||0) - (parseInt(b.year)||0);
     if (sortBy === 'type') return a.studyType < b.studyType ? -1 : 1;
@@ -1306,15 +1688,24 @@ function renderPapers() {
         '<div class="paper-row">' +
           '<span class="badge" style="background:'+color+'22;color:'+color+';border-color:'+color+'44">'+p.studyType+'</span>' +
           '<div style="flex:1;min-width:0">' +
-            '<div class="paper-title-link" onclick="window.open(\'https://pubmed.ncbi.nlm.nih.gov/'+p.pmid+'/\',\'_blank\')">'+p.title+'</div>' +
+            '<div class="paper-title-link" onclick="window.open(\''+(p.pmid && !String(p.pmid).startsWith('EP_') && !String(p.pmid).startsWith('SS_') ? 'https://pubmed.ncbi.nlm.nih.gov/'+p.pmid+'/' : p.doi ? 'https://doi.org/'+p.doi : '#')+'\',\'_blank\')">'+p.title+'</div>' +
             '<div class="paper-meta">'+authorStr+' &middot; '+p.journal+' &middot; '+p.year+(p.doi?' &middot; <a href="https://doi.org/'+p.doi+'" target="_blank" style="color:#374151">DOI</a>':'')+'</div>' +
-            '<div style="margin-top:5px">' +
+            '<div style="margin-top:4px;display:flex;align-items:center;gap:5px;flex-wrap:wrap">' +
               (p.scanDepth==='full' ? '<span class="depth-badge depth-full" id="db-'+p.pmid+'">&#9670; Full text scanned</span>' :
                p.scanDepth==='pdf' ? '<span class="depth-badge depth-pdf" id="db-'+p.pmid+'">&#9670; PDF scanned</span>' :
                p.scanDepth==='pdf-blocked' ? '<span class="depth-badge depth-pdf-blocked" id="db-'+p.pmid+'">&#9888; PDF unreadable by app</span>' :
                p.pmcid ? '<span class="depth-badge depth-scanning" id="db-'+p.pmid+'">&#8635; fetching full text…</span>' :
                p.doi ? '<span class="depth-badge depth-scanning" id="db-'+p.pmid+'">&#8635; checking PDF…</span>' :
                '<span class="depth-badge depth-abstract" id="db-'+p.pmid+'">Abstract only</span>') +
+              (p.citationCount !== null && p.citationCount !== undefined ?
+                '<span class="cite-badge' + (p.citationCount >= 100 ? ' cite-badge-high' : p.citationCount >= 20 ? ' cite-badge-med' : '') + '" title="Citation count">&#128196; ' + p.citationCount.toLocaleString() + ' citations</span>' : '') +
+              (function() {
+                var srcColors = { 'PubMed': '#3b82f6', 'Cochrane': '#22c55e', 'EuropePMC': '#8b5cf6', 'Semantic Scholar': '#f59e0b' };
+                return (p.sources || [p.source || 'PubMed']).map(function(s) {
+                  var c = srcColors[s] || '#4b5563';
+                  return '<span style="font-size:9px;padding:1px 7px;border-radius:20px;border:1px solid '+c+'44;background:'+c+'11;color:'+c+';font-weight:600">'+s+'</span>';
+                }).join('');
+              })() +
             '</div>' +
             '<div style="margin-top:6px"><span id="ft-'+p.pmid+'" class="pdf-checking">'+(p.doi?'&#8635; checking for free PDF…':'')+'</span>'+(p.fullTextUrl?'<a class="pdf-btn" href="'+p.fullTextUrl+'" target="_blank">&#128196; Free PDF <span style="font-size:9px;opacity:0.7">('+p.fullTextSource+')</span></a>':'')+'</div>' +
             '<div class="scan-row">'+chipHtml+'</div>' +
@@ -1334,6 +1725,11 @@ function renderPapers() {
         detailHtml +
         renderChecklistSection(p) +
         '<div style="margin-top:14px"><div class="abstract-text">'+(p.abstract||'No abstract available.')+'</div></div>' +
+        '<div style="margin-top:10px;display:flex;gap:8px;flex-wrap:wrap">' +
+          '<button class="related-btn" onclick="loadCitedBy(\''+p.pmid+'\')">&#128196; Cited by papers</button>' +
+          '<button class="related-btn" onclick="loadRelated(\''+p.pmid+'\')">&#128279; Related articles</button>' +
+        '</div>' +
+        '<div class="related-panel" id="related-'+p.pmid+'"></div>' +
         '<div class="sec-label" style="margin-top:10px">Notes</div>' +
         '<textarea class="notes-area" placeholder="Research notes\u2026" onchange="updateNotes(\''+p.pmid+'\', this.value)">'+p.notes+'</textarea>' +
       '</div>' +
@@ -1361,6 +1757,126 @@ function toggleManualTag(pmid, tag) {
 
 function updateNotes(pmid, val) {
   var p = papers.find(function(x){ return x.pmid === pmid; }); if (p) p.notes = val;
+}
+
+// ══════════════════════════════════════════════
+// CITED BY / RELATED ARTICLES
+// ══════════════════════════════════════════════
+function getS2Id(p) {
+  // Best identifier for S2 API: S2 paperId, then DOI, then PMID
+  if (p.s2paperId) return p.s2paperId;
+  if (p.doi) return p.doi;
+  if (p.pmid && !String(p.pmid).startsWith('EP_') && !String(p.pmid).startsWith('SS_')) return 'PMID:' + p.pmid;
+  return null;
+}
+
+function loadCitedBy(pmid) {
+  var p = papers.find(function(x){ return x.pmid === pmid; });
+  if (!p) return;
+  var panel = document.getElementById('related-' + pmid);
+  if (!panel) return;
+  if (panel.classList.contains('open') && panel.dataset.mode === 'citedby') {
+    panel.classList.remove('open'); return;
+  }
+  panel.dataset.mode = 'citedby';
+  panel.classList.add('open');
+  panel.innerHTML = '<div class="related-panel-title">&#128196; Papers that cite this work</div><div style="color:#4b5563;font-size:11px"><span class="spinner"></span> Fetching…</div>';
+
+  var s2id = getS2Id(p);
+  if (!s2id) {
+    panel.innerHTML = '<div class="related-panel-title">&#128196; Cited by</div><div style="font-size:11px;color:#f87171">No identifier available to look up citations.</div>';
+    return;
+  }
+
+  fetch('https://api.semanticscholar.org/graph/v1/paper/' + encodeURIComponent(s2id) + '/citations?fields=title,authors,year,journal,externalIds,citationCount&limit=20')
+    .then(function(r) { if (!r.ok) throw new Error(r.status); return r.json(); })
+    .then(function(data) {
+      var items = (data.data || []).map(function(d){ return d.citingPaper; }).filter(Boolean);
+      renderRelatedPanel(panel, items, 'Cited by ' + (data.total || items.length) + ' papers (showing top 20)', 'citedby');
+    })
+    .catch(function(e) {
+      panel.innerHTML = '<div class="related-panel-title">&#128196; Cited by</div><div style="font-size:11px;color:#f87171">Could not fetch citation data: ' + e.message + '</div>';
+    });
+}
+
+function loadRelated(pmid) {
+  var p = papers.find(function(x){ return x.pmid === pmid; });
+  if (!p) return;
+  var panel = document.getElementById('related-' + pmid);
+  if (!panel) return;
+  if (panel.classList.contains('open') && panel.dataset.mode === 'related') {
+    panel.classList.remove('open'); return;
+  }
+  panel.dataset.mode = 'related';
+  panel.classList.add('open');
+  panel.innerHTML = '<div class="related-panel-title">&#128279; Related articles</div><div style="color:#4b5563;font-size:11px"><span class="spinner"></span> Fetching…</div>';
+
+  var s2id = getS2Id(p);
+  if (!s2id) {
+    // Fallback: Europe PMC related
+    if (p.pmid && !String(p.pmid).startsWith('EP_') && !String(p.pmid).startsWith('SS_')) {
+      fetchEuropePMCRelated(p.pmid, panel);
+    } else {
+      panel.innerHTML = '<div class="related-panel-title">&#128279; Related articles</div><div style="font-size:11px;color:#f87171">No identifier available.</div>';
+    }
+    return;
+  }
+
+  fetch('https://api.semanticscholar.org/recommendations/v1/papers/forpaper/' + encodeURIComponent(s2id) + '?fields=title,authors,year,journal,externalIds,citationCount&limit=15')
+    .then(function(r) { if (!r.ok) throw new Error(r.status); return r.json(); })
+    .then(function(data) {
+      var items = data.recommendedPapers || [];
+      renderRelatedPanel(panel, items, 'Related articles (Semantic Scholar recommendations)', 'related');
+    })
+    .catch(function() {
+      // S2 recommendations sometimes 404 for older papers — fallback to references
+      fetch('https://api.semanticscholar.org/graph/v1/paper/' + encodeURIComponent(s2id) + '/references?fields=title,authors,year,journal,externalIds,citationCount&limit=20')
+        .then(function(r) { if (!r.ok) throw new Error(r.status); return r.json(); })
+        .then(function(data) {
+          var items = (data.data || []).map(function(d){ return d.citedPaper; }).filter(Boolean);
+          renderRelatedPanel(panel, items, 'References in this paper (top 20)', 'related');
+        })
+        .catch(function(e) {
+          panel.innerHTML = '<div class="related-panel-title">&#128279; Related</div><div style="font-size:11px;color:#f87171">Could not fetch related articles: ' + e.message + '</div>';
+        });
+    });
+}
+
+function fetchEuropePMCRelated(pmid, panel) {
+  fetch('https://www.ebi.ac.uk/europepmc/webservices/rest/MED/' + pmid + '/citations/1/10/json')
+    .then(function(r){ if(!r.ok) throw new Error(r.status); return r.json(); })
+    .then(function(data){
+      var items = (data.citationList && data.citationList.citation) || [];
+      var mapped = items.map(function(c){
+        return { title: c.title, authors: c.authorString ? [c.authorString] : [], year: c.pubYear, externalIds: { DOI: c.doi || '' }, citationCount: null };
+      });
+      renderRelatedPanel(panel, mapped, 'Cited by (Europe PMC)', 'related');
+    })
+    .catch(function(e){
+      panel.innerHTML = '<div class="related-panel-title">&#128279; Related</div><div style="font-size:11px;color:#f87171">Could not fetch: ' + e.message + '</div>';
+    });
+}
+
+function renderRelatedPanel(panel, items, title, mode) {
+  if (!items.length) {
+    panel.innerHTML = '<div class="related-panel-title">' + title + '</div><div style="font-size:11px;color:#4b5563">No results found.</div>';
+    return;
+  }
+  panel.innerHTML = '<div class="related-panel-title">' + title + '</div>' +
+    items.map(function(item) {
+      var doi = (item.externalIds && item.externalIds.DOI) || '';
+      var pmidRef = (item.externalIds && item.externalIds.PubMed) || '';
+      var url = doi ? 'https://doi.org/' + doi :
+                pmidRef ? 'https://pubmed.ncbi.nlm.nih.gov/' + pmidRef + '/' :
+                item.title ? 'https://pubmed.ncbi.nlm.nih.gov/?term=' + encodeURIComponent(item.title) : '#';
+      var authorStr = (item.authors || []).slice(0,3).map(function(a){ return a.name || a; }).join(', ');
+      if ((item.authors||[]).length > 3) authorStr += ' et al.';
+      var cites = item.citationCount !== null && item.citationCount !== undefined ? ' · ' + item.citationCount.toLocaleString() + ' citations' : '';
+      return '<div class="related-item">' +
+        '<div class="related-item-title" onclick="window.open(\'' + url + '\',\'_blank\')">' + (item.title || 'Untitled') + '</div>' +
+        '<div class="related-item-meta">' + [authorStr, item.year, (item.journal && item.journal.name) || ''].filter(Boolean).join(' · ') + cites + '</div>' +
+      '</div>';
+    }).join('');
 }
 
 // ══════════════════════════════════════════════
@@ -1473,14 +1989,100 @@ function renderHistory() {
   var list = document.getElementById('history-list');
   if (!searchHistory.length) { list.innerHTML = '<div class="empty" style="padding:40px 0"><div>No searches yet.</div></div>'; return; }
   list.innerHTML = searchHistory.map(function(h,i) {
+    var isAlert = savedAlerts.some(function(a){ return a.query === h.query; });
+    var srcBadge = h.sources ? '<span style="font-size:10px;color:#64748b;margin-left:6px">via ' + h.sources + '</span>' : '';
+    var newBadge = h.newCount ? '<span class="alert-new-badge">+'+h.newCount+' new</span>' : '';
     return '<div class="history-item">' +
-      '<div style="flex:1"><div style="font-size:12px;color:#94a3b8;word-break:break-all">'+h.query+'</div><div style="font-size:11px;color:#4b5563;margin-top:3px">'+h.date+' &middot; '+h.count+' papers</div></div>' +
-      '<button class="btn btn-ghost" style="font-size:11px;white-space:nowrap" onclick="rerunSearch('+i+')">Re-run &rarr;</button>' +
+      '<div style="flex:1;min-width:0">' +
+        '<div style="font-size:12px;color:#94a3b8;word-break:break-all">'+h.query+'</div>' +
+        '<div style="font-size:11px;color:#4b5563;margin-top:3px">'+h.date+' &middot; '+h.count+' papers'+srcBadge+newBadge+'</div>' +
+      '</div>' +
+      '<div class="history-actions">' +
+        '<button class="alert-chip'+(isAlert?'':' inactive')+'" title="'+(isAlert?'Remove alert':'Save as alert')+'" onclick="toggleAlert('+i+', this)">'+
+          (isAlert ? '🔔' : '🔕') +
+        '</button>' +
+        (isAlert ? '<button class="btn btn-ghost" style="font-size:11px;white-space:nowrap" onclick="checkAlertForNew('+i+', this)">&#8635; Check new</button>' : '') +
+        '<button class="btn btn-ghost" style="font-size:11px;white-space:nowrap" onclick="rerunSearch('+i+')">Re-run &rarr;</button>' +
+      '</div>' +
     '</div>';
   }).join('');
 }
 
 function rerunSearch(i) { document.getElementById('query-input').value = searchHistory[i].query; switchTab('search'); }
+
+function toggleAlert(i, btn) {
+  var h = searchHistory[i];
+  var idx = savedAlerts.findIndex(function(a){ return a.query === h.query; });
+  if (idx !== -1) {
+    savedAlerts.splice(idx, 1);
+  } else {
+    savedAlerts.push({ query: h.query, sources: h.sources, knownCount: h.count, knownTitles: (papers || []).map(function(p){ return p.title; }), saved: new Date().toISOString() });
+  }
+  saveAlerts();
+  renderHistory();
+}
+
+function saveAlerts() {
+  try { localStorage.setItem('pla_alerts', JSON.stringify(savedAlerts)); } catch(e) {}
+}
+
+function loadAlerts() {
+  try { var d = localStorage.getItem('pla_alerts'); if (d) savedAlerts = JSON.parse(d); } catch(e) {}
+}
+
+function checkAlertForNew(i, btn) {
+  var h = searchHistory[i];
+  var alert = savedAlerts.find(function(a){ return a.query === h.query; });
+  if (!alert) return;
+
+  btn = btn || event && event.target;
+  if (!btn) return;
+  btn.disabled = true; btn.innerHTML = '<span class="spinner"></span>';
+
+  var maxR = parseInt(document.getElementById('max-results').value) || 50;
+  var usePubmed = dbEnabled('pubmed'), useCochrane = dbEnabled('cochrane');
+  var useEuropePmc = dbEnabled('europepmc'), useSemantic = dbEnabled('semantic');
+
+  var pubmedQuery = alert.query;
+  var cochraneQuery = alert.query + ' JOURNAL:"Cochrane Database of Systematic Reviews"';
+  var epQuery = alert.query;
+
+  var promises = [
+    usePubmed    ? fetchPubMed(pubmedQuery, maxR).catch(function(){ return []; }) : Promise.resolve([]),
+    useCochrane  ? fetchEuropePMC(cochraneQuery, maxR, 'Cochrane').catch(function(){ return []; }) : Promise.resolve([]),
+    useEuropePmc ? fetchEuropePMC(epQuery, maxR, 'EuropePMC').catch(function(){ return []; }) : Promise.resolve([]),
+    useSemantic  ? fetchSemanticScholar(alert.query, maxR).catch(function(){ return []; }) : Promise.resolve([])
+  ];
+
+  Promise.all(promises).then(function(allResults) {
+    var combined = deduplicatePapers(allResults[0], allResults[1], allResults[2], allResults[3]);
+    var knownTitles = alert.knownTitles || [];
+    var newPapers = combined.filter(function(p) {
+      return !knownTitles.some(function(t){ return normTitle(t) === normTitle(p.title); });
+    });
+    h.newCount = newPapers.length;
+    alert.knownCount = combined.length;
+    if (newPapers.length > 0) {
+      alert.knownTitles = combined.map(function(p){ return p.title; });
+      saveAlerts();
+    }
+    btn.disabled = false; btn.innerHTML = '&#8635; Check new';
+    renderHistory();
+    if (newPapers.length > 0) {
+      var msg = newPapers.length + ' new paper' + (newPapers.length > 1 ? 's' : '') + ' found since last run! Re-run the search to see them.';
+      var notif = document.createElement('div');
+      notif.className = 'alert-success';
+      notif.style.marginBottom = '10px';
+      notif.textContent = '🔔 ' + msg;
+      var list = document.getElementById('history-list');
+      list.parentNode.insertBefore(notif, list);
+      setTimeout(function(){ notif.remove(); }, 8000);
+    } else {
+      btn.innerHTML = '&#10003; Up to date';
+      setTimeout(function(){ btn.innerHTML = '&#8635; Check new'; }, 3000);
+    }
+  });
+}
 
 // ══════════════════════════════════════════════
 // CSV EXPORT
@@ -1490,7 +2092,7 @@ function exportCSV() {
   // Dynamic headers: one column per criterion
   var critHeaders = scanCriteria.map(function(c){ return c.label; });
   var clHeaders = Object.keys(CHECKLISTS).map(function(k){ return CHECKLISTS[k].short + ' Score %'; });
-  var headers = ["PMID","Title","Authors","Year","Journal","DOI","Study Type","Criteria Score %","Criteria Passed","Scan Depth"].concat(critHeaders).concat(clHeaders).concat(["Selected Checklist","Manual Tags","Notes","Abstract","PubMed Link","Free Full Text URL","Full Text Source"]);
+  var headers = ["PMID","Title","Authors","Year","Journal","DOI","Study Type","Sources","Citations","Criteria Score %","Criteria Passed","Scan Depth"].concat(critHeaders).concat(clHeaders).concat(["Selected Checklist","Manual Tags","Notes","Abstract","PubMed Link","Free Full Text URL","Full Text Source"]);
 
   var sorted = papers.slice().sort(function(a,b){ return b.score - a.score; });
   var rows = sorted.map(function(p) {
@@ -1504,6 +2106,8 @@ function exportCSV() {
     });
     return [
       p.pmid, p.title, p.authors.join('; '), p.year, p.journal, p.doi, p.studyType,
+      (p.sources || [p.source || 'PubMed']).join('; '),
+      p.citationCount !== null && p.citationCount !== undefined ? p.citationCount : '',
       p.score, p.passedCriteria + '/' + p.totalCriteria, p.scanDepth === 'full' ? 'Full text (PMC)' : p.scanDepth === 'pdf' ? 'Full text (PDF)' : 'Abstract only'
     ].concat(critCols).concat(clCols).concat([
       p.selectedChecklist ? (CHECKLISTS[p.selectedChecklist] ? CHECKLISTS[p.selectedChecklist].name : '') : '',
@@ -1818,6 +2422,7 @@ var uploaderText = null;
 
 // Auto-select checklist when study type changes
 document.addEventListener('DOMContentLoaded', function() {
+  loadAlerts();
   var studyTypeSel = document.getElementById('ucl-study-type');
   var clSel = document.getElementById('ucl-checklist-select');
   if (studyTypeSel && clSel) {
