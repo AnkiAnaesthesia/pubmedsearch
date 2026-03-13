@@ -2,7 +2,7 @@
 
 > A browser-based systematic review and literature screening tool. No installation. No backend. Runs entirely in your browser.
 
-**[→ Launch Evidentum Pro](https://chucknally2.github.io/pubmedsearch/)**
+**[→ Launch Evidentum Pro](https://AnkiAnaesthesia.github.io/pubmedsearch/)**
 
 ---
 
@@ -77,7 +77,7 @@ Searches are saved locally and can be re-run as alerts to track new publications
 **No installation required.** Download or clone the repository and open `index.html` in any modern browser, or use the hosted GitHub Pages version linked above.
 
 ```bash
-git clone https://github.com/chucknally2/pubmedsearch.git
+git clone https://github.com/AnkiAnaesthesia/pubmedsearch.git
 cd evidentum-pro
 open index.html   # or just drag the file into your browser
 ```
