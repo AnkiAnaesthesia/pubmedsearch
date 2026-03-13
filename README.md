@@ -2,7 +2,7 @@
 
 > A browser-based systematic review and literature screening tool. No installation. No backend. Runs entirely in your browser.
 
-**[→ Launch Evidentum Pro](https://AnkiAnaesthesia.github.io/pubmedsearch/)**
+**[→ Launch Evidentum Pro](https://ankianaesthesia.github.io/pubmedsearch/)**
 
 ---
 
