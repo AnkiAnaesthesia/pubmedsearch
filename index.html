@@ -159,22 +159,11 @@ input:focus, select:focus, textarea:focus { border-color: #3b82f6; }
 /* ── Database selector ── */
 .db-selector { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 13px; align-items: center; }
 .db-selector-label { font-size: 10px; color: #4b5563; text-transform: uppercase; letter-spacing: 0.1em; margin-right: 4px; flex-shrink: 0; }
-.db-chip { display: flex; align-items: center; gap: 6px; padding: 5px 12px; border-radius: 20px; border: 1px solid; cursor: pointer; font-size: 11px; font-family: 'IBM Plex Mono', monospace; font-weight: 600; user-select: none; transition: background 0.15s, border-color 0.15s; }
+.db-chip { display: flex; align-items: center; gap: 6px; padding: 5px 12px; border-radius: 20px; border: 1px solid #1e2d4a; cursor: pointer; font-size: 11px; font-family: 'IBM Plex Mono', monospace; font-weight: 600; user-select: none; transition: background 0.15s, border-color 0.15s, color 0.15s; background: transparent; color: #4b5563; }
 .db-chip input[type=checkbox] { display: none; }
-.db-chip-pubmed    { border-color: #3b82f644; background: #0d1628; color: #93c5fd; }
-.db-chip-pubmed.active    { border-color: #3b82f6; background: #1e3a5f; color: #93c5fd; }
-.db-chip-cochrane  { border-color: #22c55e44; background: #0a1a10; color: #4ade80; }
-.db-chip-cochrane.active  { border-color: #22c55e; background: #14271a; color: #4ade80; }
-.db-chip-europepmc { border-color: #8b5cf644; background: #130f2a; color: #c4b5fd; }
-.db-chip-europepmc.active { border-color: #8b5cf6; background: #1e1040; color: #c4b5fd; }
-.db-chip-semantic  { border-color: #f59e0b44; background: #1a1208; color: #fbbf24; }
-.db-chip-semantic.active  { border-color: #f59e0b; background: #1c1408; color: #fbbf24; }
-.db-chip-openalex  { border-color: #06b6d444; background: #001a1a; color: #67e8f9; }
-.db-chip-openalex.active  { border-color: #06b6d4; background: #002626; color: #67e8f9; }
-.db-chip-scopus           { border-color: #f59e0b44; color: #6b7280; }
-.db-chip-scopus.active    { border-color: #f59e0b; background: #1a1200; color: #fbbf24; }
-.db-chip-clinicaltrials           { border-color: #f4725644; background: #1a0d0a; color: #6b7280; }
-.db-chip-clinicaltrials.active    { border-color: #f47256; background: #1f100a; color: #fda57d; }
+.db-chip.active { border-color: #3b82f6; background: #1e3a5f; color: #93c5fd; }
+.db-chip-pubmed, .db-chip-cochrane, .db-chip-europepmc, .db-chip-semantic, .db-chip-openalex, .db-chip-scopus, .db-chip-clinicaltrials { }
+.db-chip-pubmed.active, .db-chip-cochrane.active, .db-chip-europepmc.active, .db-chip-semantic.active, .db-chip-openalex.active, .db-chip-scopus.active, .db-chip-clinicaltrials.active { }
 .db-search-row { display: flex; gap: 9px; align-items: stretch; width: 100%; }
 .db-status-bar { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 9px; min-height: 20px; }
 .db-pill { font-size: 10px; padding: 2px 9px; border-radius: 20px; border: 1px solid; display: flex; align-items: center; gap: 5px; }
@@ -359,7 +348,10 @@ input:focus, select:focus, textarea:focus { border-color: #3b82f6; }
 
       <!-- Query input + button -->
       <div class="db-search-row">
-        <input type="text" id="query-input" style="flex:1;min-width:0;padding:13px 16px;font-size:14px;border-radius:8px;" placeholder='"propofol" AND "postoperative outcomes" AND anaesthesia' onkeydown="if(event.key==='Enter') doSearch()" />
+        <div style="position:relative;flex:1;min-width:0;">
+          <input type="text" id="query-input" style="width:100%;box-sizing:border-box;padding:13px 38px 13px 16px;font-size:14px;border-radius:8px;" placeholder='"propofol" AND "postoperative outcomes" AND anaesthesia' onkeydown="if(event.key==='Enter') doSearch()" oninput="var b=document.getElementById('query-clear-btn');b.style.display=this.value?'flex':'none';" />
+          <button id="query-clear-btn" onclick="document.getElementById('query-input').value='';this.style.display='none';document.getElementById('query-input').focus();" title="Clear" style="display:none;position:absolute;right:10px;top:50%;transform:translateY(-50%);width:18px;height:18px;border-radius:50%;border:none;background:#374151;color:#9ca3af;font-size:11px;cursor:pointer;align-items:center;justify-content:center;line-height:1;">&#10005;</button>
+        </div>
         <button id="search-btn" onclick="doSearch()">&#8594; Search</button>
       </div>
 
@@ -1262,11 +1254,11 @@ function buildChecklistBody(p) {
       }).join('');
 
       var qRows = domain.questions.map(function(q) {
-        var st = data[q.id] || 'unclear';
-        var opts = CL_STATUSES.map(function(o){
+        var st = data[q.id] || 'NI';
+        var opts = ROB2_STATUSES.map(function(o){
           return '<option value="'+o.val+'"'+(st===o.val?' selected':'')+'>'+o.label+'</option>';
         }).join('');
-        var stClass = st==='yes'?'cl-status-yes':st==='partial'?'cl-status-partial':st==='no'?'cl-status-no':st==='na'?'cl-status-na':'cl-status-unclear';
+        var stClass = (st==='Y'||st==='yes')?'cl-status-yes':(st==='PY')?'cl-status-partial':(st==='PN'||st==='N'||st==='no')?'cl-status-no':st==='na'?'cl-status-na':'cl-status-unclear';
         return '<div class="cl-item-row">' +
           '<div class="cl-item-text" style="padding-left:4px">'+q.text+'</div>' +
           '<div class="cl-item-status"><select class="cl-status-select '+stClass+'" onchange="updateChecklistItem(\''+p.pmid+'\',\''+clKey+'\',\''+q.id+'\',this.value,this)">'+opts+'</select></div>' +
@@ -1276,6 +1268,14 @@ function buildChecklistBody(p) {
       return '<div class="rob-domain">' +
         '<div class="rob-domain-title">'+domain.title+'</div>' +
         qRows +
+        (function() {
+          var rationales = data['__domain_rationales__'] || {};
+          return rationales[domain.id]
+            ? '<div style="margin:5px 0 3px;padding:6px 10px;background:#0d1a12;border-left:2px solid #22c55e44;border-radius:0 4px 4px 0;font-size:10px;color:#86efac;line-height:1.5;font-style:italic">'
+              + '<span style="font-size:9px;font-weight:700;letter-spacing:0.08em;color:#4ade80;font-style:normal">AI EVIDENCE \u2014 </span>'
+              + esc(rationales[domain.id]) + '</div>'
+            : '';
+        })() +
         '<div class="rob-judgement-row">' +
           '<span class="rob-judgement-label">Domain judgement:</span>' +
           '<select class="rob-judgement-select rob-'+domJudge+'" onchange="updateRobDomainJudgement(\''+p.pmid+'\',\''+domain.id+'\',this.value,this)">'+judgeOpts+'</select>' +
@@ -1632,17 +1632,13 @@ function doSearch() {
     renderHistory();
     renderResults();
 
-    // Unlock agent button once background PDF/PMC fetching is done.
-    // fetchAndScanPDFs starts at t+10s; allow 10s + 400ms/paper, capped at 40s.
-    (function() {
-      var delay = papers.some(function(p){ return p.doi || p.pmcid; })
-        ? Math.min(10000 + papers.length * 400, 40000)
-        : 500;
-      setTimeout(function() {
-        searchInProgress = false;
-        updateKeyBanner();
-      }, delay);
-    })();
+    // If no papers have PDFs to background-scan, unlock agent button immediately.
+    // Otherwise fetchAndScanPDFs() will call updateKeyBanner() when it finishes.
+    var hasPdfs = papers.some(function(p){ return p.doi || p.pmcid; });
+    if (!hasPdfs) {
+      searchInProgress = false;
+      updateKeyBanner();
+    }
 
     // Reset retraction button and auto-sweep after new search
     var rBtn = document.getElementById('retraction-check-btn');
@@ -1736,14 +1732,17 @@ var PROXIES = [
 
 function fetchWithFallback(url) {
   return fetch(url).then(function(r) {
-    if (!r.ok) throw new Error('direct ' + r.status);
+    if (!r.ok) throw new Error('HTTP ' + r.status);
     return r;
   }).catch(function() {
     var chain = Promise.reject(new Error('no proxy yet'));
     PROXIES.forEach(function(proxy) {
       chain = chain.catch(function() {
         return fetch(proxy.url + encodeURIComponent(url)).then(function(r) {
-          if (!r.ok) throw new Error('proxy failed ' + r.status);
+          if (!r.ok) throw new Error('proxy HTTP ' + r.status);
+          // Reject HTML error pages from proxies so chain tries next proxy
+          var ct = r.headers.get('content-type') || '';
+          if (ct.indexOf('text/html') !== -1) throw new Error('proxy returned HTML');
           return r;
         });
       });
@@ -1864,12 +1863,29 @@ function fetchEuropePMC(query, maxResults, sourceLabel) {
 // ══════════════════════════════════════════════
 // SEMANTIC SCHOLAR API
 // ══════════════════════════════════════════════
+function sanitiseForS2(query) {
+  return query
+    // Strip PubMed field tags: [tiab], [MeSH Terms], [tw], [pt], etc.
+    .replace(/\[[^\]]*\]/g, ' ')
+    // Strip Boolean operators (case-insensitive, whole-word)
+    .replace(/\b(AND|OR|NOT)\b/g, ' ')
+    // Strip parentheses and quotes
+    .replace(/[()\"]/g, ' ')
+    // Collapse multiple spaces
+    .replace(/\s+/g, ' ')
+    .trim();
+}
+
 function fetchSemanticScholar(query, maxResults, dateFrom, dateTo) {
+  var s2query = sanitiseForS2(query);
+  // If sanitisation leaves nothing useful, bail early
+  if (!s2query || s2query.length < 2) return Promise.resolve([]);
+
   var fields = 'title,authors,year,abstract,externalIds,publicationTypes,journal,venue,citationCount,paperId';
   // Guard against NaN from a failed parseInt upstream
   var limit = (isNaN(maxResults) || maxResults < 1) ? 50 : Math.min(maxResults, 100);
   var url = 'https://api.semanticscholar.org/graph/v1/paper/search?query=' +
-    encodeURIComponent(query) +
+    encodeURIComponent(s2query) +
     '&limit=' + limit +
     '&fields=' + fields;
   // Build year range only when it forms a valid low-high pair
@@ -1886,7 +1902,7 @@ function fetchSemanticScholar(query, maxResults, dateFrom, dateTo) {
     url += '&year=' + lo + '-' + hi;
   }
 
-  // Retry helper: if S2 rate-limits (429), wait 2s and try once more
+  // Retry on 429, use fetchWithFallback for proxy chain support
   function fetchS2WithRetry(targetUrl) {
     return fetchWithFallback(targetUrl).catch(function(e) {
       var msg = (e.message || '').toLowerCase();
@@ -1902,10 +1918,21 @@ function fetchSemanticScholar(query, maxResults, dateFrom, dateTo) {
   }
 
   return fetchS2WithRetry(url).then(function(r) {
-    return r.json();
-  }).then(function(data) {
+    return r.text();
+  }).then(function(text) {
+    var data;
+    try {
+      data = JSON.parse(text);
+    } catch(e) {
+      // Detect HTML proxy error page
+      if (text.trimLeft().charAt(0) === '<') throw new Error('Semantic Scholar unavailable — proxy returned an error page');
+      throw new Error('Semantic Scholar returned unparseable response');
+    }
     // S2 occasionally returns 200 with an error body
-    if (data.error) throw new Error('Semantic Scholar: ' + (data.error.message || JSON.stringify(data.error)));
+    if (data.error) {
+      var msg = (typeof data.error === 'string') ? data.error : (data.error.message || JSON.stringify(data.error));
+      throw new Error('Semantic Scholar: ' + msg + ' (query: "' + s2query.slice(0, 60) + '")');
+    }
     var items = data.data || [];
     var stMap = {
       'ClinicalTrial': 'Clinical Trial',
@@ -3242,10 +3269,23 @@ function fetchFullTextLinks() {
 // Safety-net: re-check any papers that resolved a URL but weren't scanned
 function fetchAndScanPDFs() {
   setTimeout(function() {
-    papers.forEach(function(p) {
-      if (p.fullTextUrl && p.scanDepth !== 'full' && p.scanDepth !== 'pdf' && p.scanDepth !== 'pdf-blocked') {
-        scanPaperFromPDF(p);
-      }
+    var toScan = papers.filter(function(p) {
+      return p.fullTextUrl && p.scanDepth !== 'full' && p.scanDepth !== 'pdf' && p.scanDepth !== 'pdf-blocked';
+    });
+    if (!toScan.length) {
+      searchInProgress = false;
+      updateKeyBanner();
+      return;
+    }
+    var completed = 0;
+    toScan.forEach(function(p) {
+      Promise.resolve(scanPaperFromPDF(p)).catch(function(){}).then(function() {
+        completed++;
+        if (completed >= toScan.length) {
+          searchInProgress = false;
+          updateKeyBanner();
+        }
+      });
     });
   }, 10000);
 }
@@ -3614,8 +3654,12 @@ function updateKeyBanner() {
     if (label) label.textContent = '🤖 OpenAI API Key — unlock AI agent screening';
   }
   if (agentBtn) {
-    agentBtn.disabled = !(hasKey && papers.length > 0);
-    agentBtn.title = hasKey ? 'Run AI agent analysis on all results' : 'Add your OpenAI API key to enable';
+    var canRun = hasKey && papers.length > 0 && !searchInProgress && !agentRunning;
+    agentBtn.disabled = !canRun;
+    agentBtn.title = !hasKey ? 'Add your OpenAI API key to enable'
+      : searchInProgress ? 'Waiting for background fetch to complete…'
+      : agentRunning ? 'Agent analysis already running'
+      : 'Run AI agent analysis on all results';
   }
 }
 
@@ -3699,6 +3743,16 @@ function startAgentAnalysis() {
   }).then(function() {
     // throttledQueue resolved — all checks done (or timed out), start agent
     setTimeout(function() { runAgentQueue(0); }, 300);
+  }).catch(function(err) {
+    console.warn('Retraction pre-sweep error:', err);
+    // Still proceed with agent queue even if retraction check blew up
+    agentRunning = false;
+    updateKeyBanner();
+    setTimeout(function() {
+      agentRunning = true;
+      agentStop = false;
+      runAgentQueue(0);
+    }, 300);
   });
 }
 
@@ -4059,38 +4113,68 @@ async function analyseOneWithAgent(p) {
   refreshCardChecklist(p);
 
   var prompts = buildAnalysisPrompts(p);
-  var pdfUrl = p.fullTextUrl || null;  // already resolved by the webapp's Unpaywall lookup
-  var hasPdf = pdfUrl && pdfUrl.length > 10;
+  var pdfUrl = p.fullTextUrl || null;
+
+  // ── PATH A: Already have locally-extracted full text (PMC or pdf.js) ──────
+  // This is the most reliable path — text is already in hand
   var hasFullText = p.fullText && p.fullText.length > 300;
-  var textSource = 'abstract';
-
-  // ── PATH A: PDF URL available → use Responses API with file_url ──────────
-  // OpenAI fetches the PDF server-side — no CORS, no proxy needed
-  if (hasPdf && !hasFullText) {
-    try {
-      var result = await callOpenAIWithPdfUrl(pdfUrl, prompts);
-      applyAgentResults(p, result, p.abstract || '', 'pdf (OpenAI)');
-      return;
-    } catch(e) {
-      // PDF fetch failed at OpenAI's end (e.g. paywalled) — fall through to text path
-      console.warn('PDF URL failed at OpenAI, falling back to text:', e.message);
-    }
-  }
-
-  // ── PATH B: Already have full text (PMC, previously scanned) ─────────────
   if (hasFullText) {
-    textSource = p.scanDepth === 'full' ? 'PMC full text' : 'extracted text';
+    var textSource = p.scanDepth === 'full' ? 'PMC full text' : 'PDF (extracted)';
     var result = await callOpenAIWithText(p.fullText, prompts, p, textSource);
-    applyAgentResults(p, result, p.fullText, textSource);
+    try { applyAgentResults(p, result, p.fullText, textSource); } catch(e) { console.warn('applyAgentResults error (PATH A):', e); }
     return;
   }
 
-  // ── PATH C: No PDF, no full text — use abstract only ─────────────────────
-  // Still valuable: GPT-4o can make better inferences from abstracts than keyword matching
+  // ── PATH B: No local text but have a PDF URL — try to extract locally first ─
+  if (pdfUrl && pdfUrl.length > 10) {
+    try {
+      var extracted = await extractPdfText(pdfUrl);
+      if (extracted && extracted.length > 300) {
+        p.fullText = extracted;
+        var result = await callOpenAIWithText(extracted, prompts, p, 'PDF (extracted)');
+        try { applyAgentResults(p, result, extracted, 'PDF (extracted)'); } catch(e) { console.warn('applyAgentResults error (PATH B):', e); }
+        return;
+      }
+    } catch(e) {
+      console.warn('Local pdf.js extraction failed, trying OpenAI direct fetch:', e.message);
+    }
+
+    // ── PATH C: Local extraction failed — let OpenAI fetch the PDF directly ──
+    try {
+      var result = await callOpenAIWithPdfUrl(pdfUrl, prompts);
+      try { applyAgentResults(p, result, p.abstract || '', 'PDF (OpenAI)'); } catch(e) { console.warn('applyAgentResults error (PATH C):', e); }
+      return;
+    } catch(e) {
+      console.warn('OpenAI PDF fetch also failed, falling back to abstract:', e.message);
+    }
+  }
+
+  // ── PATH D: No PDF available — use abstract only ──────────────────────────
   var abstract = p.abstract || '';
   if (!abstract) throw new Error('No text available for analysis');
   var result = await callOpenAIWithText(abstract, prompts, p, 'abstract');
-  applyAgentResults(p, result, abstract, 'abstract');
+  try { applyAgentResults(p, result, abstract, 'abstract'); } catch(e) { console.warn('applyAgentResults error (PATH D):', e); }
+}
+
+// Robustly parse agent JSON — handles truncation by closing open structures
+function safeParseAgentJson(raw) {
+  // First try clean parse
+  try { return JSON.parse(raw); } catch(e) {}
+
+  // Try closing truncated JSON by counting brackets
+  try {
+    var fixed = raw;
+    var opens = (fixed.match(/{/g) || []).length - (fixed.match(/}/g) || []).length;
+    var arrOpens = (fixed.match(/\[/g) || []).length - (fixed.match(/\]/g) || []).length;
+    // Close any open arrays first, then objects
+    for (var a = 0; a < arrOpens; a++) fixed += ']';
+    for (var o = 0; o < opens; o++) fixed += '}';
+    return JSON.parse(fixed);
+  } catch(e2) {}
+
+  // Last resort: extract whatever fields we can
+  console.warn('Agent JSON parse failed entirely, raw:', raw.slice(0, 200));
+  throw new Error('Agent response was not valid JSON — likely truncated. Try again or reduce max results.');
 }
 
 // Call OpenAI Responses API with a PDF URL (OpenAI fetches the PDF server-side)
@@ -4103,7 +4187,7 @@ async function callOpenAIWithPdfUrl(pdfUrl, prompts) {
     },
     body: JSON.stringify({
       model: 'gpt-4o',
-      max_output_tokens: 2500,
+      max_output_tokens: 4000,
       input: [
         {
           role: 'user',
@@ -4140,7 +4224,7 @@ async function callOpenAIWithPdfUrl(pdfUrl, prompts) {
     });
   }
   raw = raw.replace(/^```json\s*/i,'').replace(/^```\s*/i,'').replace(/\s*```$/,'').trim();
-  return JSON.parse(raw);
+  return safeParseAgentJson(raw);
 }
 
 // Call OpenAI Chat Completions API with text content
@@ -4155,7 +4239,7 @@ async function callOpenAIWithText(text, prompts, p, textSource) {
     },
     body: JSON.stringify({
       model: 'gpt-4o-mini',
-      max_tokens: 2500,
+      max_tokens: 4000,
       temperature: 0,
       messages: [
         { role: 'system', content: prompts.systemPrompt },
@@ -4172,7 +4256,7 @@ async function callOpenAIWithText(text, prompts, p, textSource) {
   var data = await response.json();
   var raw = (data.choices && data.choices[0] && data.choices[0].message && data.choices[0].message.content) || '{}';
   raw = raw.replace(/^```json\s*/i,'').replace(/^```\s*/i,'').replace(/\s*```$/,'').trim();
-  return JSON.parse(raw);
+  return safeParseAgentJson(raw);
 }
 
 function applyAgentResults(p, result, fullText, textSource) {
@@ -4309,11 +4393,8 @@ function applyAgentResults(p, result, fullText, textSource) {
   addAgentBadge(p.pmid);
   maybeShowRob2VizBtn();
 
-  // Recompute rank score, switch sort to agent_rank, and re-render the list
+  // Recompute rank score — full re-render happens once at end via reRankAfterAgent()
   p.agentRankScore = computeAgentRankScore(p);
-  var sortEl = document.getElementById('sort-by');
-  if (sortEl && sortEl.value !== 'agent_rank') sortEl.value = 'agent_rank';
-  renderPapers();
 }
 
 function refreshCardChecklist(p) {
