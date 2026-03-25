@@ -511,6 +511,7 @@ input:focus, select:focus, textarea:focus { border-color: #3b82f6; }
           <button class="agent-btn" id="agent-run-btn" onclick="startAgentAnalysis()" disabled title="Add your OpenAI API key in the Search tab to enable">🤖 Agent Analysis</button>
           <button class="btn btn-blue" id="rob2-viz-btn" onclick="showRob2Viz()" style="display:none" title="Generate robvis-style Risk of Bias charts from agent assessments">📊 RoB2 Visualisation</button>
         </div>
+        <div id="agent-fetch-note" style="display:none;font-size:11px;color:#f59e0b;margin-top:6px">⏳ Background PDF fetching in progress — you can run the agent now, papers not yet fetched will use abstract only.</div>
       </div>
       <!-- Agent progress -->
       <div id="agent-summary-bar"></div>
@@ -964,6 +965,14 @@ var CL_STATUSES = [
   { val: 'na',      label: '— N/A' }
 ];
 
+var ROB2_STATUSES = [
+  { val: 'yes',     label: 'Y — Yes / Probably Yes' },
+  { val: 'no',      label: 'N — No / Probably No' },
+  { val: 'ni',      label: 'NI — No Information' },
+  { val: 'na',      label: 'NA — Not Applicable' },
+  { val: 'unclear', label: '? — Unclear' }
+];
+
 // Auto-detect status for a checklist item given full text
 function autoDetectStatus(item, fullText) {
   if (!fullText) return 'unclear';
@@ -1033,28 +1042,29 @@ function getRob2RiskLabel(p) {
   if (!p.checklists || !p.checklists['ROB2']) return null;
   var rob = p.checklists['ROB2'];
   var oj = ((rob['__overall_judgement__'] || '') + '').toLowerCase().trim();
+  // Normalise overall judgement
+  if (oj === 'some_concerns' || oj === 'some concerns') oj = 'some';
 
-  // Normalise judgement string
   if (!oj || oj === 'unclear' || oj === 'ni') {
     // Derive from domain judgements
     var dj = rob['__domain_judgements__'] || {};
     var vals = Object.values(dj).map(function(v){ return (v+'').toLowerCase().trim(); });
     if (vals.length === 0) return null;
     var highs = vals.filter(function(v){ return v === 'high'; }).length;
-    var somes  = vals.filter(function(v){ return v === 'some_concerns' || v === 'some concerns'; }).length;
+    var somes  = vals.filter(function(v){ return v === 'some' || v === 'some_concerns' || v === 'some concerns'; }).length;
     if (highs >= 1)      oj = 'high';
-    else if (somes >= 1) oj = 'some_concerns';
+    else if (somes >= 1) oj = 'some';
     else                 oj = 'low';
   }
 
   if (oj === 'low') {
-    return { label: 'RoB2: Low risk',    colour: '#fef08a', bg: '#713f1222', border: '#a16207' };
+    return { label: 'RoB2: Low risk',      colour: '#4ade80', bg: '#14271a', border: '#22c55e44' };
   }
-  if (oj === 'some_concerns' || oj === 'some concerns') {
-    return { label: 'RoB2: Medium risk', colour: '#fb923c', bg: '#43141222', border: '#c2410c' };
+  if (oj === 'some') {
+    return { label: 'RoB2: Some concerns', colour: '#fbbf24', bg: '#1c1408', border: '#f59e0b44' };
   }
   if (oj === 'high') {
-    return { label: 'RoB2: High risk',   colour: '#f87171', bg: '#7f1d1d22', border: '#dc2626' };
+    return { label: 'RoB2: High risk',     colour: '#f87171', bg: '#1a0808', border: '#ef444444' };
   }
   return null;
 }
@@ -1094,7 +1104,7 @@ function computeAgentRankScore(p) {
     var oj = ((p.checklists['ROB2']['__overall_judgement__'] || '') + '').toLowerCase();
     if (oj === 'low')  rob2Adj = 15;
     else if (oj === 'high') rob2Adj = -15;
-    else if (oj === 'some_concerns' || oj === 'some concerns') rob2Adj = 0;
+    else if (oj === 'some' || oj === 'some_concerns' || oj === 'some concerns') rob2Adj = 0;
     else {
       // Derive from domain judgements if overall not set
       var dj = p.checklists['ROB2']['__domain_judgements__'] || {};
@@ -1657,6 +1667,12 @@ function doSearch() {
       ' \u00b7 scanned against ' + scanCriteria.length + ' criteria \u00b7 ' + allPass + ' passed all \u2014 click to view';
 
     btn.disabled = false; btn.innerHTML = '\u2192 Search';
+  }).catch(function(err) {
+    console.error('Search error:', err);
+    btn.disabled = false; btn.innerHTML = '\u2192 Search';
+    showError('Search failed: ' + (err.message || 'unknown error'));
+    searchInProgress = false;
+    updateKeyBanner();
   });
 }
 
@@ -2175,12 +2191,15 @@ function buildChecklistPill(p) {
 
 function renderPapers() {
   var sorted = getSorted();
-  document.getElementById('paper-count').textContent = sorted.length + ' / ' + papers.length + ' papers';
+  var countEl = document.getElementById('paper-count');
+  if (countEl) countEl.textContent = sorted.length + ' / ' + papers.length + ' papers';
   var list = document.getElementById('papers-list');
+  if (!list) return;
 
   list.innerHTML = sorted.map(function(p) {
     var color = TYPE_COLORS[p.studyType] || '#6b7280';
-    var authorStr = p.authors.slice(0,3).join(', ') + (p.authors.length > 3 ? ' et al.' : '');
+    var authors = p.authors || [];
+    var authorStr = authors.slice(0,3).join(', ') + (authors.length > 3 ? ' et al.' : '');
     var expanded = expandedCards.has(p.pmid);
     var scoreColor = p.score >= 80 ? '#22c55e' : p.score >= 50 ? '#f59e0b' : '#ef4444';
 
@@ -2220,9 +2239,19 @@ function renderPapers() {
       '</div>';
     }
 
-    var agentRankBadge = (p.agentRankScore != null)
-      ? '<span style="background:#1e3a5f;border:1px solid #3b82f6;color:#93c5fd;font-size:10px;font-weight:700;font-family:\'IBM Plex Mono\',monospace;padding:2px 8px;border-radius:10px;letter-spacing:0.03em;white-space:nowrap">&#128202; ' + p.agentRankScore + ' pts</span>'
-      : '';
+    var agentRankBadge = '';
+    if (p.agentRankScore != null && p.scanDepth === 'agent') {
+      var rob2Risk = getRob2RiskLabel(p);
+      var robColour = rob2Risk ? rob2Risk.colour : '#4b5563';
+      var robLabel  = rob2Risk ? rob2Risk.label.replace('RoB2: ','') : 'Not assessed';
+      var clKey2 = p.selectedChecklist;
+      var clSc2  = clKey2 ? checklistScore(p, clKey2) : null;
+      agentRankBadge =
+        '<div style="display:flex;flex-direction:column;gap:2px;margin-top:2px">' +
+          '<span style="background:#1e3a5f;border:1px solid #3b82f6;color:#93c5fd;font-size:10px;font-weight:700;font-family:\'IBM Plex Mono\',monospace;padding:2px 8px;border-radius:10px;white-space:nowrap">&#128202; Score: ' + p.agentRankScore + '/100</span>' +
+          (clSc2 ? '<span style="font-size:9px;color:#64748b;padding-left:2px">Criteria ' + p.score + '% &middot; ' + esc(clKey2) + ' ' + clSc2.pct + '% &middot; <span style="color:' + robColour + '">' + esc(robLabel) + '</span></span>' : '') +
+        '</div>';
+    }
 
     return '<div class="paper-card" id="card-'+p.pmid+'">' +
       '<div class="paper-header">' +
@@ -3677,12 +3706,16 @@ function updateKeyBanner() {
     if (label) label.textContent = '🤖 OpenAI API Key — unlock AI agent screening';
   }
   if (agentBtn) {
-    var canRun = hasKey && papers.length > 0 && !searchInProgress && !agentRunning;
+    var canRun = hasKey && papers.length > 0 && !agentRunning;
     agentBtn.disabled = !canRun;
     agentBtn.title = !hasKey ? 'Add your OpenAI API key to enable'
-      : searchInProgress ? 'Waiting for background fetch to complete…'
-      : agentRunning ? 'Agent analysis already running'
+      : agentRunning ? 'Agent appears to be running — click to force reset'
       : 'Run AI agent analysis on all results';
+  }
+  // Show a soft note if background PDF fetching is still in progress
+  var fetchNote = document.getElementById('agent-fetch-note');
+  if (fetchNote) {
+    fetchNote.style.display = (searchInProgress && papers.length > 0) ? 'block' : 'none';
   }
   // Update uploader button label to reflect AI availability
   var uclNote = document.getElementById('ucl-ai-note');
@@ -3710,11 +3743,21 @@ function startAgentAnalysis() {
     return;
   }
   if (!papers.length) return;
-  if (agentRunning) return;
+
+  // If stuck running for some reason, force reset and proceed
+  if (agentRunning) {
+    var forceReset = confirm('Agent appears to still be running. Force reset and start fresh?');
+    if (!forceReset) return;
+    agentRunning = false;
+    agentStop = true;
+    document.querySelectorAll('.agent-processing-card').forEach(function(el) {
+      el.classList.remove('agent-processing-card');
+    });
+  }
 
   // Sort papers by score descending so highest-ranked papers are analysed first
   papers.sort(function(a, b) { return (b.score || 0) - (a.score || 0); });
-  renderResults(); // re-render cards in new order
+  renderPapers(); // re-render cards in new order only — don't re-trigger background fetches
 
   agentRunning = true;
   agentStop = false;
@@ -3775,13 +3818,7 @@ function startAgentAnalysis() {
   }).catch(function(err) {
     console.warn('Retraction pre-sweep error:', err);
     // Still proceed with agent queue even if retraction check blew up
-    agentRunning = false;
-    updateKeyBanner();
-    setTimeout(function() {
-      agentRunning = true;
-      agentStop = false;
-      runAgentQueue(0);
-    }, 300);
+    setTimeout(function() { runAgentQueue(0); }, 300);
   });
 }
 
@@ -3844,6 +3881,46 @@ function runAgentQueue(index) {
     agentStats.done++;
     updateAgentCounters();
     if (activeCard) activeCard.classList.remove('agent-processing-card');
+    // Compute rank score and update badge in-place
+    try {
+      p.agentRankScore = computeAgentRankScore(p);
+      // Update the rank badge directly on the card
+      var card = document.getElementById('card-' + p.pmid);
+      if (card) {
+        var rob2Risk = getRob2RiskLabel(p);
+        var robColour = rob2Risk ? rob2Risk.colour : '#4b5563';
+        var robLabel  = rob2Risk ? rob2Risk.label.replace('RoB2: ','') : 'Not assessed';
+        var clKey2 = p.selectedChecklist;
+        var clSc2  = clKey2 ? checklistScore(p, clKey2) : null;
+        var badgeHtml =
+          '<div id="agent-rank-badge-' + p.pmid + '" style="display:flex;flex-direction:column;gap:2px;margin-top:2px">' +
+            '<span style="background:#1e3a5f;border:1px solid #3b82f6;color:#93c5fd;font-size:10px;font-weight:700;font-family:\'IBM Plex Mono\',monospace;padding:2px 8px;border-radius:10px;white-space:nowrap">&#128202; Score: ' + p.agentRankScore + '/100</span>' +
+            (clSc2 ? '<span style="font-size:9px;color:#64748b;padding-left:2px">Criteria ' + p.score + '% &middot; ' + esc(clKey2) + ' ' + clSc2.pct + '% &middot; <span style="color:' + robColour + '">' + esc(robLabel) + '</span></span>' : '') +
+          '</div>';
+        // Replace existing badge or insert after type badge
+        var existing = card.querySelector('[id^="agent-rank-badge-"]');
+        if (existing) {
+          existing.outerHTML = badgeHtml;
+        } else {
+          var typeBadge = card.querySelector('.badge');
+          if (typeBadge) typeBadge.insertAdjacentHTML('afterend', badgeHtml);
+        }
+      }
+      // Stable agent sort: analysed papers at top sorted by rank, unanalysed below in original order
+      var list = document.getElementById('papers-list');
+      if (list) {
+        var analysed   = papers.filter(function(pp){ return pp.scanDepth === 'agent'; });
+        var unanalysed = papers.filter(function(pp){ return pp.scanDepth !== 'agent'; });
+        analysed.sort(function(a, b){ return (b.agentRankScore || 0) - (a.agentRankScore || 0); });
+        var ordered = analysed.concat(unanalysed);
+        ordered.forEach(function(pp) {
+          var c = document.getElementById('card-' + pp.pmid);
+          if (c) list.appendChild(c);
+        });
+        var countEl = document.getElementById('paper-count');
+        if (countEl) countEl.textContent = papers.length + ' / ' + papers.length + ' papers';
+      }
+    } catch(e) { console.warn('Progressive rerank error:', e); }
     setTimeout(function() { runAgentQueue(index + 1); }, 800);
   }).catch(function(err) {
     console.warn('Agent failed for', p.pmid, err);
@@ -4215,7 +4292,7 @@ async function callOpenAIWithPdfUrl(pdfUrl, prompts) {
       'Authorization': 'Bearer ' + openAIKey
     },
     body: JSON.stringify({
-      model: 'gpt-4o',
+      model: 'gpt-5',
       max_output_tokens: 4000,
       input: [
         {
@@ -4256,23 +4333,30 @@ async function callOpenAIWithPdfUrl(pdfUrl, prompts) {
   return safeParseAgentJson(raw);
 }
 
-// Call OpenAI Chat Completions API with text content
+// Call OpenAI Responses API with text content
 async function callOpenAIWithText(text, prompts, p, textSource) {
   var userPrompt = prompts.userHeader + '\n\nTEXT (' + textSource.toUpperCase() + '):\n' + text.slice(0, 14000);
 
-  var response = await fetch('https://api.openai.com/v1/chat/completions', {
+  var response = await fetch('https://api.openai.com/v1/responses', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
       'Authorization': 'Bearer ' + openAIKey
     },
     body: JSON.stringify({
-      model: 'gpt-4o-mini',
-      max_tokens: 4000,
-      temperature: 0,
-      messages: [
-        { role: 'system', content: prompts.systemPrompt },
-        { role: 'user', content: userPrompt }
+      model: 'gpt-5',
+      max_output_tokens: 8000,
+      reasoning: { effort: 'medium' },
+      input: [
+        {
+          role: 'user',
+          content: [
+            {
+              type: 'input_text',
+              text: prompts.systemPrompt + '\n\n' + userPrompt
+            }
+          ]
+        }
       ]
     })
   });
@@ -4283,7 +4367,18 @@ async function callOpenAIWithText(text, prompts, p, textSource) {
   }
 
   var data = await response.json();
-  var raw = (data.choices && data.choices[0] && data.choices[0].message && data.choices[0].message.content) || '{}';
+  // Responses API: extract text from output array
+  var raw = '';
+  if (data.output) {
+    data.output.forEach(function(block) {
+      if (block.type === 'message' && block.content) {
+        block.content.forEach(function(c) {
+          if (c.type === 'output_text') raw += c.text;
+        });
+      }
+    });
+  }
+  if (!raw) raw = '{}';
   raw = raw.replace(/^```json\s*/i,'').replace(/^```\s*/i,'').replace(/\s*```$/,'').trim();
   return safeParseAgentJson(raw);
 }
@@ -4348,9 +4443,17 @@ function applyAgentResults(p, result, fullText, textSource) {
     if (!p.checklists) p.checklists = {};
     p.checklists['ROB2'] = p.checklists['ROB2'] || {};
     var domainJudgements = {};
+    function normaliseJudgement(v) {
+      if (!v) return 'unclear';
+      v = String(v).toLowerCase().trim();
+      if (v === 'some_concerns' || v === 'some concerns' || v === 'some') return 'some';
+      if (v === 'low') return 'low';
+      if (v === 'high') return 'high';
+      return 'unclear';
+    }
     Object.keys(result.rob2).forEach(function(id) {
       if (id.endsWith('_judgement')) {
-        domainJudgements[id.replace('_judgement', '')] = result.rob2[id];
+        domainJudgements[id.replace('_judgement', '')] = normaliseJudgement(result.rob2[id]);
       } else {
         p.checklists['ROB2'][id] = result.rob2[id];
       }
@@ -4359,11 +4462,15 @@ function applyAgentResults(p, result, fullText, textSource) {
       p.checklists['ROB2']['__domain_judgements__'] = domainJudgements;
     }
     if (result.rob2.overall_judgement) {
-      p.checklists['ROB2']['__overall_judgement__'] = result.rob2.overall_judgement;
+      p.checklists['ROB2']['__overall_judgement__'] = normaliseJudgement(result.rob2.overall_judgement);
     }
     if (result.domain_judgements) {
+      var normDj = {};
+      Object.keys(result.domain_judgements).forEach(function(k) {
+        normDj[k] = normaliseJudgement(result.domain_judgements[k]);
+      });
       p.checklists['ROB2']['__domain_judgements__'] = Object.assign(
-        p.checklists['ROB2']['__domain_judgements__'] || {}, result.domain_judgements
+        p.checklists['ROB2']['__domain_judgements__'] || {}, normDj
       );
     }
   }
@@ -4543,7 +4650,7 @@ function showAgentSummary() {
     '<div style="color:#1e2d4a">|</div>' +
     '<div class="agent-sum-item"><div class="agent-sum-num" style="color:#64748b">' + agentStats.skipped + '</div><div style="font-size:11px">skipped</div></div>' +
     (agentStats.retracted ? '<div style="color:#1e2d4a">|</div><div class="agent-sum-item"><div class="agent-sum-num" style="color:#ef4444">' + agentStats.retracted + '</div><div style="font-size:11px">⚠️ retracted</div></div>' : '') +
-    '<div style="font-size:11px;color:#4b5563;margin-left:auto">Used gpt-4o-mini · <a href="https://platform.openai.com/usage" target="_blank" style="color:#64748b">View usage →</a></div>';
+    '<div style="font-size:11px;color:#4b5563;margin-left:auto">Used gpt-5 · <a href="https://platform.openai.com/usage" target="_blank" style="color:#64748b">View usage →</a></div>';
 }
 
 // ══════════════════════════════════════════════
