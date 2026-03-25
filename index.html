@@ -647,7 +647,8 @@ input:focus, select:focus, textarea:focus { border-color: #3b82f6; }
         <label style="font-size:11px; color:#64748b; display:flex; align-items:center; gap:6px; cursor:pointer">
           <input type="checkbox" id="ucl-also-rob2" checked style="accent-color:#3b82f6"> Also run RoB2
         </label>
-        <button class="btn btn-blue" onclick="runUploaderChecklist()" style="padding:6px 18px; font-size:12px">&#9654; Run Checklist</button>
+        <button class="btn btn-blue" id="ucl-run-btn" onclick="runUploaderChecklist()" style="padding:6px 18px; font-size:12px">&#9654; Run Checklist</button>
+        <span id="ucl-ai-note" style="font-size:10px; color:#64748b"></span>
       </div>
 
       <!-- Progress -->
@@ -3531,14 +3532,36 @@ function runUploaderWithText(text, clKey, alsoRob2, title, studyType) {
   var fakePaper = {
     pmid: pmid, title: title, studyType: studyType,
     fullText: text, abstract: text, scanDepth: 'pdf',
-    checklists: {}, selectedChecklist: clKey
+    checklists: {}, selectedChecklist: clKey,
+    authors: [], year: '', journal: '', score: 0,
+    scanResults: [], passedCriteria: 0, totalCriteria: 0,
+    manualTags: []
   };
-  runChecklistsOnPaper(fakePaper);
-  uploaderPapers[pmid] = fakePaper;
 
-  setUploaderProgress(100);
-  setUploaderStatus('');
-  renderUploaderResults(fakePaper, clKey, alsoRob2, title);
+  // Use AI agent if key available, otherwise fall back to keyword scan
+  if (openAIKey && openAIKey.startsWith('sk-')) {
+    setUploaderStatus('🤖 Running AI agent analysis…', '#a78bfa');
+    analyseOneWithAgent(fakePaper).then(function() {
+      uploaderPapers[pmid] = fakePaper;
+      setUploaderProgress(100);
+      setUploaderStatus('');
+      renderUploaderResults(fakePaper, fakePaper.selectedChecklist || clKey, alsoRob2, title);
+    }).catch(function(err) {
+      // Fall back to keyword scan on agent failure
+      console.warn('Uploader agent failed, falling back to keyword scan:', err);
+      runChecklistsOnPaper(fakePaper);
+      uploaderPapers[pmid] = fakePaper;
+      setUploaderProgress(100);
+      setUploaderStatus('⚠️ AI failed, used keyword scan: ' + (err.message || ''), '#f59e0b');
+      renderUploaderResults(fakePaper, clKey, alsoRob2, title);
+    });
+  } else {
+    runChecklistsOnPaper(fakePaper);
+    uploaderPapers[pmid] = fakePaper;
+    setUploaderProgress(100);
+    setUploaderStatus('');
+    renderUploaderResults(fakePaper, clKey, alsoRob2, title);
+  }
 }
 
 function updateUploaderItem(pmid, ck, itemId, selectEl) {
@@ -3660,6 +3683,12 @@ function updateKeyBanner() {
       : searchInProgress ? 'Waiting for background fetch to complete…'
       : agentRunning ? 'Agent analysis already running'
       : 'Run AI agent analysis on all results';
+  }
+  // Update uploader button label to reflect AI availability
+  var uclNote = document.getElementById('ucl-ai-note');
+  if (uclNote) {
+    uclNote.textContent = hasKey ? '🤖 AI agent mode' : 'keyword scan only — add API key for AI';
+    uclNote.style.color = hasKey ? '#a78bfa' : '#4b5563';
   }
 }
 
