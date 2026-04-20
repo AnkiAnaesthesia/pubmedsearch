@@ -46,6 +46,20 @@ a:hover { text-decoration: underline; }
 #logo-title { font-family: 'IBM Plex Sans', sans-serif; font-weight: 700; font-size: 17px; color: #f1f5f9; }
 #logo-sub { font-size: 11px; color: #64748b; margin-top: 1px; }
 #tabs { display: flex; gap: 6px; }
+.settings-btn { width:40px; height:40px; border-radius:8px; border:1px solid #1e2d4a; background:transparent; color:#64748b; font-size:22px; cursor:pointer; display:flex; align-items:center; justify-content:center; flex-shrink:0; transition:color 0.15s,border-color 0.15s; }
+.settings-btn:hover { color:#f1f5f9; border-color:#3b82f6; }
+#settings-overlay { display:none; position:fixed; inset:0; background:#00000088; z-index:1000; align-items:flex-start; justify-content:flex-end; padding:60px 20px 0; }
+#settings-overlay.open { display:flex; }
+#settings-panel { background:#0d1220; border:1px solid #1e2d4a; border-radius:12px; width:100%; max-width:480px; max-height:calc(100vh - 80px); overflow-y:auto; box-shadow:0 24px 64px #000a; }
+#settings-panel-header { display:flex; align-items:center; justify-content:space-between; padding:16px 20px; border-bottom:1px solid #1e2d4a; }
+#settings-panel-title { font-size:14px; font-weight:700; color:#f1f5f9; display:flex; align-items:center; gap:8px; }
+.settings-close-btn { background:none; border:none; color:#64748b; font-size:18px; cursor:pointer; line-height:1; padding:2px; }
+.settings-close-btn:hover { color:#f1f5f9; }
+.settings-section { padding:16px 20px; border-bottom:1px solid #1e2d4a; }
+.settings-section:last-child { border-bottom:none; }
+.settings-section-title { font-size:11px; color:#3b82f6; text-transform:uppercase; letter-spacing:0.1em; font-weight:600; margin-bottom:12px; }
+.settings-dot { width:8px; height:8px; border-radius:50%; background:#f59e0b; flex-shrink:0; display:inline-block; margin-right:6px; }
+#settings-overlay .key-set .settings-dot { background:#4ade80; }
 .tab-btn { padding: 5px 15px; border-radius: 6px; border: 1px solid #1e2d4a; font-size: 11px; cursor: pointer; font-family: 'IBM Plex Mono', monospace; text-transform: uppercase; letter-spacing: 0.06em; background: transparent; color: #94a3b8; }
 .tab-btn.active { background: #3b82f6; border-color: #3b82f6; color: #fff; }
 
@@ -217,7 +231,7 @@ input:focus, select:focus, textarea:focus { border-color: #3b82f6; }
 .rob-judgement-select { padding: 3px 7px; font-size: 10px; border-radius: 4px; cursor: pointer; }
 .rob-low  { background: #14271a; border-color: #22c55e44; color: #4ade80; }
 .rob-high { background: #1a0808; border-color: #ef444444; color: #f87171; }
-.rob-some { background: #1c1408; border-color: #f59e0b44; color: #fbbf24; }
+.rob-some_concerns { background: #1c1408; border-color: #f59e0b44; color: #fbbf24; }
 .rob-na   { background: #111827; border-color: #37415144; color: #6b7280; }
 
 /* ── Citation count badge ── */
@@ -244,7 +258,64 @@ input:focus, select:focus, textarea:focus { border-color: #3b82f6; }
 .alert-new-badge { display: inline-block; font-size: 9px; padding: 1px 6px; border-radius: 20px; border: 1px solid #22c55e44; background: #14271a; color: #4ade80; font-weight: 700; margin-left: 4px; }
 .history-actions { display: flex; gap: 7px; align-items: center; flex-shrink: 0; }
 
-/* ── Checklist Uploader ── */
+.ucl-cl-chevron { font-size:10px; color:#4b5563; flex-shrink:0; transition:transform 0.2s; margin-left:6px; margin-top:2px; }
+.ucl-cl-box.collapsed .ucl-cl-chevron { transform:rotate(180deg); }
+.ucl-cl-box-summary { margin-top:5px; display:flex; flex-wrap:wrap; gap:4px; }
+.ucl-cl-box-summary-pill { font-size:10px; padding:2px 8px; border-radius:10px; background:#1e3a5f; color:#60a5fa; font-weight:600; }
+.ucl-cl-box-bias .ucl-cl-box-summary-pill { background:#2a1540; color:#c084fc; }
+#ucl-checklist-grid-quality, #ucl-checklist-grid-bias { overflow:hidden; transition:max-height 0.25s ease, opacity 0.2s ease; max-height:600px; opacity:1; }
+.ucl-cl-box.collapsed #ucl-checklist-grid-quality,
+.ucl-cl-box.collapsed #ucl-checklist-grid-bias { max-height:0; opacity:0; pointer-events:none; }
+.ucl-cl-box.collapsed .ucl-cl-box-header { border-bottom:none; padding-bottom:0; }
+
+
+
+/* ── Reference Scanner ── */
+.ref-card { background:#0a0e1a; border:1px solid #1e2d4a; border-radius:8px; padding:12px 14px; margin-bottom:8px; display:flex; gap:12px; align-items:flex-start; }
+.ref-card:hover { border-color:#2d3f5e; }
+.ref-rank { font-size:18px; font-weight:700; color:#1e2d4a; min-width:28px; text-align:center; flex-shrink:0; line-height:1.2; padding-top:2px; }
+.ref-body { flex:1; min-width:0; }
+.ref-title { font-size:13px; font-weight:600; color:#f1f5f9; margin-bottom:4px; line-height:1.4; }
+.ref-meta { font-size:11px; color:#64748b; margin-bottom:7px; }
+.ref-badges { display:flex; flex-wrap:wrap; gap:5px; align-items:center; }
+.ref-badge { display:inline-flex; align-items:center; gap:3px; font-size:10px; padding:2px 8px; border-radius:10px; font-weight:600; white-space:nowrap; }
+.ref-badge-type { background:#1e2d4a; color:#93c5fd; border:1px solid #2d3f5e; }
+.ref-badge-bias-low { background:#14532d; color:#4ade80; border:1px solid #16a34a; }
+.ref-badge-bias-some { background:#451a03; color:#fb923c; border:1px solid #9a3412; }
+.ref-badge-bias-high { background:#450a0a; color:#fca5a5; border:1px solid #7f1d1d; }
+.ref-badge-bias-unclear { background:#1c1917; color:#78716c; border:1px solid #44403c; }
+.ref-badge-quality { background:#0c2340; color:#7dd3fc; border:1px solid #1e3a5f; }
+.ref-badge-biastool { background:#1a0a2e; color:#c084fc; border:1px solid #3b1e6e; }
+.ref-badge-score { background:#1e1b4b; color:#a5b4fc; border:1px solid #312e81; }
+.ref-reasoning { font-size:10px; color:#4b5563; margin-top:5px; line-height:1.4; font-style:italic; }
+.ref-progress-row { display:flex; align-items:center; gap:10px; padding:8px 0; border-bottom:1px solid #0d1220; font-size:11px; color:#64748b; }
+.ref-progress-spinner { width:12px; height:12px; border:2px solid #1e2d4a; border-top-color:#3b82f6; border-radius:50%; animation:spin 0.7s linear infinite; flex-shrink:0; }
+@keyframes spin { to { transform:rotate(360deg); } }
+
+/* ── PDF Scanner checklist boxes ── */
+.ucl-cl-box { background:#0a0e1a; border:1px solid #1e2d4a; border-radius:10px; padding:14px; }
+.ucl-cl-box-bias { border-color:#3d1f4f; }
+.ucl-cl-box-header { display:flex; align-items:flex-start; gap:10px; margin-bottom:12px; padding-bottom:10px; border-bottom:1px solid #1e2d4a; }
+.ucl-cl-box-bias .ucl-cl-box-header { border-bottom-color:#3d1f4f; }
+.ucl-cl-box-icon { font-size:18px; line-height:1; margin-top:1px; flex-shrink:0; }
+.ucl-cl-box-title { font-size:13px; font-weight:700; color:#f1f5f9; margin-bottom:2px; }
+.ucl-cl-box-sub { font-size:11px; color:#64748b; }
+.ucl-cl-card { display:flex; align-items:flex-start; gap:9px; background:#0d1220; border:1px solid #1a2540; border-radius:7px; padding:10px 12px; cursor:pointer; transition:border-color 0.15s, background 0.15s; margin-bottom:6px; }
+.ucl-cl-card:last-child { margin-bottom:0; }
+.ucl-cl-card:hover { border-color:#3b82f6; background:#0d1830; }
+.ucl-cl-box-bias .ucl-cl-card:hover { border-color:#a855f7; background:#150d25; }
+.ucl-cl-card input[type=checkbox] { margin-top:2px; accent-color:#3b82f6; flex-shrink:0; width:14px; height:14px; cursor:pointer; }
+.ucl-cl-box-bias .ucl-cl-card input[type=checkbox] { accent-color:#a855f7; }
+.ucl-cl-card:has(input:checked) { border-color:#3b82f6; background:#0d1830; }
+.ucl-cl-box-bias .ucl-cl-card:has(input:checked) { border-color:#a855f7; background:#150d25; }
+.ucl-cl-card-inner { flex:1; min-width:0; }
+.ucl-cl-name { font-size:12px; font-weight:600; color:#f1f5f9; margin-bottom:3px; }
+.ucl-cl-desc { font-size:11px; color:#64748b; line-height:1.45; margin-bottom:5px; }
+.ucl-cl-tag { display:inline-block; font-size:10px; padding:2px 7px; border-radius:10px; background:#1e2d4a; color:#60a5fa; font-weight:600; letter-spacing:0.03em; }
+.ucl-cl-box-bias .ucl-cl-tag { background:#2a1540; color:#c084fc; }
+@media(max-width:720px){ .ucl-cl-box { grid-column: 1 / -1; } }
+
+/* ── PDF Scanner ── */
 .upload-zone { border: 2px dashed #1e3a5f; border-radius: 12px; padding: 48px 24px; text-align: center; cursor: pointer; transition: border-color 0.2s, background 0.2s; background: #070b14; }
 .upload-zone:hover, .upload-zone.drag-over { border-color: #3b82f6; background: #0d1628; }
 .upload-zone-icon { font-size: 40px; margin-bottom: 12px; }
@@ -279,7 +350,52 @@ input:focus, select:focus, textarea:focus { border-color: #3b82f6; }
     <button class="tab-btn" id="results-tab-btn" onclick="switchTab('results')">Results</button>
     <button class="tab-btn" onclick="switchTab('criteria')">Scan Criteria</button>
     <button class="tab-btn" onclick="switchTab('history')">History</button>
-    <button class="tab-btn" onclick="switchTab('uploader')">&#128203; Checklist Uploader</button>
+    <button class="tab-btn" onclick="switchTab('uploader')">&#128203; PDF Scanner</button>
+  </div>
+  <button class="settings-btn" onclick="toggleSettings()" title="Settings">&#9881;</button>
+</div>
+
+<!-- ══ SETTINGS PANEL ══════════════════════════════════════ -->
+<div id="settings-overlay" onclick="if(event.target===this)closeSettings()">
+  <div id="settings-panel">
+    <div id="settings-panel-header">
+      <div id="settings-panel-title">&#9881; Settings</div>
+      <button class="settings-close-btn" onclick="closeSettings()">&#10005;</button>
+    </div>
+
+    <!-- OpenAI API Key -->
+    <div class="settings-section" id="settings-key-section">
+      <div class="settings-section-title">&#129302; AI Agent — OpenAI API Key</div>
+      <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:8px">
+        <span class="settings-dot" id="settings-key-dot"></span>
+        <span id="settings-key-label" style="font-size:11px;color:#f59e0b;font-weight:600">Not set</span>
+      </div>
+      <input type="password" id="openai-key-input" placeholder="sk-..." oninput="saveOpenAIKey()" autocomplete="off"
+        style="width:100%;box-sizing:border-box;padding:7px 10px;font-size:12px;letter-spacing:0.04em;margin-bottom:6px" />
+      <div style="font-size:11px;color:#4b5563">Enables AI agent analysis, checklist assessment &amp; PDF screening. <a href="https://platform.openai.com/api-keys" target="_blank" style="color:#64748b">Get a key →</a></div>
+    </div>
+
+    <!-- LibKey -->
+    <div class="settings-section">
+      <div class="settings-section-title">&#128218; LibKey — Institutional Library Access</div>
+      <input type="text" id="libkey-id" placeholder="e.g. 1271  (from libkey.io/libraries/1271)"
+        style="width:100%;box-sizing:border-box;padding:7px 10px;font-size:12px;margin-bottom:6px" oninput="saveLibkeyId()" />
+      <div style="font-size:11px;color:#4b5563">One-click full-text access via your institution. <a href="https://libkey.io" target="_blank" style="color:#64748b">Find your ID at libkey.io</a></div>
+    </div>
+
+    <!-- Scopus -->
+    <div class="settings-section">
+      <div class="settings-section-title">&#128083; Scopus API Credentials <span style="font-size:10px;background:#111827;border:1px solid #1e2d4a;padding:1px 7px;border-radius:10px;color:#4b5563;font-weight:400;text-transform:none;letter-spacing:0">Optional</span></div>
+      <div style="display:flex;flex-direction:column;gap:7px;margin-bottom:8px">
+        <input type="password" id="scopus-api-key" placeholder="API Key (from dev.elsevier.com)" autocomplete="off"
+          style="padding:7px 10px;font-size:12px;width:100%;box-sizing:border-box" oninput="saveScopusKey()" />
+        <input type="text" id="scopus-inst-token" placeholder="InstToken (from apisupport@elsevier.com)" autocomplete="off"
+          style="padding:7px 10px;font-size:12px;width:100%;box-sizing:border-box" oninput="saveScopusKey()" />
+        <span id="scopus-key-status" style="font-size:11px;color:#4b5563"></span>
+      </div>
+      <div style="font-size:11px;color:#4b5563">Free for academic use. Register at <a href="https://dev.elsevier.com" target="_blank" style="color:#64748b">dev.elsevier.com</a> · InstToken needed for off-campus access · Enable the Scopus chip on the search tab once keys are entered.</div>
+    </div>
+
   </div>
 </div>
 
@@ -288,15 +404,11 @@ input:focus, select:focus, textarea:focus { border-color: #3b82f6; }
   <!-- ══ SEARCH TAB ══════════════════════════════════════ -->
   <div class="tab-panel active" id="tab-search">
 
-    <!-- OpenAI API Key Banner -->
-    <div id="api-key-banner">
-      <div class="key-status-dot"></div>
-      <div class="api-key-label" id="api-key-label">🤖 OpenAI API Key — unlock AI agent screening</div>
-      <input type="password" id="openai-key-input" placeholder="sk-..." oninput="saveOpenAIKey()" autocomplete="off" />
-      <span style="font-size:11px;color:#64748b">Enables full-text AI analysis, intelligent checklist assessment &amp; agent-driven PDF screening. <a href="https://platform.openai.com/api-keys" target="_blank" style="color:#64748b">Get a key →</a></span>
-    </div>
-
     <!-- Step 1: Database Query -->
+    <div id="api-key-notice" class="info-box" style="margin-bottom:16px; border-color:#f59e0b44; color:#94a3b8; background:#0d1220; display:flex; align-items:center; gap:10px; flex-wrap:wrap">
+      <span style="font-size:15px">🔑</span>
+      <span>To unlock full use of Evidentum, an OpenAI key is needed — please enter it in the <button onclick="toggleSettings()" style="background:none;border:none;color:#f59e0b;font-family:'IBM Plex Mono',monospace;font-size:inherit;cursor:pointer;padding:0;text-decoration:underline">⚙ Settings</button> panel.</span>
+    </div>
     <div class="card">
       <div style="display:flex;align-items:center;gap:10px;margin-bottom:11px">
         <span class="step-num">1</span>
@@ -388,31 +500,6 @@ input:focus, select:focus, textarea:focus { border-color: #3b82f6; }
         </div>
       </div>
 
-      <!-- LibKey institutional access -->
-      <div style="margin-top:10px;display:flex;align-items:center;gap:8px;flex-wrap:wrap">
-        <div class="sec-label" style="margin-bottom:0;white-space:nowrap">&#128218; LibKey Library ID</div>
-        <input type="text" id="libkey-id" placeholder="e.g. 1271  (from libkey.io/libraries/1271)" style="flex:1;min-width:180px;max-width:340px;padding:6px 10px;font-size:12px" oninput="saveLibkeyId()" />
-        <span style="font-size:11px;color:#4b5563">Enter your institution's ID for one-click library access on each result. <a href="https://libkey.io" target="_blank" style="color:#64748b">Find yours at libkey.io</a></span>
-      </div>
-
-      <!-- Scopus API credentials -->
-      <div style="margin-top:10px;border-top:1px solid #1e2d4a;padding-top:10px">
-        <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px">
-          <div class="sec-label" style="margin-bottom:0">&#128083; Scopus API Credentials</div>
-          <span style="font-size:10px;color:#4b5563;background:#111827;border:1px solid #1e2d4a;padding:1px 7px;border-radius:10px">Optional</span>
-        </div>
-        <div style="display:flex;flex-wrap:wrap;gap:8px;align-items:center">
-          <input type="password" id="scopus-api-key" placeholder="API Key (from dev.elsevier.com)" autocomplete="off"
-            style="flex:1;min-width:200px;max-width:320px;padding:6px 10px;font-size:12px" oninput="saveScopusKey()" />
-          <input type="text" id="scopus-inst-token" placeholder="InstToken (from apisupport@elsevier.com)" autocomplete="off"
-            style="flex:1;min-width:200px;max-width:320px;padding:6px 10px;font-size:12px" oninput="saveScopusKey()" />
-          <span id="scopus-key-status" style="font-size:11px;color:#4b5563"></span>
-        </div>
-        <div style="font-size:11px;color:#4b5563;margin-top:4px">
-          Free for academic use. Register at <a href="https://dev.elsevier.com" target="_blank" style="color:#64748b">dev.elsevier.com</a>
-          · InstToken needed for off-campus access · Enable the Scopus database chip above once keys are entered.
-        </div>
-      </div>
     </div>
 
     <!-- Step 2: Document Scanning -->
@@ -459,11 +546,10 @@ input:focus, select:focus, textarea:focus { border-color: #3b82f6; }
         <span style="font-size:11px;color:#4b5563;margin-left:4px">— run automatically on any paper with full text available</span>
       </div>
       <div class="info-box">
-        Once a paper's full text is retrieved (via PubMed Central or a free PDF), the app will <b>automatically run quality checklists</b> against the text. Each checklist item is keyword-scanned and pre-filled as a starting point — you can review and adjust each item manually inside the paper's expanded view. Checklists are <b>matched to study type</b> by default but can be changed per paper. <b>RoB2 is always assessed alongside the matched checklist.</b>
+        Once a paper's full text is retrieved (via PubMed Central or a free PDF), the app will <b>automatically run quality checklists</b> against the text. Each checklist item is keyword-scanned and pre-filled as a starting point — you can review and adjust each item manually inside the paper's expanded view. Checklists are <b>matched to study type</b> by default but can be changed per paper. <b>The appropriate risk of bias tool is automatically selected and assessed alongside the matched quality checklist</b> (e.g. RoB2 for RCTs, ROBINS-II for observational studies, Newcastle-Ottawa for case-control studies).
       </div>
       <div style="display:flex;flex-wrap:wrap;gap:7px;margin-top:4px">
         <span style="font-size:11px;padding:3px 11px;border-radius:20px;border:1px solid #3b82f644;background:#3b82f611;color:#3b82f6">&#10003; CONSORT 2010 — RCTs</span>
-        <span style="font-size:11px;padding:3px 11px;border-radius:20px;border:1px solid #f59e0b44;background:#f59e0b11;color:#f59e0b">&#10003; RoB2 — All trials (risk of bias)</span>
         <span style="font-size:11px;padding:3px 11px;border-radius:20px;border:1px solid #8b5cf644;background:#8b5cf611;color:#8b5cf6">&#10003; PRISMA 2020 — Systematic Reviews &amp; Meta-Analyses</span>
         <span style="font-size:11px;padding:3px 11px;border-radius:20px;border:1px solid #f9741644;background:#f9741611;color:#f97416">&#10003; STROBE — Observational Studies</span>
         <span style="font-size:11px;padding:3px 11px;border-radius:20px;border:1px solid #ec489944;background:#ec489911;color:#ec4899">&#10003; CARE — Case Reports</span>
@@ -594,11 +680,11 @@ input:focus, select:focus, textarea:focus { border-color: #3b82f6; }
     </div>
   </div>
 
-  <!-- ══ CHECKLIST UPLOADER TAB ════════════════════════════ -->
+  <!-- ══ PDF SCANNER TAB ════════════════════════════ -->
   <div class="tab-panel" id="tab-uploader">
 
     <div class="card">
-      <div class="card-label">&#128203; Standalone Checklist Uploader</div>
+      <div class="card-label">&#128203; Standalone PDF Scanner</div>
       <div class="info-box">
         Upload any research paper PDF directly and run a quality checklist against it — no PubMed search needed. The app reads the PDF locally in your browser (nothing is sent to any server). Useful for spot-checking a specific paper or assessing papers outside a formal search.
       </div>
@@ -615,40 +701,116 @@ input:focus, select:focus, textarea:focus { border-color: #3b82f6; }
       </div>
       <input type="file" id="pdf-file-input" accept=".pdf" style="display:none" onchange="handleUploaderFile(this.files[0])">
 
-      <!-- Metadata inputs -->
-      <div class="uploader-meta">
-        <div>
-          <div class="sec-label">Paper Title (optional)</div>
-          <input type="text" id="ucl-title-input" placeholder="e.g. Effect of propofol on…" />
+      <!-- Checklist selector -->
+      <div style="margin-top:16px; display:grid; grid-template-columns:1fr 1fr; gap:14px">
+
+        <!-- Quality checklists -->
+        <div class="ucl-cl-box collapsed">
+          <div class="ucl-cl-box-header" onclick="uclToggleBox('quality')" style="cursor:pointer; user-select:none">
+            <span class="ucl-cl-box-icon">&#128203;</span>
+            <div style="flex:1; min-width:0">
+              <div class="ucl-cl-box-title">Reporting Quality</div>
+              <div class="ucl-cl-box-sub">How completely is the study reported?</div>
+              <div id="ucl-summary-quality" class="ucl-cl-box-summary"></div>
+            </div>
+            <span id="ucl-chevron-quality" class="ucl-cl-chevron">&#9650;</span>
+          </div>
+          <div id="ucl-checklist-grid-quality">
+            <label class="ucl-cl-card">
+              <input type="checkbox" value="CONSORT" onchange="uclCardSync(this)">
+              <div class="ucl-cl-card-inner">
+                <div class="ucl-cl-name">CONSORT 2010</div>
+                <div class="ucl-cl-desc">25-item checklist for transparent reporting of parallel-group RCTs.</div>
+                <div class="ucl-cl-tag">RCT</div>
+              </div>
+            </label>
+            <label class="ucl-cl-card">
+              <input type="checkbox" value="PRISMA" onchange="uclCardSync(this)">
+              <div class="ucl-cl-card-inner">
+                <div class="ucl-cl-name">PRISMA 2020</div>
+                <div class="ucl-cl-desc">27-item checklist for systematic reviews and meta-analyses.</div>
+                <div class="ucl-cl-tag">Systematic Review / Meta-Analysis</div>
+              </div>
+            </label>
+            <label class="ucl-cl-card">
+              <input type="checkbox" value="STROBE" onchange="uclCardSync(this)">
+              <div class="ucl-cl-card-inner">
+                <div class="ucl-cl-name">STROBE</div>
+                <div class="ucl-cl-desc">22-item checklist for cohort, case-control, and cross-sectional studies.</div>
+                <div class="ucl-cl-tag">Observational</div>
+              </div>
+            </label>
+            <label class="ucl-cl-card">
+              <input type="checkbox" value="CARE" onchange="uclCardSync(this)">
+              <div class="ucl-cl-card-inner">
+                <div class="ucl-cl-name">CARE</div>
+                <div class="ucl-cl-desc">13-item checklist for completeness in clinical case reporting.</div>
+                <div class="ucl-cl-tag">Case Report</div>
+              </div>
+            </label>
+            <label class="ucl-cl-card">
+              <input type="checkbox" value="AGREE" onchange="uclCardSync(this)">
+              <div class="ucl-cl-card-inner">
+                <div class="ucl-cl-name">AGREE II</div>
+                <div class="ucl-cl-desc">23-item instrument across six domains for clinical practice guideline quality.</div>
+                <div class="ucl-cl-tag">Clinical Guideline</div>
+              </div>
+            </label>
+          </div>
         </div>
-        <div>
-          <div class="sec-label">Study Type — selects default checklist</div>
-          <select id="ucl-study-type">
-            <option value="RCT">RCT / Clinical Trial</option>
-            <option value="Systematic Review">Systematic Review</option>
-            <option value="Meta-Analysis">Meta-Analysis</option>
-            <option value="Observational">Observational Study</option>
-            <option value="Case Report">Case Report</option>
-            <option value="Guideline">Clinical Guideline</option>
-          </select>
+
+        <!-- Bias checklists -->
+        <div class="ucl-cl-box ucl-cl-box-bias collapsed">
+          <div class="ucl-cl-box-header" onclick="uclToggleBox('bias')" style="cursor:pointer; user-select:none">
+            <span class="ucl-cl-box-icon">&#9878;</span>
+            <div style="flex:1; min-width:0">
+              <div class="ucl-cl-box-title">Risk of Bias</div>
+              <div class="ucl-cl-box-sub">How likely is the study to be biased?</div>
+              <div id="ucl-summary-bias" class="ucl-cl-box-summary"></div>
+            </div>
+            <span id="ucl-chevron-bias" class="ucl-cl-chevron">&#9650;</span>
+          </div>
+          <div id="ucl-checklist-grid-bias">
+            <label class="ucl-cl-card">
+              <input type="checkbox" value="ROB2" onchange="uclCardSync(this)">
+              <div class="ucl-cl-card-inner">
+                <div class="ucl-cl-name">RoB2</div>
+                <div class="ucl-cl-desc">Cochrane risk of bias tool. Five domains covering randomisation, deviations, missing data, measurement, and reporting.</div>
+                <div class="ucl-cl-tag">RCT</div>
+              </div>
+            </label>
+            <label class="ucl-cl-card">
+              <input type="checkbox" value="ROBINS2" onchange="uclCardSync(this)">
+              <div class="ucl-cl-card-inner">
+                <div class="ucl-cl-name">ROBINS-II</div>
+                <div class="ucl-cl-desc">Risk of Bias in Non-randomised Studies of Interventions. Seven domains adapted from RoB2 for observational research.</div>
+                <div class="ucl-cl-tag">Observational</div>
+              </div>
+            </label>
+            <label class="ucl-cl-card">
+              <input type="checkbox" value="NOS" onchange="uclCardSync(this)">
+              <div class="ucl-cl-card-inner">
+                <div class="ucl-cl-name">Newcastle-Ottawa Scale</div>
+                <div class="ucl-cl-desc">Star-based scoring across selection, comparability, and outcome domains for cohort and case-control studies.</div>
+                <div class="ucl-cl-tag">Cohort / Case-Control</div>
+              </div>
+            </label>
+            <label class="ucl-cl-card">
+              <input type="checkbox" value="JADAD" onchange="uclCardSync(this)">
+              <div class="ucl-cl-card-inner">
+                <div class="ucl-cl-name">Jadad Scale</div>
+                <div class="ucl-cl-desc">5-point scale assessing randomisation, blinding, and withdrawals/dropouts in clinical trials.</div>
+                <div class="ucl-cl-tag">RCT</div>
+              </div>
+            </label>
+          </div>
         </div>
+
       </div>
 
-      <!-- Checklist selector -->
-      <div style="margin-top:12px; display:flex; align-items:center; gap:10px; flex-wrap:wrap">
-        <div class="sec-label" style="margin-bottom:0">Checklist to run:</div>
-        <select id="ucl-checklist-select" style="padding:6px 10px; font-size:12px; background:#111827; border:1px solid #1e2d4a; border-radius:6px; color:#e2e8f0;">
-          <option value="CONSORT">CONSORT 2010 — RCTs</option>
-          <option value="ROB2">RoB2 — Risk of Bias</option>
-          <option value="PRISMA">PRISMA 2020 — Systematic Reviews</option>
-          <option value="STROBE">STROBE — Observational Studies</option>
-          <option value="CARE">CARE — Case Reports</option>
-          <option value="AGREE">AGREE II — Clinical Guidelines</option>
-        </select>
-        <label style="font-size:11px; color:#64748b; display:flex; align-items:center; gap:6px; cursor:pointer">
-          <input type="checkbox" id="ucl-also-rob2" checked style="accent-color:#3b82f6"> Also run RoB2
-        </label>
-        <button class="btn btn-blue" id="ucl-run-btn" onclick="runUploaderChecklist()" style="padding:6px 18px; font-size:12px">&#9654; Run Checklist</button>
+      <div style="display:flex; align-items:center; gap:10px; flex-wrap:wrap; margin-top:14px">
+        <button class="btn btn-blue" id="ucl-run-btn" onclick="runUploaderChecklist()" style="padding:6px 18px; font-size:12px">&#9654; Run Selected Checklists</button>
+        <button class="btn" id="ucl-ref-btn" onclick="runReferenceScanner()" style="padding:6px 18px; font-size:12px; background:#0d2a1f; border-color:#16a34a; color:#4ade80">&#128269; Scan References</button>
         <span id="ucl-ai-note" style="font-size:10px; color:#64748b"></span>
       </div>
 
@@ -657,8 +819,27 @@ input:focus, select:focus, textarea:focus { border-color: #3b82f6; }
       <div class="uploader-status" id="ucl-status"></div>
     </div>
 
-    <!-- Results area -->
+    <!-- Checklist Results area -->
     <div id="ucl-results" style="display:none"></div>
+
+    <!-- Reference Scanner Results -->
+    <div id="ucl-ref-results" style="display:none">
+      <div class="card">
+        <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:14px; flex-wrap:wrap; gap:8px">
+          <div class="card-label" style="margin-bottom:0">&#128269; Reference Scanner</div>
+          <div style="display:flex; align-items:center; gap:8px; flex-wrap:wrap">
+            <span id="ucl-ref-count" style="font-size:12px; color:#64748b"></span>
+            <select id="ucl-ref-sort" onchange="renderRefResults()" style="padding:5px 9px; font-size:12px; background:#111827; border:1px solid #1e2d4a; border-radius:6px; color:#e2e8f0">
+              <option value="rank">Sort: Relevance Rank</option>
+              <option value="year-desc">Sort: Year (Newest)</option>
+              <option value="year-asc">Sort: Year (Oldest)</option>
+              <option value="bias-low">Sort: Bias (Low first)</option>
+            </select>
+          </div>
+        </div>
+        <div id="ucl-ref-list"></div>
+      </div>
+    </div>
 
   </div>
 
@@ -701,6 +882,7 @@ function safeUrl(url) {
 }
 
 var papers = [];
+var currentQuery = '';
 var expandedCards = new Set();
 var searchHistory = [];
 var savedAlerts = [];
@@ -941,6 +1123,101 @@ var CHECKLISTS = {
       { id: 'ag22', num: 'D6-22', label: 'Funding',            text: 'Funding body had no influence on the content of the guideline', keywords: ['funded','funding','conflict of interest','disclosure','sponsor','no influence','independent'] },
       { id: 'ag23', num: 'D6-23', label: 'Conflicts of Interest', text: 'Competing interests of guideline development group members recorded and addressed', keywords: ['conflict of interest','COI','competing interest','declaration','disclosed','financial relationship'] }
     ]
+  },
+
+  ROBINS2: {
+    name: 'ROBINS-II (Non-randomised Studies)',
+    short: 'ROBINS-II',
+    color: '#f97316',
+    forTypes: ['Observational', 'Cohort', 'Case-Control'],
+    domains: [
+      {
+        id: 'robins2_confounding', title: 'D1 — Bias due to Confounding',
+        questions: [
+          { id: 'r2_1_1', text: '1.1 Were there important confounders for the intervention–outcome relationship in this study?', keywords: ['confounder','confounding','covariate','adjustment','multivariable','regression'] },
+          { id: 'r2_1_2', text: '1.2 Did the authors use an appropriate analysis method to control for all important confounding domains?', keywords: ['adjusted','multivariable','propensity score','inverse probability','matching','regression','stratification'] },
+          { id: 'r2_1_3', text: '1.3 Were confounders measured validly and reliably?', keywords: ['validated','reliably measured','measurement error','misclassification','data quality'] }
+        ]
+      },
+      {
+        id: 'robins2_selection', title: 'D2 — Bias in Selection of Participants',
+        questions: [
+          { id: 'r2_2_1', text: '2.1 Was selection into the study (or into the analysis) based on participant characteristics observed after the start of intervention?', keywords: ['selection bias','inclusion criteria','eligible','enrolled','selected'] },
+          { id: 'r2_2_2', text: '2.2 Were start-of-follow-up and start-of-intervention the same?', keywords: ['time-zero','immortal time','follow-up start','inception cohort','entry criteria'] }
+        ]
+      },
+      {
+        id: 'robins2_classification', title: 'D3 — Bias in Classification of Interventions',
+        questions: [
+          { id: 'r2_3_1', text: '3.1 Were intervention groups clearly defined?', keywords: ['exposure definition','intervention defined','treatment group','control group','clearly defined'] },
+          { id: 'r2_3_2', text: '3.2 Was the same information used to define intervention groups as is used to define the target trial?', keywords: ['target trial','protocol','definition consistent','treatment protocol'] },
+          { id: 'r2_3_3', text: '3.3 Were those responsible for intervention assessment unaware of the study hypothesis?', keywords: ['blinded','masked','unaware','independent assessment'] }
+        ]
+      },
+      {
+        id: 'robins2_deviations', title: 'D4 — Bias due to Deviations from Intended Interventions',
+        questions: [
+          { id: 'r2_4_1', text: '4.1 Were important co-interventions balanced across intervention groups?', keywords: ['co-intervention','concurrent treatment','crossover','contamination','compliance'] },
+          { id: 'r2_4_2', text: '4.2 Were failures in implementing the intervention unlikely to have affected the outcome?', keywords: ['protocol adherence','compliance','contamination','crossover','intention-to-treat'] }
+        ]
+      },
+      {
+        id: 'robins2_missing', title: 'D5 — Bias due to Missing Data',
+        questions: [
+          { id: 'r2_5_1', text: '5.1 Were outcome data available for all or nearly all participants?', keywords: ['missing data','loss to follow-up','attrition','complete data','dropout'] },
+          { id: 'r2_5_2', text: '5.2 Were the reasons for missing data unlikely to be related to the outcome?', keywords: ['missing at random','MAR','MCAR','imputation','multiple imputation'] }
+        ]
+      },
+      {
+        id: 'robins2_measurement', title: 'D6 — Bias in Measurement of Outcomes',
+        questions: [
+          { id: 'r2_6_1', text: '6.1 Was the outcome measure appropriate?', keywords: ['validated outcome','outcome measure','primary outcome','endpoint','surrogate'] },
+          { id: 'r2_6_2', text: '6.2 Were outcome assessors blinded to the intervention status of participants?', keywords: ['blinded assessor','masked','outcome adjudication','independent committee'] }
+        ]
+      },
+      {
+        id: 'robins2_reporting', title: 'D7 — Bias in Selection of the Reported Result',
+        questions: [
+          { id: 'r2_7_1', text: '7.1 Was the study registered prospectively?', keywords: ['prospectively registered','clinicaltrials','ISRCTN','ANZCTR','protocol registration'] },
+          { id: 'r2_7_2', text: '7.2 Were the outcome measures pre-specified?', keywords: ['pre-specified','primary outcome','protocol','statistical analysis plan','SAP'] },
+          { id: 'r2_7_3', text: '7.3 Is the numerical result unlikely to have been selected from multiple eligible analyses?', keywords: ['selective reporting','multiple analyses','adjusted','unadjusted','post-hoc'] }
+        ]
+      }
+    ]
+  },
+
+  NOS: {
+    name: 'Newcastle-Ottawa Scale',
+    short: 'NOS',
+    color: '#22c55e',
+    forTypes: ['Observational', 'Cohort', 'Case-Control'],
+    items: [
+      { id: 'nos1',  num: 'S1', label: 'Representativeness of Exposed Cohort', text: 'Is the exposed cohort truly representative of the average population?', keywords: ['representative','community-based','population-based','registry','consecutive'] },
+      { id: 'nos2',  num: 'S2', label: 'Selection of Non-exposed Cohort',       text: 'Is the non-exposed cohort drawn from the same community as the exposed cohort?', keywords: ['control group','non-exposed','same community','same source'] },
+      { id: 'nos3',  num: 'S3', label: 'Ascertainment of Exposure',             text: 'Is exposure ascertained from secure record or structured interview?', keywords: ['medical record','structured interview','exposure ascertainment','record linkage','validated'] },
+      { id: 'nos4',  num: 'S4', label: 'Outcome Not Present at Start',          text: 'Is it demonstrated that the outcome of interest was not present at the start?', keywords: ['not present at start','incident','baseline','disease-free','incident cases'] },
+      { id: 'nos5',  num: 'C1', label: 'Comparability — Primary Factor',        text: 'Cohorts are comparable on the basis of the design or analysis for the most important confounding factor?', keywords: ['adjusted for age','adjusted for sex','adjusted','matched','stratified','propensity'] },
+      { id: 'nos6',  num: 'C2', label: 'Comparability — Additional Factor',     text: 'Cohorts are comparable for any additional important confounding factor?', keywords: ['additionally adjusted','further adjustment','multiple covariates','confounders controlled'] },
+      { id: 'nos7',  num: 'O1', label: 'Assessment of Outcome',                 text: 'Outcome ascertained by independent blind assessment or record linkage?', keywords: ['independent assessment','blind','record linkage','death certificate','national registry','adjudicated'] },
+      { id: 'nos8',  num: 'O2', label: 'Follow-up Length',                      text: 'Was follow-up long enough for outcomes to occur?', keywords: ['follow-up duration','median follow-up','years of follow-up','adequate follow-up','months of follow-up'] },
+      { id: 'nos9',  num: 'O3', label: 'Adequacy of Follow-up',                 text: 'Was follow-up complete, or were non-responders described?', keywords: ['loss to follow-up','dropout','complete follow-up','non-responder','attrition','withdrew'] }
+    ]
+  },
+
+  JADAD: {
+    name: 'Jadad Scale',
+    short: 'Jadad',
+    color: '#ec4899',
+    forTypes: ['RCT', 'Clinical Trial'],
+    items: [
+      { id: 'jad1', num: '1', label: 'Randomisation Described',    text: 'Was the study described as randomised?', keywords: ['randomised','randomized','random','randomly assigned','randomisation'] },
+      { id: 'jad2', num: '2', label: 'Randomisation Appropriate',  text: 'Was the method of randomisation appropriate (e.g. random number table, computer)?', keywords: ['random number table','computer-generated','block randomisation','stratified','minimisation','random sequence'] },
+      { id: 'jad3', num: '3', label: 'Randomisation Inappropriate', text: 'Was the method of randomisation inappropriate (e.g. alternating, date of birth, case record number)? (Deduct 1 point)', keywords: ['alternating','alternate allocation','date of birth','record number','quasi-random','systematic allocation'] },
+      { id: 'jad4', num: '4', label: 'Double-blind Described',     text: 'Was the study described as double-blind?', keywords: ['double-blind','double blind','double-masked','blinded','masking'] },
+      { id: 'jad5', num: '5', label: 'Blinding Appropriate',       text: 'Was the method of blinding appropriate (identical placebo, dummy)?', keywords: ['identical placebo','dummy','sham','placebo-controlled','matching tablets','indistinguishable'] },
+      { id: 'jad6', num: '6', label: 'Blinding Inappropriate',     text: 'Was the method of blinding inappropriate? (Deduct 1 point)', keywords: ['open-label','unblinded','not blinded','no blinding','single-blind'] },
+      { id: 'jad7', num: '7', label: 'Withdrawals Described',      text: 'Was there a description of withdrawals and dropouts?', keywords: ['withdrawal','dropout','discontinued','lost to follow-up','withdrew','excluded from analysis','CONSORT flow'] }
+    ]
   }
 };
 
@@ -1038,34 +1315,66 @@ function checklistScore(p, clKey) {
 
 // Returns { label, colour, bg } for the RoB2 overall risk level, or null.
 // Reads __overall_judgement__ first; derives from domains if not set.
+// Returns a risk label for whichever bias tool was applied to this paper.
+// Keeps the same { label, colour, bg, border } shape for all callsites.
 function getRob2RiskLabel(p) {
-  if (!p.checklists || !p.checklists['ROB2']) return null;
-  var rob = p.checklists['ROB2'];
-  var oj = ((rob['__overall_judgement__'] || '') + '').toLowerCase().trim();
-  // Normalise overall judgement
-  if (oj === 'some_concerns' || oj === 'some concerns') oj = 'some';
+  if (!p.checklists) return null;
 
-  if (!oj || oj === 'unclear' || oj === 'ni') {
-    // Derive from domain judgements
-    var dj = rob['__domain_judgements__'] || {};
-    var vals = Object.values(dj).map(function(v){ return (v+'').toLowerCase().trim(); });
-    if (vals.length === 0) return null;
-    var highs = vals.filter(function(v){ return v === 'high'; }).length;
-    var somes  = vals.filter(function(v){ return v === 'some' || v === 'some_concerns' || v === 'some concerns'; }).length;
-    if (highs >= 1)      oj = 'high';
-    else if (somes >= 1) oj = 'some';
-    else                 oj = 'low';
+  // Find which bias tool was used
+  var BIAS_TOOLS = ['ROB2','ROBINS2','NOS','JADAD'];
+  var biasKey = p.biasToolUsed || null;
+  if (!biasKey) {
+    for (var i = 0; i < BIAS_TOOLS.length; i++) {
+      if (p.checklists[BIAS_TOOLS[i]] && Object.keys(p.checklists[BIAS_TOOLS[i]]).length > 0) {
+        biasKey = BIAS_TOOLS[i];
+        break;
+      }
+    }
+  }
+  if (!biasKey) return null;
+
+  var bd = p.checklists[biasKey];
+  var shortNames = { ROB2:'RoB2', ROBINS2:'ROBINS-II', NOS:'NOS', JADAD:'Jadad' };
+  var toolName = shortNames[biasKey] || biasKey;
+  var oj = null;
+
+  if (biasKey === 'ROB2' || biasKey === 'ROBINS2') {
+    oj = ((bd['__overall_judgement__'] || '') + '').toLowerCase().trim();
+    if (!oj || oj === 'unclear' || oj === 'ni') {
+      var dj = bd['__domain_judgements__'] || {};
+      var vals = Object.values(dj).map(function(v){ return (v+'').toLowerCase().trim(); });
+      if (vals.length === 0) return null;
+      var highs = vals.filter(function(v){ return v === 'high'; }).length;
+      var somes  = vals.filter(function(v){ return v === 'some_concerns' || v === 'some concerns' || v === 'some'; }).length;
+      if (highs >= 1)      oj = 'high';
+      else if (somes >= 1) oj = 'some_concerns';
+      else                 oj = 'low';
+    }
+  } else if (biasKey === 'NOS') {
+    var stars = Object.values(bd).filter(function(v){ return v === 'yes'; }).length;
+    oj = stars >= 7 ? 'low' : stars >= 4 ? 'some_concerns' : 'high';
+    var maxStars = (CHECKLISTS.NOS && CHECKLISTS.NOS.items) ? CHECKLISTS.NOS.items.length : 9;
+    if (oj === 'low')          return { label: toolName + ': ' + stars + '/' + maxStars + ' ★ Low risk',      colour: '#4ade80', bg: '#14271a', border: '#22c55e44' };
+    if (oj === 'some_concerns') return { label: toolName + ': ' + stars + '/' + maxStars + ' ★ Some concerns', colour: '#fbbf24', bg: '#1c1408', border: '#f59e0b44' };
+    return                               { label: toolName + ': ' + stars + '/' + maxStars + ' ★ High risk',     colour: '#f87171', bg: '#1a0808', border: '#ef444444' };
+  } else if (biasKey === 'JADAD') {
+    var jadScore = 0;
+    var jadItems = CHECKLISTS.JADAD ? CHECKLISTS.JADAD.items || [] : [];
+    jadItems.forEach(function(item) {
+      var val = bd[item.id];
+      if (item.id === 'jad3' || item.id === 'jad6') { if (val==='yes') jadScore -= 1; }
+      else { if (val==='yes') jadScore += 1; }
+    });
+    jadScore = Math.max(0, jadScore);
+    oj = jadScore >= 3 ? 'low' : jadScore >= 2 ? 'some_concerns' : 'high';
+    if (oj === 'low')          return { label: toolName + ': ' + jadScore + '/5 Low risk',      colour: '#4ade80', bg: '#14271a', border: '#22c55e44' };
+    if (oj === 'some_concerns') return { label: toolName + ': ' + jadScore + '/5 Some concerns', colour: '#fbbf24', bg: '#1c1408', border: '#f59e0b44' };
+    return                               { label: toolName + ': ' + jadScore + '/5 High risk',     colour: '#f87171', bg: '#1a0808', border: '#ef444444' };
   }
 
-  if (oj === 'low') {
-    return { label: 'RoB2: Low risk',      colour: '#4ade80', bg: '#14271a', border: '#22c55e44' };
-  }
-  if (oj === 'some') {
-    return { label: 'RoB2: Some concerns', colour: '#fbbf24', bg: '#1c1408', border: '#f59e0b44' };
-  }
-  if (oj === 'high') {
-    return { label: 'RoB2: High risk',     colour: '#f87171', bg: '#1a0808', border: '#ef444444' };
-  }
+  if (oj === 'low')           return { label: toolName + ': Low risk',      colour: '#4ade80', bg: '#14271a', border: '#22c55e44' };
+  if (oj === 'some_concerns' || oj === 'some') return { label: toolName + ': Some concerns', colour: '#fbbf24', bg: '#1c1408', border: '#f59e0b44' };
+  if (oj === 'high')          return { label: toolName + ': High risk',     colour: '#f87171', bg: '#1a0808', border: '#ef444444' };
   return null;
 }
 
@@ -1079,7 +1388,7 @@ function getRob2RiskLabel(p) {
 
 function computeAgentRankScore(p) {
   // ── Component 1: scan criteria (0–100) ──────
-  var criteriaScore = p.score || 0; // already 0-100
+  var criteriaScore = p.score || 0;
 
   // ── Component 2: checklist quality (0–100) ──
   var clScore = 0;
@@ -1088,46 +1397,73 @@ function computeAgentRankScore(p) {
     var sc = checklistScore(p, clKey);
     if (sc !== null) clScore = sc.pct;
   }
-  // If no primary checklist, try any available
   if (!clKey && p.checklists) {
-    var keys = Object.keys(p.checklists).filter(function(k) { return k !== 'ROB2'; });
+    var keys = Object.keys(p.checklists).filter(function(k) { return !['ROB2','ROBINS2','NOS','JADAD'].includes(k); });
     if (keys.length > 0) {
       var sc2 = checklistScore(p, keys[0]);
       if (sc2 !== null) clScore = sc2.pct;
     }
   }
 
-  // ── Component 3: RoB2 bias risk (-15 to +15) ─
-  var rob2Adj = 0;
-  var hasRob = p.checklists && p.checklists['ROB2'];
-  if (hasRob) {
-    var oj = ((p.checklists['ROB2']['__overall_judgement__'] || '') + '').toLowerCase();
-    if (oj === 'low')  rob2Adj = 15;
-    else if (oj === 'high') rob2Adj = -15;
-    else if (oj === 'some' || oj === 'some_concerns' || oj === 'some concerns') rob2Adj = 0;
-    else {
-      // Derive from domain judgements if overall not set
-      var dj = p.checklists['ROB2']['__domain_judgements__'] || {};
-      var vals = Object.values(dj).map(function(v) { return (v+'').toLowerCase(); });
-      var highs = vals.filter(function(v){ return v === 'high'; }).length;
-      var lows  = vals.filter(function(v){ return v === 'low'; }).length;
-      if (vals.length > 0) {
-        if (highs === 0 && lows === vals.length) rob2Adj = 12;
-        else if (highs >= 2) rob2Adj = -10;
-        else rob2Adj = 0;
+  // ── Component 3: query relevance (0 or 20) ──
+  var queryScore = 0;
+  if (p.queryMatch === true) queryScore = 20;
+  else if (p.queryMatch === false) queryScore = 0;
+  else queryScore = 10; // not yet assessed — neutral
+
+  // ── Component 4: Bias tool risk (-10 to +10) — uses whichever tool was applied ─
+  var biasAdj = 0;
+  var DOMAIN_BIAS_TOOLS = { ROB2:1, ROBINS2:1 };
+  var ITEM_BIAS_TOOLS   = { NOS:1, JADAD:1 };
+  var biasKey = p.biasToolUsed || (p.checklists && (p.checklists['ROB2'] ? 'ROB2' : p.checklists['ROBINS2'] ? 'ROBINS2' : p.checklists['NOS'] ? 'NOS' : p.checklists['JADAD'] ? 'JADAD' : null));
+  if (biasKey && p.checklists && p.checklists[biasKey]) {
+    var bd = p.checklists[biasKey];
+    if (DOMAIN_BIAS_TOOLS[biasKey]) {
+      // Domain-based: use overall or derive from domains
+      var oj = ((bd['__overall_judgement__'] || '') + '').toLowerCase();
+      if (oj === 'low') biasAdj = 10;
+      else if (oj === 'high') biasAdj = -10;
+      else if (oj === 'some_concerns' || oj === 'some concerns') biasAdj = 0;
+      else {
+        var dj = bd['__domain_judgements__'] || {};
+        var vals = Object.values(dj).map(function(v){ return (v+'').toLowerCase(); });
+        if (vals.length > 0) {
+          var highs = vals.filter(function(v){ return v==='high'; }).length;
+          var lows  = vals.filter(function(v){ return v==='low'; }).length;
+          if (highs === 0 && lows === vals.length) biasAdj = 8;
+          else if (highs >= 2) biasAdj = -8;
+        }
       }
+    } else if (biasKey === 'NOS') {
+      // NOS: stars out of 9 — 7+ is low bias
+      var stars = Object.values(bd).filter(function(v){ return v==='yes'; }).length;
+      if (stars >= 7) biasAdj = 10;
+      else if (stars >= 4) biasAdj = 0;
+      else biasAdj = -8;
+    } else if (biasKey === 'JADAD') {
+      // Jadad: 0-5 — 3+ is adequate
+      var jadScore = 0;
+      var jadItems = CHECKLISTS.JADAD ? CHECKLISTS.JADAD.items || [] : [];
+      jadItems.forEach(function(item) {
+        var val = bd[item.id];
+        if (item.id === 'jad3' || item.id === 'jad6') { if (val==='yes') jadScore -= 1; }
+        else { if (val==='yes') jadScore += 1; }
+      });
+      jadScore = Math.max(0, jadScore);
+      if (jadScore >= 3) biasAdj = 10;
+      else if (jadScore >= 2) biasAdj = 0;
+      else biasAdj = -8;
     }
   }
 
   // ── Weighted composite ───────────────────────
-  // Papers not yet analysed by agent: fall back to criteria score only
+  // Weights: criteria 40%, checklist 30%, query match 20%, bias tool ±10
   var hasAgentData = (p.scanDepth === 'agent' || (p.checklists && Object.keys(p.checklists).length > 0));
   if (!hasAgentData) {
-    return criteriaScore * 0.5; // partial score, will sort below analysed papers
+    return criteriaScore * 0.5;
   }
 
-  var raw = (criteriaScore * 0.50) + (clScore * 0.35) + rob2Adj;
-  // Clamp to 0–100
+  var raw = (criteriaScore * 0.40) + (clScore * 0.30) + queryScore + biasAdj;
   return Math.max(0, Math.min(100, Math.round(raw)));
 }
 
@@ -1142,21 +1478,7 @@ function reRankAfterAgent() {
   if (sortEl) sortEl.value = 'agent_rank';
 
   renderPapers();
-
-  // Show a brief toast notification
-  var toast = document.createElement('div');
-  toast.style.cssText = [
-    'position:fixed', 'bottom:24px', 'right:24px',
-    'background:#1e3a5f', 'border:1px solid #3b82f6',
-    'color:#93c5fd', 'font-size:12px', 'font-family:"IBM Plex Mono",monospace',
-    'padding:10px 16px', 'border-radius:8px', 'z-index:9999',
-    'box-shadow:0 4px 20px rgba(0,0,0,0.5)',
-    'transition:opacity 0.5s', 'opacity:1'
-  ].join(';');
-  toast.textContent = '📊 Papers re-ranked by Agent Score';
-  document.body.appendChild(toast);
-  setTimeout(function() { toast.style.opacity = '0'; }, 2800);
-  setTimeout(function() { if (toast.parentNode) toast.parentNode.removeChild(toast); }, 3400);
+  showToast('📊 Papers re-ranked by Agent Score', '#3b82f6');
 }
 
 
@@ -1257,7 +1579,7 @@ function buildChecklistBody(p) {
       var domJudge = (data['__domain_judgements__'] && data['__domain_judgements__'][domain.id]) || 'unclear';
       var judgeOpts = [
         {val:'low', label:'Low Risk'},
-        {val:'some', label:'Some Concerns'},
+        {val:'some_concerns', label:'Some Concerns'},
         {val:'high', label:'High Risk'},
         {val:'unclear', label:'Unclear'}
       ].map(function(o){
@@ -1399,7 +1721,7 @@ function switchTab(name) {
   document.querySelectorAll('.tab-panel').forEach(function(p){ p.classList.remove('active'); });
   document.querySelectorAll('.tab-btn').forEach(function(b){ b.classList.remove('active'); });
   document.getElementById('tab-' + name).classList.add('active');
-  var map = { search:'Search', results:'Results', criteria:'Scan Criteria', history:'History', uploader:'Checklist Uploader' };
+  var map = { search:'Search', results:'Results', criteria:'Scan Criteria', history:'History', uploader:'PDF Scanner' };
   document.querySelectorAll('.tab-btn').forEach(function(b){
     var label = b.textContent.trim().replace(/\s+/g,' ');
     if (b.textContent.trim() === map[name] || label.indexOf(map[name]) !== -1) b.classList.add('active');
@@ -1465,6 +1787,7 @@ function dbEnabled(id) {
 function doSearch() {
   var q = document.getElementById('query-input').value.trim();
   if (!q) return;
+  currentQuery = q;
   var dateFrom  = document.getElementById('date-from').value;
   var dateTo    = document.getElementById('date-to').value;
   var maxResults = parseInt(document.getElementById('max-results').value);
@@ -1734,6 +2057,23 @@ function deduplicatePapers(pubmedArr, cochraneArr, europePmcArr, semanticArr, op
 function showError(msg) {
   var el = document.getElementById('search-error');
   el.textContent = msg; el.style.display = 'block';
+}
+
+function showToast(msg, colour) {
+  colour = colour || '#3b82f6';
+  var toast = document.createElement('div');
+  toast.style.cssText = [
+    'position:fixed', 'bottom:24px', 'right:24px',
+    'background:#0d1220', 'border:1px solid ' + colour,
+    'color:#e2e8f0', 'font-size:12px', 'font-family:"IBM Plex Mono",monospace',
+    'padding:10px 16px', 'border-radius:8px', 'z-index:9999',
+    'box-shadow:0 4px 20px rgba(0,0,0,0.5)', 'max-width:320px',
+    'transition:opacity 0.5s', 'opacity:1'
+  ].join(';');
+  toast.textContent = msg;
+  document.body.appendChild(toast);
+  setTimeout(function() { toast.style.opacity = '0'; }, 2800);
+  setTimeout(function() { if (toast.parentNode) toast.parentNode.removeChild(toast); }, 3400);
 }
 
 // ══════════════════════════════════════════════
@@ -2246,10 +2586,13 @@ function renderPapers() {
       var robLabel  = rob2Risk ? rob2Risk.label.replace('RoB2: ','') : 'Not assessed';
       var clKey2 = p.selectedChecklist;
       var clSc2  = clKey2 ? checklistScore(p, clKey2) : null;
+      var qColour = p.queryMatch === true ? '#4ade80' : p.queryMatch === false ? '#f87171' : '#64748b';
+      var qLabel  = p.queryMatch === true ? '✓ Matches question' : p.queryMatch === false ? '✗ Off-topic' : '? Not assessed';
       agentRankBadge =
-        '<div style="display:flex;flex-direction:column;gap:2px;margin-top:2px">' +
+        '<div style="display:flex;flex-direction:column;gap:1px;margin-top:2px">' +
           '<span style="background:#1e3a5f;border:1px solid #3b82f6;color:#93c5fd;font-size:10px;font-weight:700;font-family:\'IBM Plex Mono\',monospace;padding:2px 8px;border-radius:10px;white-space:nowrap">&#128202; Score: ' + p.agentRankScore + '/100</span>' +
-          (clSc2 ? '<span style="font-size:9px;color:#64748b;padding-left:2px">Criteria ' + p.score + '% &middot; ' + esc(clKey2) + ' ' + clSc2.pct + '% &middot; <span style="color:' + robColour + '">' + esc(robLabel) + '</span></span>' : '') +
+          '<span style="font-size:9px;color:#64748b;padding-left:2px">Criteria ' + p.score + '%' + (clSc2 ? ' &middot; ' + esc(clKey2) + ' ' + clSc2.pct + '%' : '') + '</span>' +
+          '<span style="font-size:9px;padding-left:2px"><span style="color:' + robColour + '">' + esc(robLabel) + '</span> &middot; <span style="color:' + qColour + '">' + qLabel + '</span></span>' +
         '</div>';
     }
 
@@ -3321,7 +3664,7 @@ function fetchAndScanPDFs() {
 }
 
 // ══════════════════════════════════════════════
-// CHECKLIST UPLOADER
+// PDF SCANNER
 // ══════════════════════════════════════════════
 
 var uploaderFile = null;
@@ -3332,22 +3675,266 @@ document.addEventListener('DOMContentLoaded', function() {
   loadAlerts();
   loadLibkeyId();
   loadScopusKey();
-  var studyTypeSel = document.getElementById('ucl-study-type');
-  var clSel = document.getElementById('ucl-checklist-select');
-  if (studyTypeSel && clSel) {
-    studyTypeSel.addEventListener('change', function() {
-      var map = {
-        'RCT': 'CONSORT', 'Systematic Review': 'PRISMA',
-        'Meta-Analysis': 'PRISMA', 'Observational': 'STROBE',
-        'Case Report': 'CARE', 'Guideline': 'AGREE'
-      };
-      var cl = map[studyTypeSel.value] || 'CONSORT';
-      clSel.value = cl;
-      // Hide RoB2 option when RoB2 is the primary checklist
-      document.getElementById('ucl-also-rob2').parentElement.style.display = (cl === 'ROB2') ? 'none' : 'flex';
+  uclUpdateSummary('quality');
+  uclUpdateSummary('bias');
+});
+
+// ── REFERENCE SCANNER ────────────────────────────────────────────────────────
+
+var refScannerResults = [];   // parsed + scored references
+var refScannerAbortFlag = false;
+
+function extractReferenceSection(text) {
+  // Find the references section — try common headings
+  var markers = ['\\bREFERENCES\\b', '\\bBIBLIOGRAPHY\\b', '\\bWORKS CITED\\b', '\\bLITERATURE CITED\\b', '\\bCITED LITERATURE\\b'];
+  var bestIdx = -1;
+  markers.forEach(function(m) {
+    var re = new RegExp(m, 'i');
+    var match = text.search(re);
+    // Prefer the last occurrence (end of paper) but at least 30% through
+    if (match > text.length * 0.3 && match > bestIdx) bestIdx = match;
+  });
+  if (bestIdx === -1) {
+    // Fallback: take the last 20% of the text
+    bestIdx = Math.floor(text.length * 0.8);
+  }
+  return text.slice(bestIdx, bestIdx + 12000); // cap at ~12k chars
+}
+
+async function parseReferencesWithAI(refText) {
+  var prompt = [
+    'You are a bibliographic parser and evidence appraiser. Extract all references from the text below.',
+    'Return ONLY a JSON array of objects with these exact fields:',
+    '  title: string (full article title, or empty string)',
+    '  authors: string (first author surname + "et al" if >2, e.g. "Smith et al")',
+    '  year: number or null',
+    '  journal: string (abbreviated journal name, or empty string)',
+    '  study_type: one of exactly: "RCT", "Systematic Review", "Meta-Analysis", "Observational", "Case Report", "Guideline", "Basic Science", "Unknown"',
+    '  quality_checklist: "CONSORT"|"PRISMA"|"STROBE"|"CARE"|"AGREE"|null',
+    '  bias_checklist: "ROB2"|"ROBINS2"|"NOS"|"JADAD"|null',
+    '  bias_risk: "low"|"some_concerns"|"high"|"unclear"',
+    '  bias_reasoning: string (1 sentence max)',
+    '  relevance_score: integer 1-10',
+    '',
+    'Study type → checklist mapping (follow strictly):',
+    '  RCT → quality_checklist: CONSORT, bias_checklist: ROB2',
+    '  Systematic Review / Meta-Analysis → quality_checklist: PRISMA, bias_checklist: null',
+    '  Observational (cohort/cross-sectional) → quality_checklist: STROBE, bias_checklist: ROBINS2',
+    '  Observational (case-control) → quality_checklist: STROBE, bias_checklist: NOS',
+    '  Case Report → quality_checklist: CARE, bias_checklist: null',
+    '  Guideline → quality_checklist: AGREE, bias_checklist: null',
+    '  Basic Science / Unknown → quality_checklist: null, bias_checklist: null',
+    '',
+    'Rules: include ALL references, limit 80, return ONLY the JSON array with no other text.',
+    '',
+    'REFERENCE TEXT:',
+    refText.slice(0, 10000)
+  ].join('\n');
+
+  var response = await fetch('https://api.openai.com/v1/responses', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + openAIKey },
+    body: JSON.stringify({
+      model: 'gpt-5',
+      max_output_tokens: 8000,
+      reasoning: { effort: 'low' },
+      input: [{ role: 'user', content: [{ type: 'input_text', text: prompt }] }]
+    })
+  });
+
+  if (!response.ok) {
+    var err = await response.json().catch(function(){ return {}; });
+    throw new Error('OpenAI ' + response.status + ': ' + ((err.error && err.error.message) || 'unknown'));
+  }
+
+  var data = await response.json();
+  var raw = '';
+  if (data.output) {
+    data.output.forEach(function(block) {
+      if (block.type === 'message' && block.content) {
+        block.content.forEach(function(c) { if (c.type === 'output_text') raw += c.text; });
+      }
     });
   }
-});
+  raw = raw.replace(/^```json\s*/i,'').replace(/^```\s*/i,'').replace(/\s*```$/,'').trim();
+  return safeParseAgentJson(raw);
+}
+
+function rankReferences(refs) {
+  var biasOrder = { low: 3, some_concerns: 2, unclear: 1, high: 0 };
+  return refs.slice().sort(function(a, b) {
+    var scoreA = (a.relevance_score || 5) * 10 + (biasOrder[a.bias_risk] || 1) + (a.year ? Math.min((a.year - 1990) / 3, 10) : 0);
+    var scoreB = (b.relevance_score || 5) * 10 + (biasOrder[b.bias_risk] || 1) + (b.year ? Math.min((b.year - 1990) / 3, 10) : 0);
+    return scoreB - scoreA;
+  });
+}
+
+async function runReferenceScanner() {
+  if (!uploaderFile) { setUploaderStatus('Please select a PDF first.', '#ef4444'); return; }
+  if (!openAIKey || !openAIKey.startsWith('sk-')) {
+    setUploaderStatus('An OpenAI API key is required for reference scanning.', '#ef4444');
+    return;
+  }
+
+  refScannerAbortFlag = false;
+  refScannerResults = [];
+  var refResultsEl = document.getElementById('ucl-ref-results');
+  var refListEl = document.getElementById('ucl-ref-list');
+  refResultsEl.style.display = 'none';
+  refListEl.innerHTML = '';
+
+  setUploaderStatus('Extracting PDF text…', '#64748b');
+  setUploaderProgress(10);
+
+  // Reuse already-extracted text or re-extract
+  var getText = uploaderText
+    ? Promise.resolve(uploaderText)
+    : new Promise(function(resolve, reject) {
+        var reader = new FileReader();
+        reader.onload = function(e) {
+          if (typeof pdfjsLib === 'undefined') { reject(new Error('PDF.js not loaded')); return; }
+          pdfjsLib.getDocument({ data: e.target.result, verbosity: 0 }).promise.then(function(pdf) {
+            var pages = [];
+            for (var i = 1; i <= pdf.numPages; i++) pages.push(pdf.getPage(i).then(function(pg) {
+              return pg.getTextContent().then(function(tc) { return tc.items.map(function(it){ return it.str; }).join(' '); });
+            }));
+            return Promise.all(pages).then(function(ps) { return ps.join(' ').replace(/\s+/g,' ').trim(); });
+          }).then(resolve).catch(reject);
+        };
+        reader.onerror = function(){ reject(new Error('File read failed')); };
+        reader.readAsArrayBuffer(uploaderFile);
+      });
+
+  getText.then(function(text) {
+    uploaderText = text;
+    setUploaderProgress(30);
+    setUploaderStatus('Finding reference section…', '#64748b');
+
+    var refSection = extractReferenceSection(text);
+    if (!refSection || refSection.length < 100) {
+      setUploaderStatus('Could not find a reference section in this PDF.', '#ef4444');
+      setUploaderProgress(0);
+      return;
+    }
+
+    setUploaderProgress(50);
+    setUploaderStatus('🤖 AI parsing references…', '#a78bfa');
+
+    return parseReferencesWithAI(refSection);
+  }).then(function(refs) {
+    if (!refs || !Array.isArray(refs) || refs.length === 0) {
+      setUploaderStatus('No references found or could not parse them.', '#f59e0b');
+      setUploaderProgress(0);
+      return;
+    }
+
+    setUploaderProgress(100);
+    setUploaderStatus('');
+
+    refScannerResults = rankReferences(refs);
+    var refResultsEl = document.getElementById('ucl-ref-results');
+    refResultsEl.style.display = 'block';
+    document.getElementById('ucl-ref-count').textContent = refScannerResults.length + ' references found';
+    renderRefResults();
+
+  }).catch(function(err) {
+    setUploaderStatus('Reference scan failed: ' + (err.message || 'unknown error'), '#ef4444');
+    setUploaderProgress(0);
+  });
+}
+
+function renderRefResults() {
+  var sort = document.getElementById('ucl-ref-sort').value;
+  var refs = refScannerResults.slice();
+  var biasOrder = { low:0, some_concerns:1, unclear:2, high:3 };
+
+  if (sort === 'year-desc') refs.sort(function(a,b){ return (b.year||0)-(a.year||0); });
+  else if (sort === 'year-asc') refs.sort(function(a,b){ return (a.year||0)-(b.year||0); });
+  else if (sort === 'bias-low') refs.sort(function(a,b){ return (biasOrder[a.bias_risk]||2)-(biasOrder[b.bias_risk]||2); });
+
+  var biasLabel = { low:'Low Bias', some_concerns:'Some Concerns', high:'High Bias', unclear:'Unclear' };
+  var biasClass = { low:'ref-badge-bias-low', some_concerns:'ref-badge-bias-some', high:'ref-badge-bias-high', unclear:'ref-badge-bias-unclear' };
+  var typeIcon  = { 'RCT':'&#9679;', 'Systematic Review':'&#128203;', 'Meta-Analysis':'&#128200;', 'Observational':'&#128065;', 'Case Report':'&#128100;', 'Guideline':'&#9878;', 'Basic Science':'&#128300;', 'Unknown':'&#63;' };
+  var clNames = { CONSORT:'CONSORT', PRISMA:'PRISMA', STROBE:'STROBE', CARE:'CARE', AGREE:'AGREE II', ROB2:'RoB2', ROBINS2:'ROBINS-II', NOS:'Newcastle-Ottawa', JADAD:'Jadad' };
+
+  var html = refs.map(function(ref, i) {
+    var bias = ref.bias_risk || 'unclear';
+    var bClass = biasClass[bias] || 'ref-badge-bias-unclear';
+    var bLabel = biasLabel[bias] || 'Unclear';
+    var icon = typeIcon[ref.study_type] || '?';
+    var title = ref.title || '(Untitled reference)';
+    var meta = [ref.authors, ref.year, ref.journal].filter(Boolean).join(' · ');
+
+    var qualityBadge = ref.quality_checklist && clNames[ref.quality_checklist]
+      ? '<span class="ref-badge ref-badge-quality">&#128203; ' + clNames[ref.quality_checklist] + '</span>'
+      : '';
+    var biasBadge = ref.bias_checklist && clNames[ref.bias_checklist]
+      ? '<span class="ref-badge ref-badge-biastool">&#9878; ' + clNames[ref.bias_checklist] + '</span>'
+      : '';
+
+    return '<div class="ref-card">' +
+      '<div class="ref-rank">' + (i+1) + '</div>' +
+      '<div class="ref-body">' +
+        '<div class="ref-title">' + esc(title) + '</div>' +
+        (meta ? '<div class="ref-meta">' + esc(meta) + '</div>' : '') +
+        '<div class="ref-badges">' +
+          '<span class="ref-badge ref-badge-type">' + icon + ' ' + esc(ref.study_type || 'Unknown') + '</span>' +
+          qualityBadge +
+          biasBadge +
+          '<span class="ref-badge ' + bClass + '">' + bLabel + '</span>' +
+          '<span class="ref-badge ref-badge-score">Relevance ' + (ref.relevance_score || '?') + '/10</span>' +
+        '</div>' +
+        (ref.bias_reasoning ? '<div class="ref-reasoning">' + esc(ref.bias_reasoning) + '</div>' : '') +
+      '</div>' +
+    '</div>';
+  }).join('');
+
+  document.getElementById('ucl-ref-list').innerHTML = html || '<div style="color:#4b5563;font-size:12px;padding:10px 0">No references to display.</div>';
+}
+
+// ── END REFERENCE SCANNER ────────────────────────────────────────────────────
+
+function uclToggleBox(which) {
+  var grid = document.getElementById('ucl-checklist-grid-' + which);
+  if (!grid) return;
+  var box = grid.closest('.ucl-cl-box');
+  var collapsed = box.classList.toggle('collapsed');
+  var summary = document.getElementById('ucl-summary-' + which);
+  if (collapsed) {
+    uclUpdateSummary(which);
+    summary.style.display = 'flex';
+  } else {
+    summary.style.display = 'none';
+  }
+}
+
+function uclUpdateSummary(which) {
+  var grid = document.getElementById('ucl-checklist-grid-' + which);
+  var summary = document.getElementById('ucl-summary-' + which);
+  if (!grid || !summary) return;
+  var checked = Array.from(grid.querySelectorAll('input[type=checkbox]:checked'));
+  if (checked.length === 0) {
+    summary.innerHTML = '<span class="ucl-cl-box-summary-pill" style="background:#1c1917;color:#78716c">None selected</span>';
+  } else {
+    summary.innerHTML = checked.map(function(cb) {
+      // Get the name from the sibling .ucl-cl-name element
+      var nameEl = cb.closest('label') && cb.closest('label').querySelector('.ucl-cl-name');
+      var name = nameEl ? nameEl.textContent : cb.value;
+      return '<span class="ucl-cl-box-summary-pill">' + name + '</span>';
+    }).join('');
+  }
+}
+
+function uclCardSync(cb) {
+  var allChecked = document.querySelectorAll('#ucl-checklist-grid-quality input[type=checkbox]:checked, #ucl-checklist-grid-bias input[type=checkbox]:checked');
+  if (allChecked.length === 0) cb.checked = true;
+  // Refresh summary for whichever box this checkbox belongs to
+  var grid = cb.closest('#ucl-checklist-grid-quality, #ucl-checklist-grid-bias');
+  if (grid) {
+    var which = grid.id === 'ucl-checklist-grid-quality' ? 'quality' : 'bias';
+    if (grid.closest('.ucl-cl-box').classList.contains('collapsed')) uclUpdateSummary(which);
+  }
+}
 
 function handleUploaderDrop(e) {
   e.preventDefault();
@@ -3391,10 +3978,15 @@ function runUploaderChecklist() {
     return;
   }
 
-  var clKey = document.getElementById('ucl-checklist-select').value;
-  var alsoRob2 = document.getElementById('ucl-also-rob2').checked && clKey !== 'ROB2';
-  var titleInput = document.getElementById('ucl-title-input').value.trim() || uploaderFile.name.replace(/\.pdf$/i, '');
-  var studyType = document.getElementById('ucl-study-type').value;
+  var selectedCls = Array.from(document.querySelectorAll('#ucl-checklist-grid-quality input[type=checkbox]:checked, #ucl-checklist-grid-bias input[type=checkbox]:checked')).map(function(cb){ return cb.value; });
+  if (selectedCls.length === 0) {
+    setUploaderStatus('Please select at least one checklist.', '#ef4444');
+    return;
+  }
+  var clKey = selectedCls[0];
+  var alsoRob2 = selectedCls.indexOf('ROB2') > 0;
+  var titleInput = uploaderFile.name.replace(/\.pdf$/i, '');
+  var studyType = 'RCT';
 
   setUploaderStatus('Reading PDF…', '#64748b');
   setUploaderProgress(20);
@@ -3455,26 +4047,68 @@ function renderUploaderResults(p, clKey, alsoRob2, title) {
   if (!container) return;
   container.style.display = 'block';
 
-  var clDefs = [clKey];
-  if (alsoRob2 && clKey !== 'ROB2') clDefs.push('ROB2');
+  var checked = Array.from(document.querySelectorAll('#ucl-checklist-grid-quality input[type=checkbox]:checked, #ucl-checklist-grid-bias input[type=checkbox]:checked')).map(function(cb){ return cb.value; });
+  var clDefs = checked.length ? checked : ([clKey].concat(alsoRob2 && clKey !== 'ROB2' ? ['ROB2'] : []));
+
+  var BIAS_TOOLS = { ROB2:1, ROBINS2:1, NOS:1, JADAD:1 };
 
   var html = '';
   clDefs.forEach(function(ck) {
     var cl = CHECKLISTS[ck];
     if (!cl) return;
-    var sc = checklistScore(p, ck);
-    var pct = sc ? sc.pct : 0;
-    var scoreClass = pct >= 75 ? 'ucl-score-high' : pct >= 40 ? 'ucl-score-mid' : 'ucl-score-low';
+    var isBiasTool = !!BIAS_TOOLS[ck];
 
     html += '<div class="card" id="ucl-card-' + ck + '">';
     html += '<div class="ucl-result-header">';
-    html += '<div class="ucl-title">&#128203; ' + cl.name + ' — <span style="color:#94a3b8;font-weight:400">' + title + '</span></div>';
-    html += '<div style="display:flex;align-items:center;gap:8px">';
-    html += '<span class="ucl-score-badge ' + scoreClass + '">' + pct + '% reported</span>';
+    html += '<div class="ucl-title">' + (isBiasTool ? '&#9878;' : '&#128203;') + ' ' + cl.name + ' — <span style="color:#94a3b8;font-weight:400">' + esc(title) + '</span></div>';
+    html += '<div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">';
+
+    if (isBiasTool) {
+      var overallBadge = '';
+      if (ck === 'ROB2' || ck === 'ROBINS2') {
+        var rob = (p.checklists && p.checklists[ck]) || {};
+        var oj = rob['__overall_judgement__'] || '';
+        if (!oj) {
+          var dj = rob['__domain_judgements__'] || {};
+          var djVals = Object.values(dj).map(function(v){ return (v+'').toLowerCase(); });
+          if (djVals.length) {
+            if (djVals.indexOf('high') >= 0) oj = 'high';
+            else if (djVals.indexOf('some_concerns') >= 0) oj = 'some_concerns';
+            else oj = 'low';
+          }
+        }
+        var ojColor = oj==='low'?'#22c55e':oj==='high'?'#ef4444':oj==='some_concerns'?'#f59e0b':'#9ca3af';
+        var ojLabel = oj==='low'?'🟢 Low risk overall':oj==='high'?'🔴 High risk overall':oj==='some_concerns'?'🟡 Some concerns overall':'❓ Not yet assessed';
+        overallBadge = '<span class="ucl-score-badge" style="background:' + ojColor + '22;color:' + ojColor + ';border:1px solid ' + ojColor + '44">' + ojLabel + '</span>';
+      } else if (ck === 'NOS') {
+        var nosData = (p.checklists && p.checklists['NOS']) || {};
+        var stars = Object.values(nosData).filter(function(v){ return v === 'yes'; }).length;
+        var maxStars = (CHECKLISTS.NOS.items || []).length;
+        var starColor = stars >= 7 ? '#22c55e' : stars >= 4 ? '#f59e0b' : '#ef4444';
+        overallBadge = '<span class="ucl-score-badge" style="background:' + starColor + '22;color:' + starColor + ';border:1px solid ' + starColor + '44">&#11088; ' + stars + '/' + maxStars + ' stars</span>';
+      } else if (ck === 'JADAD') {
+        var jadData = (p.checklists && p.checklists['JADAD']) || {};
+        var jadScore = 0;
+        var jadItems = CHECKLISTS.JADAD.items || [];
+        jadItems.forEach(function(item) {
+          var val = jadData[item.id];
+          if (item.id === 'jad3' || item.id === 'jad6') { if (val === 'yes') jadScore -= 1; }
+          else { if (val === 'yes') jadScore += 1; }
+        });
+        jadScore = Math.max(0, jadScore);
+        var jadColor = jadScore >= 3 ? '#22c55e' : jadScore >= 2 ? '#f59e0b' : '#ef4444';
+        overallBadge = '<span class="ucl-score-badge" style="background:' + jadColor + '22;color:' + jadColor + ';border:1px solid ' + jadColor + '44">Jadad ' + jadScore + '/5</span>';
+      }
+      html += overallBadge;
+    } else {
+      var sc = checklistScore(p, ck);
+      var pct = sc ? sc.pct : 0;
+      var scoreClass = pct >= 75 ? 'ucl-score-high' : pct >= 40 ? 'ucl-score-mid' : 'ucl-score-low';
+      html += '<span class="ucl-score-badge ' + scoreClass + '">' + pct + '% reported</span>';
+    }
+
     html += '<button class="btn btn-green ucl-export-btn" onclick="exportUploaderCSV(' + JSON.stringify(ck) + ')">&#8595; Export CSV</button>';
     html += '</div></div>';
-
-    // Render the checklist items inline
     html += renderUploaderChecklistItems(p, ck);
     html += '</div>';
   });
@@ -3485,54 +4119,62 @@ function renderUploaderResults(p, clKey, alsoRob2, title) {
 function renderUploaderChecklistItems(p, ck) {
   var cl = CHECKLISTS[ck];
   if (!cl) return '';
-  var items = cl.items || [];
   var clData = (p.checklists && p.checklists[ck]) ? p.checklists[ck] : {};
 
-  // RoB2 uses domain structure
-  if (ck === 'ROB2' && cl.domains) {
+  // ── Domain-based tools: RoB2, ROBINS2 ───────────────────────────────────
+  if (cl.domains) {
     var html = '';
     cl.domains.forEach(function(domain) {
       html += '<div class="rob-domain">';
       html += '<div class="rob-domain-title">' + domain.title + '</div>';
       domain.questions.forEach(function(q) {
         var val = clData[q.id] || 'unclear';
+        var isRob2 = ck === 'ROB2';
+        var opts = isRob2
+          ? [['yes','Yes (Y/PY)'],['no','No (N/PN)'],['ni','No information'],['na','Not applicable'],['unclear','Unclear']]
+          : [['low','Low risk'],['some_concerns','Some concerns'],['high','High risk'],['unclear','Unclear']];
         html += '<div class="cl-item-row">';
         html += '<span class="cl-item-num">Q</span>';
         html += '<span class="cl-item-text"><b>' + q.text + '</b></span>';
         html += '<span class="cl-item-status"><select class="cl-status-select cl-status-' + val + '" onchange="updateUploaderItem(' + JSON.stringify(p.pmid) + ',' + JSON.stringify(ck) + ',' + JSON.stringify(q.id) + ',this)">';
-        [['yes','Yes (Y/PY)'],['no','No (N/PN)'],['ni','No information'],['na','Not applicable'],['unclear','Unclear']].forEach(function(opt) {
+        opts.forEach(function(opt) {
           html += '<option value="' + opt[0] + '"' + (val===opt[0]?' selected':'') + '>' + opt[1] + '</option>';
         });
         html += '</select></span></div>';
       });
-      var dj = clData['__domain_judgements__'] && clData['__domain_judgements__'][domain.id] || 'unclear';
-      var djNorm = dj === 'some_concerns' ? 'some' : dj;
+      var dj = (clData['__domain_judgements__'] && clData['__domain_judgements__'][domain.id]) || 'unclear';
+      var djCls = dj==='low'?'low':dj==='high'?'high':dj==='some_concerns'?'some_concerns':'na';
       html += '<div class="rob-judgement-row"><span class="rob-judgement-label">Domain judgement:</span>';
-      html += '<select class="rob-judgement-select rob-' + (djNorm==='low'?'low':djNorm==='high'?'high':djNorm==='some'?'some':'na') + '" onchange="updateUploaderDomainJudgement(' + JSON.stringify(p.pmid) + ',' + JSON.stringify(domain.id) + ',this)">';
-      ['low','some','high','unclear'].forEach(function(opt) {
-        var label = opt==='low'?'🟢 Low risk':opt==='some'?'🟡 Some concerns':opt==='high'?'🔴 High risk':'❓ Unclear';
-        html += '<option value="' + opt + '"' + (djNorm===opt?' selected':'') + '>' + label + '</option>';
+      html += '<select class="rob-judgement-select rob-' + djCls + '" onchange="updateUploaderDomainJudgement(' + JSON.stringify(p.pmid) + ',' + JSON.stringify(domain.id) + ',this)">';
+      ['low','some_concerns','high','unclear'].forEach(function(opt) {
+        var label = opt==='low'?'🟢 Low risk':opt==='some_concerns'?'🟡 Some concerns':opt==='high'?'🔴 High risk':'❓ Unclear';
+        html += '<option value="' + opt + '"' + (dj===opt?' selected':'') + '>' + label + '</option>';
       });
       html += '</select></div>';
       html += '</div>';
     });
-    // Overall RoB2 judgement
+    // Overall judgement
     var oj = clData['__overall_judgement__'] || 'unclear';
-    var ojNorm = oj === 'some_concerns' ? 'some' : oj;
-    var ojColor = ojNorm==='low'?'#22c55e':ojNorm==='high'?'#ef4444':ojNorm==='some'?'#f59e0b':'#9ca3af';
-    html += '<div class="rob-judgement-row" style="margin-top:8px;border-top:2px solid #e5e7eb;padding-top:8px">';
-    html += '<span class="rob-judgement-label" style="font-weight:700;color:#111">Overall RoB2:</span>';
-    html += '<span style="font-weight:700;color:' + ojColor + ';font-size:13px">' +
-      (ojNorm==='low'?'🟢 Low risk':ojNorm==='high'?'🔴 High risk':ojNorm==='some'?'🟡 Some concerns':'❓ Not assessed') + '</span>';
+    var ojColor = oj==='low'?'#22c55e':oj==='high'?'#ef4444':oj==='some_concerns'?'#f59e0b':'#9ca3af';
+    var ojLabel = oj==='low'?'🟢 Low risk':oj==='high'?'🔴 High risk':oj==='some_concerns'?'🟡 Some concerns':'❓ Not assessed';
+    html += '<div class="rob-judgement-row" style="margin-top:8px;border-top:1px solid #1e2d4a;padding-top:8px">';
+    html += '<span class="rob-judgement-label" style="font-weight:700;color:#f1f5f9">Overall judgement:</span>';
+    html += '<span style="font-weight:700;color:' + ojColor + ';font-size:13px">' + ojLabel + '</span>';
     html += '</div>';
+    return html;
   }
 
-  // Standard flat item list
+  // ── Item-based tools: CONSORT, PRISMA, STROBE, CARE, AGREE, NOS, JADAD ──
+  var items = cl.items || [];
   var html = '<div>';
   items.forEach(function(item) {
     var val = clData[item.id] || 'unclear';
+    var isBinaryTool = (ck === 'NOS' || ck === 'JADAD');
+    var opts = isBinaryTool
+      ? [['yes','Yes ✓'],['no','No ✗'],['unclear','Unclear']]
+      : [['yes','Yes / Reported'],['partial','Partial'],['no','No / Not reported'],['unclear','Unclear'],['na','N/A']];
     html += '<div class="cl-item-row">';
-    html += '<span class="cl-item-num">' + item.num + '</span>';
+    html += '<span class="cl-item-num" style="color:#4b5563">' + item.num + '</span>';
     html += '<div style="flex:1">';
     html += '<div class="cl-item-text"><b>' + item.label + '</b> — ' + item.text + '</div>';
     if (val === 'yes' || val === 'partial') {
@@ -3540,8 +4182,8 @@ function renderUploaderChecklistItems(p, ck) {
     }
     html += '</div>';
     html += '<span class="cl-item-status"><select class="cl-status-select cl-status-' + val + '" onchange="updateUploaderItem(' + JSON.stringify(p.pmid) + ',' + JSON.stringify(ck) + ',' + JSON.stringify(item.id) + ',this)">';
-    ['yes','partial','no','unclear','na'].forEach(function(opt) {
-      html += '<option value="' + opt + '"' + (val===opt?' selected':'') + '>' + opt.charAt(0).toUpperCase() + opt.slice(1) + '</option>';
+    opts.forEach(function(opt) {
+      html += '<option value="' + opt[0] + '"' + (val===opt[0]?' selected':'') + '>' + opt[1] + '</option>';
     });
     html += '</select></span>';
     html += '</div>';
@@ -3608,7 +4250,7 @@ function updateUploaderDomainJudgement(pmid, domainId, selectEl) {
   if (!p.checklists['ROB2']) p.checklists['ROB2'] = {};
   if (!p.checklists['ROB2']['__domain_judgements__']) p.checklists['ROB2']['__domain_judgements__'] = {};
   p.checklists['ROB2']['__domain_judgements__'][domainId] = selectEl.value;
-  var cls = selectEl.value === 'low' ? 'low' : selectEl.value === 'high' ? 'high' : selectEl.value === 'some' ? 'some' : 'na';
+  var cls = selectEl.value === 'low' ? 'low' : selectEl.value === 'high' ? 'high' : selectEl.value === 'some_concerns' ? 'some_concerns' : 'na';
   selectEl.className = 'rob-judgement-select rob-' + cls;
   refreshUploaderScore(pmid, 'ROB2');
 }
@@ -3677,6 +4319,16 @@ renderHomeCriteriaTable();
 
 var openAIKey = '';
 
+function toggleSettings() {
+  var overlay = document.getElementById('settings-overlay');
+  if (overlay.classList.contains('open')) closeSettings();
+  else overlay.classList.add('open');
+}
+
+function closeSettings() {
+  document.getElementById('settings-overlay').classList.remove('open');
+}
+
 function saveOpenAIKey() {
   var val = (document.getElementById('openai-key-input').value || '').trim();
   openAIKey = val;
@@ -3693,40 +4345,35 @@ function loadOpenAIKey() {
 }
 
 function updateKeyBanner() {
-  var banner = document.getElementById('api-key-banner');
-  var label = document.getElementById('api-key-label');
-  var agentBtn = document.getElementById('agent-run-btn');
-  if (!banner) return;
   var hasKey = openAIKey && openAIKey.startsWith('sk-');
-  if (hasKey) {
-    banner.classList.add('key-set');
-    if (label) label.textContent = '🤖 OpenAI API Key — active';
-  } else {
-    banner.classList.remove('key-set');
-    if (label) label.textContent = '🤖 OpenAI API Key — unlock AI agent screening';
-  }
+
+  // Update settings panel key indicator
+  var dot = document.getElementById('settings-key-dot');
+  var lbl = document.getElementById('settings-key-label');
+  var btn = document.querySelector('.settings-btn');
+  if (dot) dot.style.background = hasKey ? '#4ade80' : '#f59e0b';
+  if (lbl) { lbl.textContent = hasKey ? 'API key active' : 'Not set'; lbl.style.color = hasKey ? '#4ade80' : '#f59e0b'; }
+  if (btn) { btn.style.color = hasKey ? '#4ade80' : '#64748b'; btn.style.borderColor = hasKey ? '#16a34a55' : '#1e2d4a'; }
+
+  // Show/hide the unlock notice on the search tab
+  var notice = document.getElementById('api-key-notice');
+  if (notice) notice.style.display = hasKey ? 'none' : 'flex';
+  var agentBtn = document.getElementById('agent-run-btn');
   if (agentBtn) {
     var canRun = hasKey && papers.length > 0 && !agentRunning;
     agentBtn.disabled = !canRun;
-    agentBtn.title = !hasKey ? 'Add your OpenAI API key to enable'
+    agentBtn.title = !hasKey ? 'Add your OpenAI API key in Settings to enable'
       : agentRunning ? 'Agent appears to be running — click to force reset'
       : 'Run AI agent analysis on all results';
   }
-  // Show a soft note if background PDF fetching is still in progress
   var fetchNote = document.getElementById('agent-fetch-note');
-  if (fetchNote) {
-    fetchNote.style.display = (searchInProgress && papers.length > 0) ? 'block' : 'none';
-  }
-  // Update uploader button label to reflect AI availability
+  if (fetchNote) fetchNote.style.display = (searchInProgress && papers.length > 0) ? 'block' : 'none';
   var uclNote = document.getElementById('ucl-ai-note');
   if (uclNote) {
-    uclNote.textContent = hasKey ? '🤖 AI agent mode' : 'keyword scan only — add API key for AI';
+    uclNote.textContent = hasKey ? '🤖 AI agent mode' : 'keyword scan only — add API key in Settings';
     uclNote.style.color = hasKey ? '#a78bfa' : '#4b5563';
   }
 }
-
-// Also hook into renderPapers to update agent button state
-var _origRenderPapers = typeof renderPapers === 'function' ? renderPapers : null;
 
 // ══════════════════════════════════════════════
 // PRO: AGENT ANALYSIS ENGINE
@@ -3739,7 +4386,7 @@ var agentStats = { done: 0, failed: 0, skipped: 0, total: 0 };
 
 function startAgentAnalysis() {
   if (!openAIKey || !openAIKey.startsWith('sk-')) {
-    alert('Please enter your OpenAI API key in the Search tab first.');
+    showToast('⚠️ Please enter your OpenAI API key in Settings (⚙ top right) first.', '#f59e0b');
     return;
   }
   if (!papers.length) return;
@@ -3892,10 +4539,13 @@ function runAgentQueue(index) {
         var robLabel  = rob2Risk ? rob2Risk.label.replace('RoB2: ','') : 'Not assessed';
         var clKey2 = p.selectedChecklist;
         var clSc2  = clKey2 ? checklistScore(p, clKey2) : null;
+        var qColour2 = p.queryMatch === true ? '#4ade80' : p.queryMatch === false ? '#f87171' : '#64748b';
+        var qLabel2  = p.queryMatch === true ? '✓ Matches question' : p.queryMatch === false ? '✗ Off-topic' : '? Not assessed';
         var badgeHtml =
-          '<div id="agent-rank-badge-' + p.pmid + '" style="display:flex;flex-direction:column;gap:2px;margin-top:2px">' +
+          '<div id="agent-rank-badge-' + p.pmid + '" style="display:flex;flex-direction:column;gap:1px;margin-top:2px">' +
             '<span style="background:#1e3a5f;border:1px solid #3b82f6;color:#93c5fd;font-size:10px;font-weight:700;font-family:\'IBM Plex Mono\',monospace;padding:2px 8px;border-radius:10px;white-space:nowrap">&#128202; Score: ' + p.agentRankScore + '/100</span>' +
-            (clSc2 ? '<span style="font-size:9px;color:#64748b;padding-left:2px">Criteria ' + p.score + '% &middot; ' + esc(clKey2) + ' ' + clSc2.pct + '% &middot; <span style="color:' + robColour + '">' + esc(robLabel) + '</span></span>' : '') +
+            '<span style="font-size:9px;color:#64748b;padding-left:2px">Criteria ' + p.score + '%' + (clSc2 ? ' &middot; ' + esc(clKey2) + ' ' + clSc2.pct + '%' : '') + '</span>' +
+            '<span style="font-size:9px;padding-left:2px"><span style="color:' + robColour + '">' + esc(robLabel) + '</span> &middot; <span style="color:' + qColour2 + '">' + qLabel2 + '</span></span>' +
           '</div>';
         // Replace existing badge or insert after type badge
         var existing = card.querySelector('[id^="agent-rank-badge-"]');
@@ -4049,7 +4699,7 @@ function applyRetractionBadge(p, retractionInfo) {
 
 // ── Standalone retraction sweep (no agent needed) ────────────────────────────
 function runRetractionSweep() {
-  if (!papers.length) { alert('Run a search first.'); return; }
+  if (!papers.length) { showToast('⚠️ Run a search first.', '#f59e0b'); return; }
 
   var btn = document.getElementById('retraction-check-btn');
   if (btn) { btn.disabled = true; btn.textContent = '🔍 Checking…'; }
@@ -4063,7 +4713,7 @@ function runRetractionSweep() {
   var papersWithDoi = papers.filter(function(p) { return p.doi; });
   if (!papersWithDoi.length) {
     if (btn) { btn.disabled = false; btn.textContent = '⚠️ Check Retractions'; }
-    alert('No DOIs found in current results — cannot check Retraction Watch.');
+    showToast('⚠️ No DOIs found in current results — cannot check Retraction Watch.', '#f59e0b'); return;
     return;
   }
 
@@ -4145,41 +4795,71 @@ function buildAnalysisPrompts(p) {
 
   // Build all checklists — agent picks the right one based on study type
   var allChecklistsText =
-    '\n\nAVAILABLE QUALITY CHECKLISTS — select the ONE most appropriate for this paper and fill every item:\n' +
-    '  • RCT / Clinical Trial                          → use CONSORT (+ ROB2)\n' +
-    '  • Systematic Review / Meta-analysis             → use PRISMA\n' +
-    '  • Cohort / Case-Control / Cross-Sectional / Registry / Observational → use STROBE\n' +
-    '  • Case Report / Case Series                     → use CARE\n' +
-    '  • Guideline / Consensus                         → use AGREE\n' +
-    '  • Other / Unclear / Review                      → use ROB2\n' +
-    buildChecklistBlock('ROB2') +
+    '\n\nAVAILABLE QUALITY CHECKLISTS — select ONE based on study type:\n' +
+    '  • RCT / Clinical Trial         → quality: CONSORT,  bias: ROB2\n' +
+    '  • Systematic Review / Meta-analysis → quality: PRISMA,  bias: none\n' +
+    '  • Cohort / Cross-Sectional / Registry / Observational → quality: STROBE, bias: ROBINS2\n' +
+    '  • Case-Control                 → quality: STROBE,  bias: NOS\n' +
+    '  • Case Report / Case Series    → quality: CARE,    bias: none\n' +
+    '  • Guideline / Consensus        → quality: AGREE,   bias: none\n' +
+    '  • Other / Unclear / Review     → quality: none,    bias: none\n' +
     buildChecklistBlock('CONSORT') +
     buildChecklistBlock('PRISMA') +
     buildChecklistBlock('STROBE') +
     buildChecklistBlock('CARE') +
-    buildChecklistBlock('AGREE');
+    buildChecklistBlock('AGREE') +
+    buildChecklistBlock('ROB2') +
+    buildChecklistBlock('ROBINS2') +
+    buildChecklistBlock('NOS') +
+    buildChecklistBlock('JADAD');
+
+  // Trim prompt: only include bias tool blocks relevant to the paper's likely study type
+  // This avoids sending all 9 checklist blocks for every paper
+  var st = (p.studyType || '').toLowerCase();
+  var isRct = st.includes('rct') || st.includes('randomis') || st.includes('randomiz') || st.includes('clinical trial');
+  var isObs = st.includes('cohort') || st.includes('cross-sectional') || st.includes('observ') || st.includes('registry');
+  var isCc  = st.includes('case-control') || st.includes('case control');
+  var isSr  = st.includes('systematic') || st.includes('meta');
+  var isCr  = st.includes('case report') || st.includes('case series');
+  var isGl  = st.includes('guideline') || st.includes('consensus');
+
+  // Only include bias blocks for plausible study types — reduces token load significantly
+  if (!isRct && !isCc) allChecklistsText = allChecklistsText.replace(buildChecklistBlock('JADAD'), '');
+  if (!isCc)           allChecklistsText = allChecklistsText.replace(buildChecklistBlock('NOS'), '');
+  if (!isObs && !isCc) allChecklistsText = allChecklistsText.replace(buildChecklistBlock('ROBINS2'), '');
+  if (!isRct && !isObs && !isCc) allChecklistsText = allChecklistsText.replace(buildChecklistBlock('ROB2'), '');
+  if (!isRct)          allChecklistsText = allChecklistsText.replace(buildChecklistBlock('CONSORT'), '');
+  if (!isSr)           allChecklistsText = allChecklistsText.replace(buildChecklistBlock('PRISMA'), '');
+  if (!isCr)           allChecklistsText = allChecklistsText.replace(buildChecklistBlock('CARE'), '');
+  if (!isGl)           allChecklistsText = allChecklistsText.replace(buildChecklistBlock('AGREE'), '');
+  // Always keep STROBE as it covers many study types
 
   var systemPrompt = 'You are an expert systematic review methodologist analysing a biomedical research paper.\n' +
-    'Your task: (1) identify the study type, (2) select and fill the appropriate quality checklist, (3) assess every screening criterion.\n' +
+    'Your task: (1) identify the study type, (2) select and fill the appropriate quality checklist, (3) fill the appropriate bias tool, (4) assess every screening criterion.\n' +
     'Respond ONLY with a valid JSON object — absolutely no prose, no markdown, no backticks.\n\n' +
     'Required JSON structure:\n' +
     '{\n' +
     '  "study_type": "<RCT|Clinical Trial|Systematic Review|Meta-Analysis|Cohort|Case-Control|Cross-Sectional|Registry Study|Observational|Case Report|Case Series|Guideline|Consensus|Review|Preprint|Other>",\n' +
-    '  "checklist_used": "<ROB2|CONSORT|PRISMA|STROBE|CARE|AGREE>",\n' +
-    '  "checklist": { "<item_id>": "yes"|"partial"|"no"|"unclear"|"na", ... },\n' +
-    '  "rob2": { "<item_id>": "yes"|"no"|"ni"|"na"|"unclear", "<domain_id>_judgement": "low"|"some_concerns"|"high", "overall_judgement": "low"|"some_concerns"|"high" },\n' +
-    '  "criteria": { "<exact criterion label>": true|false, ... },\n' +
-    '  "summary": "<2-3 sentences: study design, population, intervention, main results>",\n' +
-    '  "key_finding": "<one sentence — single most important result>",\n' +
+    '  "checklist_used": "<CONSORT|PRISMA|STROBE|CARE|AGREE|none>",\n' +
+    '  "checklist": { "<item_id>": "yes"|"partial"|"no"|"unclear"|"na" },\n' +
+    '  "bias_tool_used": "<ROB2|ROBINS2|NOS|JADAD|none>",\n' +
+    '  "bias_tool_data": { "<item_or_domain_id>": "<value>" },\n' +
+    '  "criteria": { "<exact criterion label>": true|false },\n' +
+    '  "summary": "<2-3 sentences>",\n' +
+    '  "key_finding": "<one sentence>",\n' +
     '  "sample_size": <integer or null>,\n' +
-    '  "population": "<brief description of study population>"\n' +
+    '  "population": "<brief>",\n' +
+    '  "query_match": true|false,\n' +
+    '  "query_match_reasoning": "<one sentence>"\n' +
     '}\n\n' +
     'Rules:\n' +
-    '- Determine study_type from the paper itself, not the metadata\n' +
-    '- checklist_used must match the study type using the selection guide provided\n' +
-    '- Fill checklist items ONLY for the selected checklist — leave others empty\n' +
-    '- Always fill rob2 as well (it applies to all study types for bias assessment)\n' +
-    '- For rob2 response options use: "yes" (Y/PY), "no" (PN/N), "ni" (no information), "na" (not applicable), "unclear" (borderline/some concerns)\n' +
+    '- Determine study_type from the paper content, not the metadata\n' +
+    '- checklist_used: CONSORT for RCT, PRISMA for SR/MA, STROBE for observational/cohort/case-control, CARE for case reports, AGREE for guidelines, none otherwise\n' +
+    '- Fill checklist items ONLY for the selected checklist\n' +
+    '- bias_tool_used: ROB2 for RCT, ROBINS2 for cohort/cross-sectional/observational, NOS for case-control, none for SR/MA/case-report/guideline/other\n' +
+    '- bias_tool_data values for ROB2/ROBINS2: "yes", "no", "ni", "na", "unclear"; domain judgements as <domain_id>_judgement: "low"|"some_concerns"|"high"; include overall_judgement\n' +
+    '- bias_tool_data values for NOS/JADAD: "yes", "no", "unclear"\n' +
+    '- If bias_tool_used is none, set bias_tool_data to {}\n' +
     '- RoB2 CONDITIONAL LOGIC — only answer these if their trigger condition is met:\n' +
     '    rob2_3: only answer if rob2_1 OR rob2_2 = "yes" or "ni"\n' +
     '    rob2_4: only answer if rob2_3 = "yes"\n' +
@@ -4200,9 +4880,11 @@ function buildAnalysisPrompts(p) {
     '- Overall RoB2 judgement: HIGH if any domain=HIGH; SOME_CONCERNS if any domain=SOME_CONCERNS and none=HIGH; LOW only if ALL domains=LOW\n' +
     '- "yes" = explicitly present, "partial" = partially reported, "no" = explicitly absent, "unclear" = cannot determine, "na" = not applicable\n' +
     '- criteria: true = criterion clearly met, false = not met or cannot determine\n' +
-    '- Use full paper text (methods, results, discussion) — not just abstract';
+    '- Use full paper text (methods, results, discussion) — not just abstract\n' +
+    '- query_match: true if this paper directly and substantively addresses the SEARCH QUESTION provided; false if it is tangential, background-only, or does not address the question';
 
-  var userHeader = 'PAPER: ' + (p.title || 'Unknown') + '\n' +
+  var userHeader = 'SEARCH QUESTION: ' + (currentQuery || 'Not specified') + '\n\n' +
+    'PAPER: ' + (p.title || 'Unknown') + '\n' +
     'AUTHORS: ' + ((p.authors || []).slice(0,3).join(', ') || 'Unknown') + '\n' +
     'YEAR: ' + (p.year || 'Unknown') + ' | JOURNAL: ' + (p.journal || 'Unknown') + '\n' +
     'METADATA STUDY TYPE (may be wrong — use paper content): ' + (p.studyType || 'Unknown') + '\n\n' +
@@ -4392,6 +5074,8 @@ function applyAgentResults(p, result, fullText, textSource) {
   p.agentKeyFinding = result.key_finding || '';
   if (result.sample_size) p.agentSampleSize = result.sample_size;
   if (result.population) p.agentPopulation = result.population;
+  p.queryMatch = (result.query_match === true || result.query_match === 'true');
+  p.queryMatchReasoning = result.query_match_reasoning || '';
 
   if (result.study_type && !p.studyType) p.studyType = result.study_type;
 
@@ -4438,41 +5122,51 @@ function applyAgentResults(p, result, fullText, textSource) {
     p.selectedChecklist = checklistKey;
   }
 
-  // RoB2 — domain judgements embedded as <domain_id>_judgement keys
-  if (result.rob2) {
+  // Bias tool — apply whichever tool the agent selected for this study type
+  function normaliseJudgement(v) {
+    if (!v) return 'unclear';
+    v = String(v).toLowerCase().trim();
+    if (v === 'some_concerns' || v === 'some concerns' || v === 'some') return 'some_concerns';
+    if (v === 'low') return 'low';
+    if (v === 'high') return 'high';
+    return 'unclear';
+  }
+
+  var biasToolKey = (result.bias_tool_used || '').toUpperCase();
+  var biasData = result.bias_tool_data || result.rob2 || null; // fallback to legacy rob2 field
+  if (!biasToolKey || biasToolKey === 'NONE') biasToolKey = null;
+
+  // Legacy fallback: if old-style rob2 field present and no bias_tool_used, treat as ROB2
+  if (!biasToolKey && result.rob2 && Object.keys(result.rob2).length > 0) biasToolKey = 'ROB2';
+
+  if (biasToolKey && biasData && CHECKLISTS[biasToolKey]) {
     if (!p.checklists) p.checklists = {};
-    p.checklists['ROB2'] = p.checklists['ROB2'] || {};
+    p.checklists[biasToolKey] = p.checklists[biasToolKey] || {};
     var domainJudgements = {};
-    function normaliseJudgement(v) {
-      if (!v) return 'unclear';
-      v = String(v).toLowerCase().trim();
-      if (v === 'some_concerns' || v === 'some concerns' || v === 'some') return 'some';
-      if (v === 'low') return 'low';
-      if (v === 'high') return 'high';
-      return 'unclear';
-    }
-    Object.keys(result.rob2).forEach(function(id) {
+    Object.keys(biasData).forEach(function(id) {
       if (id.endsWith('_judgement')) {
-        domainJudgements[id.replace('_judgement', '')] = normaliseJudgement(result.rob2[id]);
+        domainJudgements[id.replace('_judgement', '')] = normaliseJudgement(biasData[id]);
+      } else if (id === 'overall_judgement') {
+        p.checklists[biasToolKey]['__overall_judgement__'] = normaliseJudgement(biasData[id]);
       } else {
-        p.checklists['ROB2'][id] = result.rob2[id];
+        p.checklists[biasToolKey][id] = biasData[id];
       }
     });
     if (Object.keys(domainJudgements).length > 0) {
-      p.checklists['ROB2']['__domain_judgements__'] = domainJudgements;
+      p.checklists[biasToolKey]['__domain_judgements__'] = domainJudgements;
     }
-    if (result.rob2.overall_judgement) {
-      p.checklists['ROB2']['__overall_judgement__'] = normaliseJudgement(result.rob2.overall_judgement);
-    }
-    if (result.domain_judgements) {
-      var normDj = {};
-      Object.keys(result.domain_judgements).forEach(function(k) {
-        normDj[k] = normaliseJudgement(result.domain_judgements[k]);
-      });
-      p.checklists['ROB2']['__domain_judgements__'] = Object.assign(
-        p.checklists['ROB2']['__domain_judgements__'] || {}, normDj
-      );
-    }
+    p.biasToolUsed = biasToolKey;
+  }
+
+  // Also handle legacy domain_judgements field
+  if (result.domain_judgements && biasToolKey && p.checklists && p.checklists[biasToolKey]) {
+    var normDj = {};
+    Object.keys(result.domain_judgements).forEach(function(k) {
+      normDj[k] = normaliseJudgement(result.domain_judgements[k]);
+    });
+    p.checklists[biasToolKey]['__domain_judgements__'] = Object.assign(
+      p.checklists[biasToolKey]['__domain_judgements__'] || {}, normDj
+    );
   }
 
   // Update card UI
@@ -4513,6 +5207,11 @@ function applyAgentResults(p, result, fullText, textSource) {
       if (p.agentSummary) inner += '<div style="color:#ddd6fe;margin-bottom:4px">' + esc(p.agentSummary) + '</div>';
       if (p.agentKeyFinding) inner += '<div style="color:#a78bfa;font-style:italic">Key finding: ' + esc(p.agentKeyFinding) + '</div>';
       if (p.agentPopulation) inner += '<div style="color:#94a3b8;margin-top:3px;font-size:10px">Population: ' + esc(p.agentPopulation) + (p.agentSampleSize ? ' · n=' + esc(String(p.agentSampleSize)) : '') + '</div>';
+      if (p.queryMatchReasoning) {
+        var qc = p.queryMatch === true ? '#4ade80' : p.queryMatch === false ? '#f87171' : '#94a3b8';
+        inner += '<div style="color:' + qc + ';margin-top:4px;font-size:10px;border-top:1px solid #7c3aed22;padding-top:4px">' +
+          '<span style="font-weight:700;letter-spacing:0.05em;font-size:9px">QUESTION RELEVANCE — </span>' + esc(p.queryMatchReasoning) + '</div>';
+      }
       summaryBox.innerHTML = inner;
       abstractEl.after(summaryBox);
     }
@@ -4555,46 +5254,6 @@ function addAgentBadge(pmid) {
 }
 
 // ══════════════════════════════════════════════
-// PRO: PDF TEXT EXTRACTION VIA PROXY
-// ══════════════════════════════════════════════
-
-async function fetchPdfTextViaProxy(url) {
-  // Try direct first, then proxy chain, then use PDF.js in memory
-  var proxies = [
-    url,
-    'https://api.allorigins.win/raw?url=' + encodeURIComponent(url),
-    'https://corsproxy.io/?' + encodeURIComponent(url)
-  ];
-
-  for (var i = 0; i < proxies.length; i++) {
-    try {
-      var resp = await fetch(proxies[i], { signal: AbortSignal.timeout(15000) });
-      if (!resp.ok) continue;
-      var buf = await resp.arrayBuffer();
-      if (buf.byteLength < 1000) continue;
-      var text = await extractTextFromPdfBuffer(buf);
-      if (text && text.length > 300) return text;
-    } catch(e) { continue; }
-  }
-  return null;
-}
-
-async function extractTextFromPdfBuffer(buffer) {
-  if (typeof pdfjsLib === 'undefined') return null;
-  try {
-    var pdf = await pdfjsLib.getDocument({ data: buffer }).promise;
-    var texts = [];
-    var maxPages = Math.min(pdf.numPages, 20); // first 20 pages max
-    for (var i = 1; i <= maxPages; i++) {
-      var page = await pdf.getPage(i);
-      var content = await page.getTextContent();
-      var pageText = content.items.map(function(item){ return item.str; }).join(' ');
-      texts.push(pageText);
-    }
-    return texts.join('\n');
-  } catch(e) { return null; }
-}
-
 // ══════════════════════════════════════════════
 // PRO: HELPER FUNCTIONS
 // ══════════════════════════════════════════════
