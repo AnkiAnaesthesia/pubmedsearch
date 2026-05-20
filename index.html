@@ -33,6 +33,13 @@ a:hover { text-decoration: underline; }
 .agent-thinking { font-size: 10px; color: #f59e0b; font-style: italic; margin-top: 4px; }
 .agent-processing-card { outline: 2px solid #7c3aed; outline-offset: 3px; box-shadow: 0 0 24px #7c3aed44; }
 .retraction-banner { background: #7f1d1d; color: #fee2e2; font-size: 12px; padding: 6px 12px; border-bottom: 1px solid #ef4444; }
+
+/* ── PICO question bar ── */
+#proj-pico-bar { display:flex; align-items:center; gap:10px; background:#0a1220; border:1px solid #1e3a5f; border-radius:8px; padding:10px 14px; margin-bottom:14px; }
+#proj-pico-bar .pico-label { font-size:10px; color:#3b82f6; text-transform:uppercase; letter-spacing:0.1em; font-weight:700; white-space:nowrap; flex-shrink:0; }
+#proj-pico-input { flex:1; background:transparent; border:none; color:#e2e8f0; font-family:'IBM Plex Mono',monospace; font-size:12px; outline:none; padding:0; }
+#proj-pico-input::placeholder { color:#334155; }
+#proj-pico-saved { font-size:10px; color:#4ade80; opacity:0; transition:opacity 0.4s; white-space:nowrap; flex-shrink:0; }
 .retracted-card { opacity: 0.65; border-color: #7f1d1d !important; }
 .retracted-card .paper-title-link { text-decoration: line-through; color: #9ca3af !important; }
 #agent-summary-bar { display: none; background: #0a1628; border: 1px solid #1e2d4a; border-radius: 8px; padding: 10px 16px; margin-bottom: 12px; font-size: 12px; color: #94a3b8; }
@@ -212,6 +219,11 @@ input:focus, select:focus, textarea:focus { border-color: #3b82f6; }
 .checklist-selector-row select { padding: 4px 8px; font-size: 11px; }
 .checklist-locked-notice { font-size: 10px; color: #4b5563; font-style: italic; }
 .cl-item-row { display: flex; align-items: flex-start; gap: 10px; padding: 5px 0; border-bottom: 1px solid #0a0e1a; }
+.cl-item-skipped { opacity: 0.55; pointer-events: none; background: repeating-linear-gradient(135deg, transparent, transparent 4px, #0a0e1a22 4px, #0a0e1a22 5px); }
+.cl-skip-badge { font-size: 10px; color: #374151; background: #111827; border: 1px solid #1e2d4a; border-radius: 4px; padding: 2px 7px; white-space: nowrap; font-style: italic; }
+.paper-supp-drop { border:1px dashed #1e2d4a; border-radius:6px; padding:7px 12px; font-size:11px; color:#4b5563; cursor:pointer; display:inline-flex; align-items:center; gap:6px; transition:border-color 0.15s,color 0.15s; margin-top:6px; }
+.paper-supp-drop:hover,.paper-supp-drop.drag-over { border-color:#3b82f6; color:#93c5fd; }
+.paper-supp-drop.has-supp { border-color:#16a34a44; color:#4ade80; background:#0a1a10; }
 .cl-item-row:last-child { border-bottom: none; }
 .cl-item-num { font-size: 10px; color: #374151; min-width: 22px; flex-shrink: 0; padding-top: 1px; }
 .cl-item-text { font-size: 11px; color: #94a3b8; flex: 1; line-height: 1.55; font-family: 'IBM Plex Sans', sans-serif; }
@@ -270,6 +282,10 @@ input:focus, select:focus, textarea:focus { border-color: #3b82f6; }
 
 
 
+.cite-tab-btn { padding:4px 12px; border-radius:6px; border:1px solid #1e2d4a; font-size:11px; cursor:pointer; font-family:'IBM Plex Mono',monospace; background:transparent; color:#94a3b8; }
+.cite-tab-btn.active { background:#1e3a5f; border-color:#3b82f6; color:#93c5fd; }
+.cite-text { font-size:12px; color:#94a3b8; background:#0a0e1a; border:1px solid #1e2d4a; border-radius:6px; padding:12px 14px; line-height:1.7; font-family:'IBM Plex Mono',monospace; }
+
 /* ── Reference Scanner ── */
 .ref-card { background:#0a0e1a; border:1px solid #1e2d4a; border-radius:8px; padding:12px 14px; margin-bottom:8px; display:flex; gap:12px; align-items:flex-start; }
 .ref-card:hover { border-color:#2d3f5e; }
@@ -292,7 +308,48 @@ input:focus, select:focus, textarea:focus { border-color: #3b82f6; }
 .ref-progress-spinner { width:12px; height:12px; border:2px solid #1e2d4a; border-top-color:#3b82f6; border-radius:50%; animation:spin 0.7s linear infinite; flex-shrink:0; }
 @keyframes spin { to { transform:rotate(360deg); } }
 
-/* ── PDF Scanner checklist boxes ── */
+/* ── Projects ── */
+.proj-card { background:#0d1220; border:1px solid #1e2d4a; border-radius:10px; padding:18px 20px; cursor:pointer; transition:border-color 0.15s, background 0.15s; display:flex; flex-direction:column; gap:8px; }
+.proj-card:hover { border-color:#3b82f6; background:#0d1830; }
+.proj-card-name { font-size:14px; font-weight:700; color:#f1f5f9; }
+.proj-card-desc { font-size:11px; color:#64748b; line-height:1.4; }
+.proj-card-meta { display:flex; align-items:center; gap:8px; flex-wrap:wrap; margin-top:2px; }
+.proj-card-count { font-size:11px; padding:2px 9px; border-radius:10px; background:#1e2d4a; color:#60a5fa; font-weight:600; }
+.proj-card-date { font-size:10px; color:#374151; }
+.proj-paper-card { background:#0a0e1a; border:1px solid #1e2d4a; border-radius:8px; padding:12px 14px; margin-bottom:8px; }
+.proj-paper-card:hover { border-color:#2d3f5e; }
+.proj-paper-expand-btn { background:none; border:none; color:#4b5563; font-size:10px; font-family:'IBM Plex Mono',monospace; cursor:pointer; padding:0; margin-top:6px; letter-spacing:0.04em; }
+.proj-paper-expand-btn:hover { color:#93c5fd; }
+.proj-paper-detail { margin-top:10px; border-top:1px solid #1e2d4a; padding-top:10px; display:none; }
+.proj-paper-detail.open { display:block; }
+.proj-cl-section { margin-bottom:10px; }
+.proj-cl-section-title { font-size:10px; color:#3b82f6; text-transform:uppercase; letter-spacing:0.1em; font-weight:600; margin-bottom:6px; }
+.proj-cl-row { display:flex; justify-content:space-between; align-items:baseline; font-size:11px; padding:3px 0; border-bottom:1px solid #0d1220; gap:8px; }
+.proj-cl-row:last-child { border-bottom:none; }
+.proj-cl-label { color:#94a3b8; flex:1; }
+.proj-cl-val { font-weight:600; white-space:nowrap; flex-shrink:0; }
+.proj-agent-btn { font-size:10px; padding:3px 10px; border-radius:6px; border:1px solid #7c3aed44; background:#1a0d35; color:#a78bfa; cursor:pointer; font-family:'IBM Plex Mono',monospace; white-space:nowrap; }
+.proj-agent-btn:hover { background:#2d1a5e; }
+.proj-agent-btn:disabled { opacity:0.4; cursor:not-allowed; }
+.proj-paper-title { font-size:13px; font-weight:600; color:#f1f5f9; margin-bottom:4px; line-height:1.4; }
+.proj-paper-meta { font-size:11px; color:#64748b; margin-bottom:7px; }
+.proj-paper-badges { display:flex; flex-wrap:wrap; gap:5px; align-items:center; margin-bottom:6px; }
+.proj-source-badge { font-size:10px; padding:2px 8px; border-radius:10px; font-weight:600; }
+.proj-source-search { background:#1e3a5f; color:#60a5fa; border:1px solid #2d4f7c; }
+.proj-source-reference { background:#1a2e1a; color:#4ade80; border:1px solid #166534; }
+.proj-source-upload { background:#2a1540; color:#c084fc; border:1px solid #6b21a8; }
+.proj-remove-btn { font-size:10px; color:#4b5563; background:none; border:none; cursor:pointer; padding:2px 6px; float:right; }
+.proj-remove-btn:hover { color:#f87171; }
+.addtoproj-btn { font-size:10px; padding:3px 10px; border-radius:6px; border:1px solid #1e3a5f; background:#0d1830; color:#60a5fa; cursor:pointer; font-family:'IBM Plex Mono',monospace; white-space:nowrap; transition:background 0.1s; }
+.addtoproj-btn:hover { background:#1e3a5f; }
+.addtoproj-btn.added { border-color:#166534; background:#1a2e1a; color:#4ade80; }
+.addtoproj-proj-row { display:flex; align-items:center; justify-content:space-between; gap:10px; padding:8px 12px; border-radius:7px; border:1px solid #1e2d4a; background:#0a0e1a; cursor:pointer; transition:border-color 0.12s; }
+.addtoproj-proj-row:hover { border-color:#3b82f6; }
+.addtoproj-proj-row.already-added { border-color:#166534; background:#0a1a10; cursor:default; }
+.addtoproj-proj-name { font-size:12px; color:#f1f5f9; font-weight:600; }
+.addtoproj-proj-count { font-size:10px; color:#4b5563; }
+
+/* ── Projects ── */
 .ucl-cl-box { background:#0a0e1a; border:1px solid #1e2d4a; border-radius:10px; padding:14px; }
 .ucl-cl-box-bias { border-color:#3d1f4f; }
 .ucl-cl-box-header { display:flex; align-items:flex-start; gap:10px; margin-bottom:12px; padding-bottom:10px; border-bottom:1px solid #1e2d4a; }
@@ -351,6 +408,18 @@ input:focus, select:focus, textarea:focus { border-color: #3b82f6; }
     <button class="tab-btn" onclick="switchTab('criteria')">Scan Criteria</button>
     <button class="tab-btn" onclick="switchTab('history')">History</button>
     <button class="tab-btn" onclick="switchTab('uploader')">&#128203; PDF Scanner</button>
+    <button class="tab-btn" onclick="switchTab('projects')">&#128193; Projects</button>
+  </div>
+  <!-- Provider toggle — sits between tabs and settings cog -->
+  <div id="provider-toggle" style="display:flex;align-items:center;gap:4px;background:#0a0e1a;border:1px solid #1e2d4a;border-radius:8px;padding:3px">
+    <button id="header-provider-btn-openai" onclick="setAiProvider('openai')"
+      style="padding:4px 11px;font-size:10px;font-weight:700;font-family:'IBM Plex Mono',monospace;border-radius:5px;cursor:pointer;border:none;background:#1e3a5f;color:#93c5fd;transition:all 0.15s;white-space:nowrap">
+      OpenAI
+    </button>
+    <button id="header-provider-btn-anthropic" onclick="setAiProvider('anthropic')"
+      style="padding:4px 11px;font-size:10px;font-weight:700;font-family:'IBM Plex Mono',monospace;border-radius:5px;cursor:pointer;border:none;background:transparent;color:#4b5563;transition:all 0.15s;white-space:nowrap">
+      Anthropic
+    </button>
   </div>
   <button class="settings-btn" onclick="toggleSettings()" title="Settings">&#9881;</button>
 </div>
@@ -363,16 +432,24 @@ input:focus, select:focus, textarea:focus { border-color: #3b82f6; }
       <button class="settings-close-btn" onclick="closeSettings()">&#10005;</button>
     </div>
 
-    <!-- OpenAI API Key -->
+    <!-- AI Agent API Keys -->
     <div class="settings-section" id="settings-key-section">
-      <div class="settings-section-title">&#129302; AI Agent — OpenAI API Key</div>
-      <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:8px">
+      <div class="settings-section-title">&#129302; AI Agent — API Keys</div>
+      <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:14px">
         <span class="settings-dot" id="settings-key-dot"></span>
         <span id="settings-key-label" style="font-size:11px;color:#f59e0b;font-weight:600">Not set</span>
+        <span id="settings-model-label" style="font-size:10px;color:#4b5563;margin-left:auto">model: gpt-5</span>
       </div>
+      <!-- OpenAI -->
+      <div style="font-size:10px;color:#93c5fd;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;margin-bottom:5px">OpenAI</div>
       <input type="password" id="openai-key-input" placeholder="sk-..." oninput="saveOpenAIKey()" autocomplete="off"
-        style="width:100%;box-sizing:border-box;padding:7px 10px;font-size:12px;letter-spacing:0.04em;margin-bottom:6px" />
-      <div style="font-size:11px;color:#4b5563">Enables AI agent analysis, checklist assessment &amp; PDF screening. <a href="https://platform.openai.com/api-keys" target="_blank" style="color:#64748b">Get a key →</a></div>
+        style="width:100%;box-sizing:border-box;padding:7px 10px;font-size:12px;letter-spacing:0.04em;margin-bottom:4px" />
+      <div style="font-size:11px;color:#4b5563;margin-bottom:14px">GPT-5 via Responses API. <a href="https://platform.openai.com/api-keys" target="_blank" style="color:#64748b">platform.openai.com →</a></div>
+      <!-- Anthropic -->
+      <div style="font-size:10px;color:#fb923c;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;margin-bottom:5px">Anthropic</div>
+      <input type="password" id="anthropic-key-input" placeholder="sk-ant-..." oninput="saveAnthropicKey()" autocomplete="off"
+        style="width:100%;box-sizing:border-box;padding:7px 10px;font-size:12px;letter-spacing:0.04em;margin-bottom:4px" />
+      <div style="font-size:11px;color:#4b5563">Claude Sonnet via Messages API. <a href="https://console.anthropic.com/account/keys" target="_blank" style="color:#64748b">console.anthropic.com →</a></div>
     </div>
 
     <!-- LibKey -->
@@ -407,7 +484,7 @@ input:focus, select:focus, textarea:focus { border-color: #3b82f6; }
     <!-- Step 1: Database Query -->
     <div id="api-key-notice" class="info-box" style="margin-bottom:16px; border-color:#f59e0b44; color:#94a3b8; background:#0d1220; display:flex; align-items:center; gap:10px; flex-wrap:wrap">
       <span style="font-size:15px">🔑</span>
-      <span>To unlock full use of Evidentum, an OpenAI key is needed — please enter it in the <button onclick="toggleSettings()" style="background:none;border:none;color:#f59e0b;font-family:'IBM Plex Mono',monospace;font-size:inherit;cursor:pointer;padding:0;text-decoration:underline">⚙ Settings</button> panel.</span>
+      <span id="api-key-notice-text">To unlock full use of Evidentum, an API key from OpenAI or Anthropic is needed — please enter it in the <button onclick="toggleSettings()" style="background:none;border:none;color:#f59e0b;font-family:'IBM Plex Mono',monospace;font-size:inherit;cursor:pointer;padding:0;text-decoration:underline">⚙ Settings</button> panel.</span>
     </div>
     <div class="card">
       <div style="display:flex;align-items:center;gap:10px;margin-bottom:11px">
@@ -561,6 +638,33 @@ input:focus, select:focus, textarea:focus { border-color: #3b82f6; }
     <div id="search-success" class="alert-success" style="display:none" onclick="switchTab('results')">
       <span id="success-msg"></span><span>&#8594;</span>
     </div>
+
+    <!-- Citation Helper -->
+    <div class="card" style="margin-top:16px; border-color:#1e2d4a">
+      <div class="card-label" style="margin-bottom:10px">&#128196; How to Cite Evidentum Pro</div>
+      <div style="font-size:12px; color:#64748b; margin-bottom:12px">If you use Evidentum Pro in your research or systematic review, please cite it using one of the formats below.</div>
+      <div id="cite-tabs" style="display:flex; gap:6px; margin-bottom:12px; flex-wrap:wrap">
+        <button class="cite-tab-btn active" onclick="switchCiteTab('apa')">APA</button>
+        <button class="cite-tab-btn" onclick="switchCiteTab('vancouver')">Vancouver</button>
+        <button class="cite-tab-btn" onclick="switchCiteTab('harvard')">Harvard</button>
+        <button class="cite-tab-btn" onclick="switchCiteTab('bibtex')">BibTeX</button>
+      </div>
+      <div id="cite-apa" class="cite-panel active">
+        <div class="cite-text">McNally, A., &amp; Duckworth, A. (<span class="cite-year"></span>). <i>Evidentum Pro: AI-powered systematic literature review tool</i> (Version <span class="cite-ver">1.0</span>) [Software]. Retrieved from https://ankianaesthesia.github.io/pubmedsearch/</div>
+      </div>
+      <div id="cite-vancouver" class="cite-panel" style="display:none">
+        <div class="cite-text">McNally A, Duckworth A. Evidentum Pro: AI-powered systematic literature review tool [Software]. Version <span class="cite-ver">1.0</span>. <span class="cite-year"></span>. Available from: https://ankianaesthesia.github.io/pubmedsearch/</div>
+      </div>
+      <div id="cite-harvard" class="cite-panel" style="display:none">
+        <div class="cite-text">McNally, A. and Duckworth, A. (<span class="cite-year"></span>) <i>Evidentum Pro: AI-powered systematic literature review tool</i>, Version <span class="cite-ver">1.0</span> [Software]. Available at: https://ankianaesthesia.github.io/pubmedsearch/</div>
+      </div>
+      <div id="cite-bibtex" class="cite-panel" style="display:none">
+        <div class="cite-text">@software{mcnally<span class="cite-year"></span>evidentum,<br>&nbsp;&nbsp;author = {McNally, Angus and Duckworth, Andrew},<br>&nbsp;&nbsp;title = {Evidentum Pro: AI-powered systematic literature review tool},<br>&nbsp;&nbsp;year = {<span class="cite-year"></span>},<br>&nbsp;&nbsp;version = {1.0},<br>&nbsp;&nbsp;url = {https://ankianaesthesia.github.io/pubmedsearch/}<br>}</div>
+      </div>
+      <button class="btn btn-ghost" style="margin-top:10px; font-size:11px" onclick="copyCitation()">&#128203; Copy citation</button>
+      <span id="cite-copy-confirm" style="font-size:11px; color:#4ade80; margin-left:10px; display:none">&#10003; Copied!</span>
+    </div>
+
   </div>
 
   <!-- ══ RESULTS TAB ══════════════════════════════════════ -->
@@ -592,6 +696,10 @@ input:focus, select:focus, textarea:focus { border-color: #3b82f6; }
             <option value="50">&#8805;50% criteria met</option>
           </select>
           <select id="filter-tag" onchange="renderPapers()"><option value="All">All Tags</option></select>
+          <label id="citation-boost-toggle" title="Adds up to 15 points based on log-normalised citation count. Rewards landmark papers but penalises recent work — toggle off for unbiased criteria-only ranking." style="display:inline-flex;align-items:center;gap:5px;font-size:11px;color:#94a3b8;cursor:pointer;padding:5px 10px;border:1px solid #1e2d4a;border-radius:6px;user-select:none;white-space:nowrap">
+            <input type="checkbox" id="citation-boost-cb" onchange="renderPapers()" style="accent-color:#3b82f6;cursor:pointer">
+            &#128218; Citation boost
+          </label>
           <button class="btn btn-green" onclick="exportCSV()">&#8595; Export CSV</button>
           <button class="btn" id="retraction-check-btn" onclick="runRetractionSweep()" style="background:#7f1d1d;color:#fca5a5;border:1px solid #ef4444;font-size:12px" title="Check all papers against Retraction Watch / Crossref (free, no API key needed)">⚠️ Check Retractions</button>
           <button class="agent-btn" id="agent-run-btn" onclick="startAgentAnalysis()" disabled title="Add your OpenAI API key in the Search tab to enable">🤖 Agent Analysis</button>
@@ -700,6 +808,20 @@ input:focus, select:focus, textarea:focus { border-color: #3b82f6; }
         <div class="upload-zone-sub">PDF is read locally — nothing is uploaded to any server</div>
       </div>
       <input type="file" id="pdf-file-input" accept=".pdf" style="display:none" onchange="handleUploaderFile(this.files[0])">
+
+      <!-- Supplementary PDFs -->
+      <div id="supplementary-section" style="margin-top:10px">
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px">
+          <span style="font-size:11px;color:#64748b;font-weight:600;text-transform:uppercase;letter-spacing:0.06em">Additional documents</span>
+          <span style="font-size:10px;color:#4b5563">Appendices, supplementary data, statistical outputs</span>
+          <button onclick="document.getElementById('supp-file-input').click()"
+            style="margin-left:auto;padding:3px 10px;font-size:10px;font-weight:600;font-family:'IBM Plex Mono',monospace;border:1px solid #1e2d4a;border-radius:5px;background:transparent;color:#64748b;cursor:pointer;white-space:nowrap">
+            + Add PDF
+          </button>
+        </div>
+        <input type="file" id="supp-file-input" accept=".pdf" multiple style="display:none" onchange="handleSuppFiles(this.files)">
+        <div id="supp-file-list" style="display:flex;flex-direction:column;gap:4px"></div>
+      </div>
 
       <!-- Checklist selector -->
       <div style="margin-top:16px; display:grid; grid-template-columns:1fr 1fr; gap:14px">
@@ -843,8 +965,117 @@ input:focus, select:focus, textarea:focus { border-color: #3b82f6; }
 
   </div>
 
+  <!-- ══ PROJECTS TAB ═══════════════════════════════════ -->
+  <div class="tab-panel" id="tab-projects">
+
+    <!-- Project list view -->
+    <div id="proj-list-view">
+      <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:16px; flex-wrap:wrap; gap:10px">
+        <div class="card-label" style="margin-bottom:0">&#128193; My Projects</div>
+        <button class="btn btn-green" onclick="showNewProjectModal()" style="font-size:12px; padding:7px 18px">&#43; New Project</button>
+      </div>
+      <div id="proj-empty" class="empty" style="padding:60px 0; display:none">
+        <div class="empty-icon">&#128193;</div>
+        <div style="margin-bottom:12px">No projects yet.</div>
+        <button class="btn btn-green" onclick="showNewProjectModal()" style="font-size:12px; padding:8px 20px">&#43; Create your first project</button>
+      </div>
+      <div id="proj-cards" style="display:grid; grid-template-columns:repeat(auto-fill,minmax(300px,1fr)); gap:12px"></div>
+    </div>
+
+    <!-- Single project view -->
+    <div id="proj-detail-view" style="display:none">
+      <div style="display:flex; align-items:center; gap:10px; margin-bottom:16px; flex-wrap:wrap">
+        <button class="btn btn-ghost" onclick="closeProjDetail()" style="font-size:12px; padding:5px 12px">&#8592; All Projects</button>
+        <div id="proj-detail-name" style="font-size:16px; font-weight:700; color:#f1f5f9; flex:1"></div>
+        <span id="proj-detail-count" style="font-size:11px; color:#64748b"></span>
+        <button class="btn btn-blue" onclick="exportProjectCSV()" style="font-size:11px; padding:5px 12px">&#8595; Export CSV</button>
+        <button class="btn btn-ghost" onclick="renameProject()" style="font-size:11px; padding:5px 12px">&#9998; Rename</button>
+        <button class="btn btn-red" onclick="deleteProject()" style="font-size:11px; padding:5px 12px">&#128465; Delete</button>
+      </div>
+      <div id="proj-detail-desc" style="font-size:12px; color:#4b5563; margin-bottom:14px"></div>
+
+      <!-- PICO question bar -->
+      <div id="proj-pico-bar">
+        <span class="pico-label">&#128269; PICO / Research Question</span>
+        <input id="proj-pico-input" type="text"
+          placeholder="e.g. In adults undergoing general anaesthesia, does propofol reduce surgical site infection compared to volatile agents?"
+          oninput="schedulePicoSave()"
+          onblur="savePicoQuestion()" />
+        <span id="proj-pico-saved">&#10003; Saved</span>
+      </div>
+
+      <!-- Filters -->
+      <div style="display:flex; align-items:center; gap:8px; margin-bottom:14px; flex-wrap:wrap">
+        <select id="proj-filter-type" onchange="renderProjDetail()" style="padding:5px 9px; font-size:12px; background:#111827; border:1px solid #1e2d4a; border-radius:6px; color:#e2e8f0">
+          <option value="All">All Study Types</option>
+        </select>
+        <select id="proj-filter-source" onchange="renderProjDetail()" style="padding:5px 9px; font-size:12px; background:#111827; border:1px solid #1e2d4a; border-radius:6px; color:#e2e8f0">
+          <option value="All">All Sources</option>
+          <option value="search">Search Results</option>
+          <option value="reference">Reference Scanner</option>
+          <option value="upload">PDF Upload</option>
+        </select>
+        <select id="proj-sort" onchange="renderProjDetail()" style="padding:5px 9px; font-size:12px; background:#111827; border:1px solid #1e2d4a; border-radius:6px; color:#e2e8f0">
+          <option value="added">Sort: Recently Added</option>
+          <option value="year-desc">Sort: Year (Newest)</option>
+          <option value="year-asc">Sort: Year (Oldest)</option>
+          <option value="score-desc">Sort: Score (High first)</option>
+          <option value="bias">Sort: Bias (Low first)</option>
+        </select>
+        <span id="proj-paper-count" style="font-size:12px; color:#64748b; margin-left:auto"></span>
+      </div>
+
+      <div id="proj-detail-empty" class="empty" style="padding:40px 0; display:none">
+        <div>No papers in this project yet.</div>
+        <div style="font-size:12px; color:#4b5563; margin-top:6px">Add papers from the Search results or Reference Scanner.</div>
+      </div>
+      <div id="proj-detail-list"></div>
+    </div>
+
+  </div>
+
 </div>
 
+<!-- New Project Modal -->
+<div id="proj-modal-overlay" style="display:none; position:fixed; inset:0; background:#00000099; z-index:2000; align-items:center; justify-content:center">
+  <div style="background:#0d1220; border:1px solid #1e2d4a; border-radius:12px; padding:24px; width:100%; max-width:440px; margin:20px">
+    <div style="font-size:14px; font-weight:700; color:#f1f5f9; margin-bottom:16px">&#128193; New Project</div>
+    <div style="margin-bottom:12px">
+      <div class="sec-label" style="margin-bottom:5px">Project name</div>
+      <input type="text" id="proj-modal-name" placeholder='e.g. "Propofol systematic review"'
+        style="width:100%; box-sizing:border-box; padding:8px 12px; font-size:13px"
+        onkeydown="if(event.key==='Enter') confirmNewProject()" />
+    </div>
+    <div style="margin-bottom:18px">
+      <div class="sec-label" style="margin-bottom:5px">Description <span style="color:#4b5563">(optional)</span></div>
+      <input type="text" id="proj-modal-desc" placeholder='e.g. "RCTs comparing propofol vs thiopental"'
+        style="width:100%; box-sizing:border-box; padding:8px 12px; font-size:13px"
+        onkeydown="if(event.key==='Enter') confirmNewProject()" />
+    </div>
+    <div style="display:flex; gap:8px; justify-content:flex-end">
+      <button class="btn btn-ghost" onclick="hideProjModal()" style="font-size:12px">Cancel</button>
+      <button class="btn btn-green" onclick="confirmNewProject()" style="font-size:12px; padding:7px 20px">Create Project</button>
+    </div>
+  </div>
+</div>
+
+<!-- Add to Project Modal -->
+<div id="addtoproj-modal-overlay" style="display:none; position:fixed; inset:0; background:#00000099; z-index:2000; align-items:center; justify-content:center">
+  <div style="background:#0d1220; border:1px solid #1e2d4a; border-radius:12px; padding:24px; width:100%; max-width:420px; margin:20px">
+    <div style="font-size:14px; font-weight:700; color:#f1f5f9; margin-bottom:6px">&#128193; Add to Project</div>
+    <div id="addtoproj-paper-title" style="font-size:11px; color:#64748b; margin-bottom:16px; line-height:1.4"></div>
+    <div id="addtoproj-list" style="display:flex; flex-direction:column; gap:6px; margin-bottom:16px; max-height:260px; overflow-y:auto"></div>
+    <div style="border-top:1px solid #1e2d4a; padding-top:12px; display:flex; align-items:center; gap:8px">
+      <input type="text" id="addtoproj-new-name" placeholder="Or create new project…"
+        style="flex:1; padding:6px 10px; font-size:12px"
+        onkeydown="if(event.key==='Enter') addToNewProjectInline()" />
+      <button class="btn btn-green" onclick="addToNewProjectInline()" style="font-size:11px; padding:6px 12px; white-space:nowrap">&#43; Create &amp; Add</button>
+    </div>
+    <div style="margin-top:10px; text-align:right">
+      <button class="btn btn-ghost" onclick="hideAddToProjModal()" style="font-size:12px">Close</button>
+    </div>
+  </div>
+</div>
 <script>
 // ══════════════════════════════════════════════
 // STATE
@@ -889,15 +1120,37 @@ var savedAlerts = [];
 
 // Scan criteria — what the document scanner checks
 var scanCriteria = [
-  { label: "Blinded / Masked",         keywords: ["double-blind","double blind","blinded","masking","masked","allocation concealment","single-blind"], type: "must" },
-  { label: "Randomised",               keywords: ["randomis","randomiz","randomly","random allocation","RCT"], type: "must" },
-  { label: "Human subjects",           keywords: ["patient","patients","human","adult","children","participant","volunteer"], type: "must" },
-  { label: "Exclude animal studies",   keywords: ["animal model","rat model","mouse model","murine model","porcine model","ovine model","canine model","rodent model","adult rat","adult mouse","adult mice","male rat","female rat","male mouse","female mouse","sprague-dawley","wistar rat","in vitro","cell culture","cell line"], type: "mustnot" },
-  { label: "Sample size > 50",         keywords: ["n=","n =","sample size","enrolled","recruited","randomised","randomized"], type: "must" },
+  // ── Inclusion criteria ─────────────────────────────────────────────────────
+  // Keywords deliberately broad so they reliably match abstract-level text.
+  // "Blinded" removed as a must — many valid RCTs are open-label by design
+  // (surgical interventions, pragmatic trials). Blinding is assessed in RoB2.
 
-  { label: "Reports primary outcome",  keywords: ["primary outcome","primary endpoint","primary end point","primary measure"], type: "must" },
-  { label: "Exclude case reports only",keywords: ["case report","case series","single case","we report a case"], type: "mustnot" },
-  { label: "Registered clinical trial", keywords: ["clinicaltrials.gov","isrctn","anzctr","nct","eudract","clinical trial registration","trial registration","registered trial","prospectively registered","chictr","drks","umin"], type: "must" },
+  { label: "Randomised controlled trial",
+    keywords: ["randomis","randomiz","randomly assigned","random allocation","randomly allocated","RCT","randomized controlled","randomised controlled","pragmatic trial","cluster-randomized","cluster-randomised","factorial trial"],
+    type: "must" },
+
+  { label: "Human subjects",
+    keywords: ["patient","patients","participant","participants","human","adult","adults","children","volunteer","subject","subjects","cohort","women","men","population"],
+    type: "must" },
+
+  { label: "Adequate sample size",
+    // Looks for explicit size reporting; avoids fragile n= pattern
+    keywords: ["enrolled","recruited","randomly assigned","randomly allocated","participants were","patients were","underwent","were randomised","were randomized","total of","included in the","analysed","analyzed"],
+    type: "must" },
+
+  { label: "Reports outcome data",
+    // Covers varied abstract phrasing across journals
+    keywords: ["primary outcome","primary endpoint","primary end point","primary measure","primary result","we found","results showed","results demonstrated","our results","the incidence","the rate","the proportion","odds ratio","risk ratio","relative risk","hazard ratio","mean difference","confidence interval","p =","p<","p value","p-value"],
+    type: "must" },
+
+  // ── Exclusion criteria ─────────────────────────────────────────────────────
+  { label: "Exclude animal / in vitro studies",
+    keywords: ["animal model","rat model","mouse model","murine","porcine model","ovine model","canine model","rodent","sprague-dawley","wistar","in vitro","cell culture","cell line","ex vivo","in vivo model","xenograft"],
+    type: "mustnot" },
+
+  { label: "Exclude single case reports",
+    keywords: ["case report","we report a case","single patient","single case","a 45-year-old","a 60-year-old","a 72-year-old"],
+    type: "mustnot" },
 ];
 
 // Manual tags (workflow only — not used in scoring)
@@ -931,20 +1184,20 @@ var CHECKLISTS = {
         questions: [
           { id: 'rob2_1', text: '2.1 Were participants aware of their assigned intervention during the trial?', keywords: ['open-label','unblinded','aware of allocation','not blinded to intervention','informed of assignment'] },
           { id: 'rob2_2', text: '2.2 Were carers and people delivering the interventions aware of participants\' assigned intervention during the trial?', keywords: ['double-blind','double blind','blinded','masking','masked','placebo-controlled','sham','open label','care provider aware','personnel blinded'] },
-          { id: 'rob2_3', text: '2.3 [If Y/PY/NI to 2.1 or 2.2] Were there deviations from intended intervention that arose because of the trial context (not routine non-adherence)? Assess only deviations inconsistent with protocol that arose from trial recruitment/engagement effects or personnel behaviour.', keywords: ['protocol deviation','non-protocol intervention','trial context','cross-over','contamination','co-intervention'] },
-          { id: 'rob2_4', text: '2.4 [If Y/PY to 2.3] Were these deviations likely to have affected the outcome?', keywords: ['affected outcome','impact on outcome','influenced result','co-intervention affect'] },
-          { id: 'rob2_5', text: '2.5 [If Y/PY/NI to 2.4] Were these deviations from intended intervention balanced between groups?', keywords: ['balanced between groups','equal deviations','both groups','comparable deviations'] },
+          { id: 'rob2_3', skipIf: { any: ['rob2_1','rob2_2'], values: ['no','na'] }, text: '2.3 [If Y/PY/NI to 2.1 or 2.2] Were there deviations from intended intervention that arose because of the trial context (not routine non-adherence)? Assess only deviations inconsistent with protocol that arose from trial recruitment/engagement effects or personnel behaviour.', keywords: ['protocol deviation','non-protocol intervention','trial context','cross-over','contamination','co-intervention'] },
+          { id: 'rob2_4', skipIf: { all: ['rob2_3'], values: ['no','ni','na','unclear'] }, text: '2.4 [If Y/PY to 2.3] Were these deviations likely to have affected the outcome?', keywords: ['affected outcome','impact on outcome','influenced result','co-intervention affect'] },
+          { id: 'rob2_5', skipIf: { all: ['rob2_4'], values: ['no','na','unclear'] }, text: '2.5 [If Y/PY/NI to 2.4] Were these deviations from intended intervention balanced between groups?', keywords: ['balanced between groups','equal deviations','both groups','comparable deviations'] },
           { id: 'rob2_6', text: '2.6 Was an appropriate analysis used to estimate the effect of assignment to intervention? (ITT or modified-ITT appropriate; naive per-protocol and as-treated analyses are NOT appropriate)', keywords: ['intention-to-treat','intent-to-treat','ITT analysis','modified ITT','mITT','per-protocol','as-treated','excluded from analysis'] },
-          { id: 'rob2_7', text: '2.7 [If N/PN/NI to 2.6] Was there potential for a substantial impact of the failure to analyse participants in their randomised group?', keywords: ['substantial impact','significant exclusions','analysed in wrong group','post-randomisation exclusion'] }
+          { id: 'rob2_7', skipIf: { all: ['rob2_6'], values: ['yes','na'] }, text: '2.7 [If N/PN/NI to 2.6] Was there potential for a substantial impact of the failure to analyse participants in their randomised group?', keywords: ['substantial impact','significant exclusions','analysed in wrong group','post-randomisation exclusion'] }
         ]
       },
       {
         id: 'rob_missing', title: 'D3 — Bias from Missing Outcome Data',
         questions: [
           { id: 'rob3_1', text: '3.1 Were data for this outcome available for all, or nearly all, randomised participants? ("Nearly all" = missing data so small that outcomes could not have importantly changed the result)', keywords: ['complete case','no missing data','all participants','full follow-up','100%','complete data','outcome available'] },
-          { id: 'rob3_2', text: '3.2 [If N/PN/NI to 3.1] Is there evidence that the result was not biased by missing outcome data? (appropriate imputation methods or sensitivity analyses confirming robustness — note: LOCF and group-only multiple imputation do NOT qualify)', keywords: ['multiple imputation','sensitivity analysis','missing data analysis','not biased by missing','robust to missing','tipping point'] },
-          { id: 'rob3_3', text: '3.3 [If N/PN to 3.2] Could missingness in the outcome depend on its true value? (YES if dropout related to health status, symptom severity, or intervention effects)', keywords: ['loss to follow-up','dropout','attrition','withdrew','withdrawn','missing data','MCAR','MAR','MNAR','missing not at random','informative censoring'] },
-          { id: 'rob3_4', text: '3.4 [If Y/PY/NI to 3.3] Is it likely that missingness depended on the true value? (Evidence: differential dropout rates between groups; reasons for dropout related to outcome; circumstances suggest outcome-dependent dropout)', keywords: ['differential dropout','dropout rate','reasons for missing','withdrew due to','discontinued due to','censored when stopped treatment','unequal attrition'] }
+          { id: 'rob3_2', skipIf: { all: ['rob3_1'], values: ['yes','na'] }, text: '3.2 [If N/PN/NI to 3.1] Is there evidence that the result was not biased by missing outcome data? (appropriate imputation methods or sensitivity analyses confirming robustness — note: LOCF and group-only multiple imputation do NOT qualify)', keywords: ['multiple imputation','sensitivity analysis','missing data analysis','not biased by missing','robust to missing','tipping point'] },
+          { id: 'rob3_3', skipIf: { all: ['rob3_2'], values: ['yes','na'] }, text: '3.3 [If N/PN to 3.2] Could missingness in the outcome depend on its true value? (YES if dropout related to health status, symptom severity, or intervention effects)', keywords: ['loss to follow-up','dropout','attrition','withdrew','withdrawn','missing data','MCAR','MAR','MNAR','missing not at random','informative censoring'] },
+          { id: 'rob3_4', skipIf: { all: ['rob3_3'], values: ['no','na','unclear'] }, text: '3.4 [If Y/PY/NI to 3.3] Is it likely that missingness depended on the true value? (Evidence: differential dropout rates between groups; reasons for dropout related to outcome; circumstances suggest outcome-dependent dropout)', keywords: ['differential dropout','dropout rate','reasons for missing','withdrew due to','discontinued due to','censored when stopped treatment','unequal attrition'] }
         ]
       },
       {
@@ -952,9 +1205,9 @@ var CHECKLISTS = {
         questions: [
           { id: 'rob4_1', text: '4.1 Was the method of measuring the outcome inappropriate? (Answer YES if insensitive to plausible effects, or demonstrated poor validity)', keywords: ['inappropriate outcome measure','poor validity','insensitive measure','unreliable instrument','floor effect','ceiling effect'] },
           { id: 'rob4_2', text: '4.2 Could measurement or ascertainment of the outcome have differed between intervention groups? (e.g. diagnostic detection bias, more monitoring in one group, passive vs active surveillance)', keywords: ['differential measurement','diagnostic detection bias','more monitoring','passive surveillance','active surveillance','ascertainment bias','differential follow-up'] },
-          { id: 'rob4_3', text: '4.3 [If N/PN/NI to 4.1 and 4.2] Were outcome assessors aware of the intervention received by study participants? (For patient-reported outcomes, the participant IS the assessor)', keywords: ['assessor blinded','outcome assessor','blinded assessor','blinded outcome','independent assessor','participant-reported','self-reported','unblinded assessor'] },
-          { id: 'rob4_4', text: '4.4 [If Y/PY/NI to 4.3] Could assessment of the outcome have been influenced by knowledge of the intervention received? (YES for patient-reported outcomes, observer outcomes requiring judgement, and provider-decision outcomes; NO for objective outcomes like all-cause mortality, automated tests)', keywords: ['influenced by knowledge','subjective outcome','patient-reported outcome','objective outcome','all-cause mortality','automated test','judgement involved'] },
-          { id: 'rob4_5', text: '4.5 [If Y/PY/NI to 4.4] Is it likely that assessment of the outcome was influenced by knowledge of the intervention received? (Consider: strength of prior beliefs, comparator type, assessor involvement in care, outcome subjectivity)', keywords: ['likely influenced','strong beliefs','assessor involved in care','subjective','open-label subjective outcome','prior hypothesis','vested interest'] }
+          { id: 'rob4_3', skipIf: { any: ['rob4_1','rob4_2'], values: ['yes','na'] }, text: '4.3 [If N/PN/NI to 4.1 and 4.2] Were outcome assessors aware of the intervention received by study participants? (For patient-reported outcomes, the participant IS the assessor)', keywords: ['assessor blinded','outcome assessor','blinded assessor','blinded outcome','independent assessor','participant-reported','self-reported','unblinded assessor'] },
+          { id: 'rob4_4', skipIf: { all: ['rob4_3'], values: ['no','na'] }, text: '4.4 [If Y/PY/NI to 4.3] Could assessment of the outcome have been influenced by knowledge of the intervention received? (YES for patient-reported outcomes, observer outcomes requiring judgement, and provider-decision outcomes; NO for objective outcomes like all-cause mortality, automated tests)', keywords: ['influenced by knowledge','subjective outcome','patient-reported outcome','objective outcome','all-cause mortality','automated test','judgement involved'] },
+          { id: 'rob4_5', skipIf: { all: ['rob4_4'], values: ['no','na','unclear'] }, text: '4.5 [If Y/PY/NI to 4.4] Is it likely that assessment of the outcome was influenced by knowledge of the intervention received? (Consider: strength of prior beliefs, comparator type, assessor involvement in care, outcome subjectivity)', keywords: ['likely influenced','strong beliefs','assessor involved in care','subjective','open-label subjective outcome','prior hypothesis','vested interest'] }
         ]
       },
       {
@@ -1297,11 +1550,14 @@ function checklistScore(p, clKey) {
   var cl = CHECKLISTS[clKey];
   if (!cl || !p.checklists || !p.checklists[clKey]) return null;
   var data = p.checklists[clKey];
+  // Compute which questions are skipped by conditional logic, then exclude them
+  var skipped = computeSkips(clKey, data);
   var items = [];
   if (cl.items)   { cl.items.forEach(function(item){ items.push(item); }); }
   if (cl.domains) { cl.domains.forEach(function(d){ d.questions.forEach(function(q){ items.push(q); }); }); }
   var total = 0, yes = 0, partial = 0;
   items.forEach(function(item) {
+    if (skipped.has(item.id)) return; // excluded by conditional branching
     var s = data[item.id];
     if (s === 'na') return;
     total++;
@@ -1312,6 +1568,239 @@ function checklistScore(p, clKey) {
   var pct = Math.round(((yes + partial) / total) * 100);
   return { pct: pct, yes: yes, total: total };
 }
+// ============================================================
+// STEP 5 — Per-paper supplementary PDF injection
+// ============================================================
+var paperSuppText = {};
+
+function buildPaperSuppZone(p) {
+  var hasSupp = !!paperSuppText[p.pmid];
+  var canRerun = hasValidKey() && (p.scanDepth === 'agent' || p.scanDepth === 'full' || p.scanDepth === 'pdf' || p.scanDepth === 'abstract');
+  if (p.scanDepth === 'agent-processing') return '';
+  var label = hasSupp
+    ? '&#128196; Supplementary loaded — <u>drop another to replace</u>'
+    : '&#10010; Drop supplementary PDF (appendix, SAP, protocol) to improve checklist';
+  var rerunBtn = (hasSupp && canRerun)
+    ? ' <button onclick="reRunAgentWithSupp(\'' + p.pmid + '\')" style="margin-left:8px;padding:2px 9px;font-size:10px;border:1px solid #3b82f6;border-radius:4px;background:#1e3a5f;color:#93c5fd;cursor:pointer;white-space:nowrap">&#8635; Re-run with supp</button>'
+    : '';
+  return '<div class="paper-supp-drop' + (hasSupp ? ' has-supp' : '') + '" ' +
+      'id="supp-drop-' + p.pmid + '" ' +
+      'ondragover="event.preventDefault();this.classList.add(\'drag-over\')" ' +
+      'ondragleave="this.classList.remove(\'drag-over\')" ' +
+      'ondrop="handlePaperSuppDrop(event,\'' + p.pmid + '\')" ' +
+      'onclick="document.getElementById(\'supp-file-' + p.pmid + '\').click()">' +
+      label + rerunBtn +
+    '</div>' +
+    '<input type="file" id="supp-file-' + p.pmid + '" accept=".pdf" style="display:none" ' +
+      'onchange="handlePaperSuppFile(this.files[0],\'' + p.pmid + '\')">'; 
+}
+
+function handlePaperSuppDrop(event, pmid) {
+  event.preventDefault();
+  var dropEl = document.getElementById('supp-drop-' + pmid);
+  if (dropEl) dropEl.classList.remove('drag-over');
+  var file = event.dataTransfer && event.dataTransfer.files && event.dataTransfer.files[0];
+  if (file && file.type === 'application/pdf') handlePaperSuppFile(file, pmid);
+}
+
+function handlePaperSuppFile(file, pmid) {
+  if (!file) return;
+  var dropEl = document.getElementById('supp-drop-' + pmid);
+  if (dropEl) dropEl.innerHTML = '<span class="spinner"></span> Extracting PDF text…';
+  extractPdfFromFile(file).then(function(text) {
+    if (!text || text.length < 100) {
+      if (dropEl) dropEl.innerHTML = '&#10007; Could not read PDF — try a text-based PDF';
+      return;
+    }
+    paperSuppText[pmid] = text;
+    var p = papers.find(function(x){ return x.pmid === pmid; });
+    if (!p) return;
+    var zone = document.getElementById('supp-drop-' + pmid);
+    if (zone) {
+      var oldInput = document.getElementById('supp-file-' + pmid);
+      if (oldInput) oldInput.remove();
+      var tempDiv = document.createElement('div');
+      tempDiv.innerHTML = buildPaperSuppZone(p);
+      zone.outerHTML = tempDiv.innerHTML;
+    }
+    showToast('&#128206; Supplementary loaded for "' + esc((p.title || '').slice(0, 40)) + '…"', '#22c55e');
+  }).catch(function(e) {
+    if (dropEl) dropEl.innerHTML = '&#10007; Error: ' + esc((e && e.message) || 'unknown');
+  });
+}
+
+function extractPdfFromFile(file) {
+  return new Promise(function(resolve, reject) {
+    if (typeof pdfjsLib === 'undefined') { reject(new Error('PDF.js not loaded')); return; }
+    var reader = new FileReader();
+    reader.onload = function(e) {
+      pdfjsLib.getDocument({ data: e.target.result, verbosity: 0 }).promise.then(function(pdf) {
+        var pages = [];
+        for (var i = 1; i <= pdf.numPages; i++) {
+          pages.push(pdf.getPage(i).then(function(pg) {
+            return pg.getTextContent().then(function(tc) {
+              return tc.items.map(function(it){ return it.str; }).join(' ');
+            });
+          }));
+        }
+        return Promise.all(pages).then(function(ps) {
+          resolve(ps.join(' ').replace(/\s+/g, ' ').trim());
+        });
+      }).catch(reject);
+    };
+    reader.onerror = function(){ reject(new Error('File read failed')); };
+    reader.readAsArrayBuffer(file);
+  });
+}
+
+async function reRunAgentWithSupp(pmid) {
+  if (!hasValidKey()) { showToast('⚠️ API key required', '#f59e0b'); return; }
+  var p = papers.find(function(x){ return x.pmid === pmid; });
+  if (!p) return;
+  var suppText = paperSuppText[pmid];
+  if (!suppText) { showToast('⚠️ No supplementary text loaded', '#f59e0b'); return; }
+  var combinedText = (p.fullText || p.abstract || '') + '\n\n--- SUPPLEMENTARY DOCUMENT ---\n\n' + suppText;
+  var origFullText = p.fullText;
+  var origScanDepth = p.scanDepth;
+  p.fullText = combinedText;
+  p.agentTextSource = 'full text + supplementary';
+  p.scanDepth = 'agent-processing';
+  refreshCardChecklist(p);
+  try {
+    await analyseOneWithAgent(p);
+    var card = document.getElementById('card-' + pmid);
+    if (card) {
+      var clSection = card.querySelector('.checklist-section');
+      if (clSection) clSection.outerHTML = renderChecklistSection(p);
+    }
+    showToast('✓ Checklist updated with supplementary data', '#4ade80');
+  } catch(e) {
+    p.fullText = origFullText;
+    p.scanDepth = origScanDepth;
+    showToast('⚠️ Re-run failed: ' + esc((e && e.message) || 'unknown'), '#f59e0b');
+  }
+}
+
+// ============================================================
+// STEP 6 — ROB2 auto-suggest domain judgements
+// ============================================================
+var ROB2_Q_RISK_DIR = {
+  rob1_1:false, rob1_2:false, rob1_3:true,
+  rob2_1:true,  rob2_2:true,  rob2_3:true,  rob2_4:true,  rob2_5:false, rob2_6:false, rob2_7:true,
+  rob3_1:false, rob3_2:false, rob3_3:true,  rob3_4:true,
+  rob4_1:true,  rob4_2:true,  rob4_3:true,  rob4_4:true,  rob4_5:true,
+  rob5_1:false, rob5_2:true,  rob5_3:true
+};
+
+function suggestRob2Judgements(data, skipped) {
+  var cl = CHECKLISTS['ROB2'];
+  if (!cl || !cl.domains) return {};
+  var out = {};
+  cl.domains.forEach(function(domain) {
+    var hasHigh = false, hasConcern = false, allAnswered = true;
+    domain.questions.forEach(function(q) {
+      if (skipped && skipped.has(q.id)) return;
+      var v = (data[q.id] || 'unclear').toLowerCase();
+      if (v === 'unclear' || v === '') { allAnswered = false; return; }
+      if (v === 'ni') { hasConcern = true; return; }
+      if (v === 'na') return;
+      var isRisky = ROB2_Q_RISK_DIR[q.id];
+      var isY = (v === 'yes' || v === 'y'), isPY = (v === 'py'), isN = (v === 'no' || v === 'n' || v === 'pn');
+      if (isRisky && isY)  hasHigh = true;
+      if (!isRisky && isN) hasHigh = true;
+      if (isRisky && isPY) hasConcern = true;
+    });
+    if (!allAnswered && !hasHigh) hasConcern = true;
+    out[domain.id] = hasHigh ? 'high' : hasConcern ? 'some_concerns' : 'low';
+  });
+  var vals = Object.values(out);
+  out['__overall__'] = vals.indexOf('high') !== -1 ? 'high' : vals.indexOf('some_concerns') !== -1 ? 'some_concerns' : vals.length > 0 ? 'low' : 'unclear';
+  return out;
+}
+
+
+// Builds a plain-language consistency note shown below the domain judgement dropdown.
+// Compares the AI-set domain judgement against the algorithmic check of question answers.
+function buildRob2ConsistencyNote(domJudge, domSugg) {
+  if (!domSugg || !domSugg.level || domJudge === 'unclear') return '';
+  var algoLevel  = domSugg.level;
+  var highQs     = domSugg.highQs || [];
+  var niQs       = domSugg.niQs   || [];
+  function qLabel(id) { return id.replace('rob','').replace('_','.'); }
+  var noteColour, noteIcon, noteText;
+
+  if (domJudge === algoLevel && highQs.length === 0 && niQs.length === 0) {
+    noteColour = '#22c55e'; noteIcon = '✓';
+    var lbl = domJudge==='low'?'low risk':domJudge==='high'?'high risk':'some concerns';
+    noteText = 'Question answers consistent with ' + lbl + ' judgement.';
+  } else if (
+    (algoLevel==='high' && domJudge!=='high') ||
+    (algoLevel==='some_concerns' && domJudge==='low')
+  ) {
+    noteColour = '#f87171'; noteIcon = '⚠️';
+    var riskLbl = algoLevel==='high'?'high risk features':'some concern features';
+    noteText = 'Question answers suggest ' + riskLbl + ' — manual review recommended';
+    if (highQs.length) noteText += ' (' + highQs.map(qLabel).join(', ') + ')';
+  } else if (
+    (domJudge==='high' && algoLevel!=='high') ||
+    (domJudge==='some_concerns' && algoLevel==='low')
+  ) {
+    noteColour = '#fbbf24'; noteIcon = 'ℹ️';
+    noteText = 'Question answers do not clearly support this judgement — check responses above';
+  } else if (niQs.length > 0) {
+    noteColour = '#60a5fa'; noteIcon = 'ℹ️';
+    noteText = 'Insufficient information on ' + niQs.map(qLabel).join(', ') + ' — consider uploading protocol or SAP to resolve';
+  } else {
+    return '';
+  }
+
+  return '<div style="margin:3px 0 5px;padding:5px 10px;border-left:2px solid '+noteColour+'55;border-radius:0 4px 4px 0;font-size:10px;color:#94a3b8;line-height:1.5;background:'+noteColour+'11">'
+    + noteIcon + ' ' + noteText
+    + '</div>';
+}
+
+// ── ROB2 skip logic ──────────────────────────────────────────
+// Evaluates skipIf rules for every question in a domain-based checklist
+// and returns a Set of question IDs that should be treated as N/A.
+//
+// skipIf.all  = skip if ALL listed questions have one of the given values
+// skipIf.any  = skip if ANY listed question has one of the given values
+// (ROB2 uses both patterns depending on the question)
+function computeSkips(clKey, data) {
+  var cl = CHECKLISTS[clKey];
+  var skipped = new Set();
+  if (!cl || !cl.domains) return skipped; // only domain-based tools have conditionals
+
+  cl.domains.forEach(function(domain) {
+    domain.questions.forEach(function(q) {
+      if (!q.skipIf) return;
+      var rule = q.skipIf;
+      var vals = rule.values || [];
+
+      if (rule.all) {
+        // Skip if ALL of the listed questions have a skipping value
+        var allMatch = rule.all.every(function(depId) {
+          if (skipped.has(depId)) return true; // if dependency is itself skipped, treat as na
+          var v = (data[depId] || 'unclear').toLowerCase();
+          return vals.indexOf(v) !== -1;
+        });
+        if (allMatch) skipped.add(q.id);
+      } else if (rule.any) {
+        // Skip if ANY of the listed questions have a non-triggering value
+        // (used for "if Y/PY/NI to 2.1 OR 2.2" — skip when BOTH are N/na)
+        var anyTriggering = rule.any.some(function(depId) {
+          if (skipped.has(depId)) return false;
+          var v = (data[depId] || 'unclear').toLowerCase();
+          return vals.indexOf(v) === -1; // value is NOT in the skip list = it's triggering
+        });
+        if (!anyTriggering) skipped.add(q.id);
+      }
+    });
+  });
+  return skipped;
+}
+
+
 
 // Returns { label, colour, bg } for the RoB2 overall risk level, or null.
 // Reads __overall_judgement__ first; derives from domains if not set.
@@ -1379,106 +1868,126 @@ function getRob2RiskLabel(p) {
 }
 
 // ══════════════════════════════════════════════
-// AGENT RE-RANKING
-// Composite score computed after agent analysis:
-//   50% — scan criteria pass rate (relevance)
-//   35% — quality checklist pass rate (methodology)
-//   15% — RoB2 overall judgement (bias risk)
+// AGENT SCORE
+// Direct AI assessment (0-100) returned in the agent JSON response.
+// Weighted breakdown defined in the system prompt:
+//   40pts methodological rigour, 25pts reporting quality, 20pts relevance, 15pts recency/journal
 // ══════════════════════════════════════════════
 
-function computeAgentRankScore(p) {
-  // ── Component 1: scan criteria (0–100) ──────
-  var criteriaScore = p.score || 0;
-
-  // ── Component 2: checklist quality (0–100) ──
-  var clScore = 0;
-  var clKey = p.selectedChecklist;
-  if (clKey) {
-    var sc = checklistScore(p, clKey);
-    if (sc !== null) clScore = sc.pct;
-  }
-  if (!clKey && p.checklists) {
-    var keys = Object.keys(p.checklists).filter(function(k) { return !['ROB2','ROBINS2','NOS','JADAD'].includes(k); });
-    if (keys.length > 0) {
-      var sc2 = checklistScore(p, keys[0]);
-      if (sc2 !== null) clScore = sc2.pct;
-    }
-  }
-
-  // ── Component 3: query relevance (0 or 20) ──
-  var queryScore = 0;
-  if (p.queryMatch === true) queryScore = 20;
-  else if (p.queryMatch === false) queryScore = 0;
-  else queryScore = 10; // not yet assessed — neutral
-
-  // ── Component 4: Bias tool risk (-10 to +10) — uses whichever tool was applied ─
-  var biasAdj = 0;
-  var DOMAIN_BIAS_TOOLS = { ROB2:1, ROBINS2:1 };
-  var ITEM_BIAS_TOOLS   = { NOS:1, JADAD:1 };
-  var biasKey = p.biasToolUsed || (p.checklists && (p.checklists['ROB2'] ? 'ROB2' : p.checklists['ROBINS2'] ? 'ROBINS2' : p.checklists['NOS'] ? 'NOS' : p.checklists['JADAD'] ? 'JADAD' : null));
-  if (biasKey && p.checklists && p.checklists[biasKey]) {
-    var bd = p.checklists[biasKey];
-    if (DOMAIN_BIAS_TOOLS[biasKey]) {
-      // Domain-based: use overall or derive from domains
-      var oj = ((bd['__overall_judgement__'] || '') + '').toLowerCase();
-      if (oj === 'low') biasAdj = 10;
-      else if (oj === 'high') biasAdj = -10;
-      else if (oj === 'some_concerns' || oj === 'some concerns') biasAdj = 0;
-      else {
-        var dj = bd['__domain_judgements__'] || {};
-        var vals = Object.values(dj).map(function(v){ return (v+'').toLowerCase(); });
-        if (vals.length > 0) {
-          var highs = vals.filter(function(v){ return v==='high'; }).length;
-          var lows  = vals.filter(function(v){ return v==='low'; }).length;
-          if (highs === 0 && lows === vals.length) biasAdj = 8;
-          else if (highs >= 2) biasAdj = -8;
-        }
-      }
-    } else if (biasKey === 'NOS') {
-      // NOS: stars out of 9 — 7+ is low bias
-      var stars = Object.values(bd).filter(function(v){ return v==='yes'; }).length;
-      if (stars >= 7) biasAdj = 10;
-      else if (stars >= 4) biasAdj = 0;
-      else biasAdj = -8;
-    } else if (biasKey === 'JADAD') {
-      // Jadad: 0-5 — 3+ is adequate
-      var jadScore = 0;
-      var jadItems = CHECKLISTS.JADAD ? CHECKLISTS.JADAD.items || [] : [];
-      jadItems.forEach(function(item) {
-        var val = bd[item.id];
-        if (item.id === 'jad3' || item.id === 'jad6') { if (val==='yes') jadScore -= 1; }
-        else { if (val==='yes') jadScore += 1; }
-      });
-      jadScore = Math.max(0, jadScore);
-      if (jadScore >= 3) biasAdj = 10;
-      else if (jadScore >= 2) biasAdj = 0;
-      else biasAdj = -8;
-    }
-  }
-
-  // ── Weighted composite ───────────────────────
-  // Weights: criteria 40%, checklist 30%, query match 20%, bias tool ±10
-  var hasAgentData = (p.scanDepth === 'agent' || (p.checklists && Object.keys(p.checklists).length > 0));
-  if (!hasAgentData) {
-    return criteriaScore * 0.5;
-  }
-
-  var raw = (criteriaScore * 0.40) + (clScore * 0.30) + queryScore + biasAdj;
-  return Math.max(0, Math.min(100, Math.round(raw)));
-}
-
 function reRankAfterAgent() {
-  // Compute composite scores for all papers
-  papers.forEach(function(p) {
-    p.agentRankScore = computeAgentRankScore(p);
-  });
-
-  // Switch sort to agent rank
+  // Switch sort to agent rank (uses p.agentScore set during applyAgentResults)
   var sortEl = document.getElementById('sort-by');
   if (sortEl) sortEl.value = 'agent_rank';
-
   renderPapers();
   showToast('📊 Papers re-ranked by Agent Score', '#3b82f6');
+}
+
+// ── Single-paper agent analysis (from card button) ────────────────────────────
+async function analyseSinglePaper(pmid) {
+  if (!hasValidKey()) {
+    showToast('Add your OpenAI API key in the Search tab first', '#ef4444'); return;
+  }
+  var p = papers.find(function(x){ return String(x.pmid) === String(pmid); });
+  if (!p) return;
+  if (p.scanDepth === 'agent' || p.scanDepth === 'agent-processing') return;
+
+  // Disable the button and show spinner
+  var btn = document.getElementById('single-agent-btn-' + pmid);
+  if (btn) { btn.disabled = true; btn.textContent = '⏳ Analysing…'; }
+
+  // Show processing outline on card
+  var card = document.getElementById('card-' + pmid);
+  if (card) card.classList.add('agent-processing-card');
+
+  try {
+    // Pre-fetch full text before analysis — mirrors what the bulk agent benefits from
+    // via background PMC/PDF fetching. Without this, single-paper analysis often
+    // falls through to abstract-only because p.fullText hasn't been populated yet.
+    if (!p.fullText || p.fullText.length < 300) {
+      if (btn) btn.textContent = '⏳ Fetching full text…';
+      // Try PMC XML first (CORS-safe, complete)
+      var pmcid = p.pmcid || extractPmcIdFromUrl(p.fullTextUrl || '');
+      if (pmcid) {
+        try {
+          var pmcText = await fetchPMCFullText(pmcid);
+          if (pmcText && pmcText.length > 300) {
+            p.fullText = pmcText;
+            p.pmcid = p.pmcid || pmcid;
+            p.scanDepth = 'full';
+            var db = document.getElementById('db-' + pmid);
+            if (db) { db.className = 'depth-badge depth-full'; db.textContent = '◆ Full text scanned'; }
+          }
+        } catch(e) { console.warn('Pre-fetch PMC failed:', e.message); }
+      }
+      // If still no text and we have a real PDF URL, try pdf.js
+      if ((!p.fullText || p.fullText.length < 300) && p.fullTextUrl) {
+        var looksLikePdf = /\.pdf(\?|$)/i.test(p.fullTextUrl) || /\/pdf\//i.test(p.fullTextUrl) || /\/pdfs?\//i.test(p.fullTextUrl);
+        if (looksLikePdf) {
+          try {
+            var pdfText = await extractPdfText(p.fullTextUrl);
+            if (pdfText && pdfText.length > 300) {
+              p.fullText = pdfText;
+              p.scanDepth = 'pdf';
+              var db2 = document.getElementById('db-' + pmid);
+              if (db2) { db2.className = 'depth-badge depth-pdf'; db2.textContent = '◆ PDF scanned'; }
+            }
+          } catch(e) { console.warn('Pre-fetch PDF failed:', e.message); }
+        }
+      }
+      if (btn) btn.textContent = '⏳ Analysing…';
+    }
+
+    // Now run the agent — analyseOneWithAgent → applyAgentResults
+    await analyseOneWithAgent(p);
+
+    // Update badge in-place (same logic as progressive re-rank in bulk flow)
+    if (card && p.agentScore != null) {
+      var rob2Risk = getRob2RiskLabel(p);
+      var robColour = rob2Risk ? rob2Risk.colour : '#4b5563';
+      var robLabel  = rob2Risk ? rob2Risk.label.replace('RoB2: ','') : 'Not assessed';
+      var clKey2 = p.selectedChecklist;
+      var clSc2  = clKey2 ? checklistScore(p, clKey2) : null;
+      var qColour2 = p.queryMatch === true ? '#4ade80' : p.queryMatch === false ? '#f87171' : '#64748b';
+      var qLabel2  = p.queryMatch === true ? '✓ Matches question' : p.queryMatch === false ? '✗ Off-topic' : '? Not assessed';
+      var scoreColour2 = p.agentScore >= 75 ? '#4ade80' : p.agentScore >= 50 ? '#f59e0b' : '#f87171';
+      var badgeHtml =
+        '<div id="agent-rank-badge-' + pmid + '" style="display:flex;flex-direction:column;gap:1px;margin-top:2px">' +
+          '<span title="' + esc(p.agentScoreReasoning || '') + '" style="background:#0f172a;border:1px solid ' + scoreColour2 + '55;color:' + scoreColour2 + ';font-size:10px;font-weight:700;font-family:\'IBM Plex Mono\',monospace;padding:2px 8px;border-radius:10px;white-space:nowrap;cursor:default">&#128202; ' + p.agentScore + '/100</span>' +
+          (clSc2 ? '<span style="font-size:9px;color:#64748b;padding-left:2px">' + esc(clKey2) + ' ' + clSc2.pct + '%</span>' : '') +
+          '<span style="font-size:9px;padding-left:2px"><span style="color:' + robColour + '">' + esc(robLabel) + '</span> &middot; <span style="color:' + qColour2 + '">' + qLabel2 + '</span></span>' +
+        '</div>';
+      var typeBadgeEl = card.querySelector('.badge');
+      var existingBadge = card.querySelector('[id^="agent-rank-badge-"]');
+      if (existingBadge) existingBadge.outerHTML = badgeHtml;
+      else if (typeBadgeEl) typeBadgeEl.insertAdjacentHTML('afterend', badgeHtml);
+    }
+
+    // Refresh checklist section in the expanded body
+    refreshCardChecklist(p);
+
+    // Update agent result badge (✓ Done)
+    addAgentBadge(pmid);
+    maybeShowRob2VizBtn();
+
+    // Hide the analyse button — analysis is done
+    if (btn) btn.style.display = 'none';
+
+    // Re-sort all papers by agent score so this paper ranks correctly
+    if (p.agentScore != null) {
+      var sortEl = document.getElementById('sort-by');
+      if (sortEl) sortEl.value = 'agent_rank';
+      renderPapers();
+    }
+
+    showToast('✓ Analysis complete for ' + esc((p.title || '').slice(0, 50)) + '…', '#4ade80');
+
+  } catch(err) {
+    console.error('Single paper agent error:', err);
+    if (btn) { btn.disabled = false; btn.textContent = '🤖 Analyse'; }
+    showToast('Agent error: ' + (err.message || 'unknown'), '#ef4444');
+  } finally {
+    if (card) card.classList.remove('agent-processing-card');
+  }
 }
 
 
@@ -1573,21 +2082,24 @@ function buildChecklistBody(p) {
   var cl = CHECKLISTS[clKey];
   var data = (p.checklists && p.checklists[clKey]) ? p.checklists[clKey] : {};
 
-  // ── RoB2: domain-based layout ──────────────────
+  // ── RoB2 / ROBINS2: domain-based layout ─────────
   if (cl.domains) {
+    var skipped = computeSkips(clKey, data);
     return cl.domains.map(function(domain) {
       var domJudge = (data['__domain_judgements__'] && data['__domain_judgements__'][domain.id]) || 'unclear';
-      var judgeOpts = [
-        {val:'low', label:'Low Risk'},
-        {val:'some_concerns', label:'Some Concerns'},
-        {val:'high', label:'High Risk'},
-        {val:'unclear', label:'Unclear'}
-      ].map(function(o){
-        return '<option value="'+o.val+'"'+(domJudge===o.val?' selected':'')+'>'+o.label+'</option>';
+      var judgeOpts = ['low','some_concerns','high','unclear'].map(function(v){
+        var lbl = v==='low'?'Low Risk':v==='some_concerns'?'Some Concerns':v==='high'?'High Risk':'Unclear';
+        return '<option value="'+v+'"'+(domJudge===v?' selected':'')+'>'+lbl+'</option>';
       }).join('');
 
       var qRows = domain.questions.map(function(q) {
-        var st = data[q.id] || 'NI';
+        if (skipped.has(q.id)) {
+          return '<div class="cl-item-row cl-item-skipped">' +
+            '<div class="cl-item-text" style="padding-left:4px;opacity:0.38">'+q.text+'</div>' +
+            '<div class="cl-item-status"><span class="cl-skip-badge">N/A — skipped</span></div>' +
+          '</div>';
+        }
+        var st = data[q.id] || 'ni';
         var opts = ROB2_STATUSES.map(function(o){
           return '<option value="'+o.val+'"'+(st===o.val?' selected':'')+'>'+o.label+'</option>';
         }).join('');
@@ -1598,21 +2110,25 @@ function buildChecklistBody(p) {
         '</div>';
       }).join('');
 
+      var rationale = (data['__domain_rationales__'] && data['__domain_rationales__'][domain.id])
+        ? '<div style="margin:5px 0 3px;padding:6px 10px;background:#0d1a12;border-left:2px solid #22c55e44;border-radius:0 4px 4px 0;font-size:10px;color:#86efac;line-height:1.5;font-style:italic">'
+          + '<span style="font-size:9px;font-weight:700;color:#4ade80;font-style:normal">AI EVIDENCE — </span>'
+          + esc(data['__domain_rationales__'][domain.id]) + '</div>'
+        : '';
+
+      var sugg = suggestRob2Judgements(data, skipped);
+      var domSugg = sugg[domain.id] || {};
+      var consistencyNote = buildRob2ConsistencyNote(domJudge, domSugg);
+
       return '<div class="rob-domain">' +
         '<div class="rob-domain-title">'+domain.title+'</div>' +
         qRows +
-        (function() {
-          var rationales = data['__domain_rationales__'] || {};
-          return rationales[domain.id]
-            ? '<div style="margin:5px 0 3px;padding:6px 10px;background:#0d1a12;border-left:2px solid #22c55e44;border-radius:0 4px 4px 0;font-size:10px;color:#86efac;line-height:1.5;font-style:italic">'
-              + '<span style="font-size:9px;font-weight:700;letter-spacing:0.08em;color:#4ade80;font-style:normal">AI EVIDENCE \u2014 </span>'
-              + esc(rationales[domain.id]) + '</div>'
-            : '';
-        })() +
+        rationale +
         '<div class="rob-judgement-row">' +
-          '<span class="rob-judgement-label">Domain judgement:</span>' +
+          '<span class="rob-judgement-label">Judgement:</span>' +
           '<select class="rob-judgement-select rob-'+domJudge+'" onchange="updateRobDomainJudgement(\''+p.pmid+'\',\''+domain.id+'\',this.value,this)">'+judgeOpts+'</select>' +
         '</div>' +
+        consistencyNote +
       '</div>';
     }).join('');
   }
@@ -1655,10 +2171,18 @@ function updateChecklistItem(pmid, clKey, itemId, val, selectEl) {
   var p = papers.find(function(x){ return x.pmid === pmid; });
   if (!p || !p.checklists || !p.checklists[clKey]) return;
   p.checklists[clKey][itemId] = val;
-  // Update select colour class
-  var classes = 'cl-status-select ';
-  classes += val==='yes'?'cl-status-yes':val==='partial'?'cl-status-partial':val==='no'?'cl-status-no':val==='na'?'cl-status-na':'cl-status-unclear';
-  selectEl.className = classes;
+  // If this checklist has conditional branching, re-render the whole body
+  // so downstream skip states cascade correctly
+  var cl = CHECKLISTS[clKey];
+  if (cl && cl.domains) {
+    var contentEl = document.getElementById('cl-content-' + pmid);
+    if (contentEl) contentEl.innerHTML = buildChecklistBody(p);
+  } else {
+    // For item-based checklists, just update the colour class in-place
+    var classes = 'cl-status-select ';
+    classes += val==='yes'?'cl-status-yes':val==='partial'?'cl-status-partial':val==='no'?'cl-status-no':val==='na'?'cl-status-na':'cl-status-unclear';
+    selectEl.className = classes;
+  }
   refreshChecklistBadge(pmid);
 }
 
@@ -1721,7 +2245,7 @@ function switchTab(name) {
   document.querySelectorAll('.tab-panel').forEach(function(p){ p.classList.remove('active'); });
   document.querySelectorAll('.tab-btn').forEach(function(b){ b.classList.remove('active'); });
   document.getElementById('tab-' + name).classList.add('active');
-  var map = { search:'Search', results:'Results', criteria:'Scan Criteria', history:'History', uploader:'PDF Scanner' };
+  var map = { search:'Search', results:'Results', criteria:'Scan Criteria', history:'History', uploader:'PDF Scanner', projects:'Projects' };
   document.querySelectorAll('.tab-btn').forEach(function(b){
     var label = b.textContent.trim().replace(/\s+/g,' ');
     if (b.textContent.trim() === map[name] || label.indexOf(map[name]) !== -1) b.classList.add('active');
@@ -1942,6 +2466,7 @@ function doSearch() {
       return;
     }
 
+    // Initial scan with whatever abstract we have — renders immediately
     papers = combined.map(function(p) {
       var scan = scanPaper(p);
       p.scanResults = scan.results;
@@ -1952,6 +2477,10 @@ function doSearch() {
       return p;
     });
 
+    // Enrich weak abstracts via PubMed efetch — runs async, updates cards in place.
+    // Targets papers with a PMID but short/absent abstract (< 300 chars),
+    // which typically means they came from OpenAlex/Semantic Scholar with a
+    // truncated or inverted-index-reconstructed abstract.
     var dbsUsed = [
       usePubmed ? 'PubMed' : null,
       useCochrane ? 'Cochrane' : null,
@@ -1965,6 +2494,9 @@ function doSearch() {
     searchHistory.unshift({ query: q, date: new Date().toLocaleString(), count: combined.length, sources: dbsUsed });
     renderHistory();
     renderResults();
+
+    // Enrich weak abstracts AFTER render so cards exist in DOM for in-place updates
+    enrichWeakAbstracts(papers);
 
     // If no papers have PDFs to background-scan, unlock agent button immediately.
     // Otherwise fetchAndScanPDFs() will call updateKeyBanner() when it finishes.
@@ -2012,34 +2544,37 @@ function deduplicatePapers(pubmedArr, cochraneArr, europePmcArr, semanticArr, op
   var seenTitle = {};
   var out = [];
 
+  function mergeIntoBetter(existing, incoming) {
+    // When deduplicating, keep the best data from each source:
+    // - Longer abstract wins (PubMed full abstract beats OpenAlex truncated)
+    // - PMID/PMCID from whichever source has it
+    // - Citation count from whichever has it
+    if (!existing.sources) existing.sources = [existing.source];
+    if (incoming.sources && incoming.sources.indexOf(incoming.source) === -1) existing.sources.push(incoming.source);
+    else if (existing.sources.indexOf(incoming.source) === -1) existing.sources.push(incoming.source);
+    if ((incoming.abstract || '').length > (existing.abstract || '').length) existing.abstract = incoming.abstract;
+    if (!existing.pmid && incoming.pmid) existing.pmid = incoming.pmid;
+    if (!existing.pmcid && incoming.pmcid) existing.pmcid = incoming.pmcid;
+    if (existing.citationCount == null && incoming.citationCount != null) existing.citationCount = incoming.citationCount;
+    if (!existing.fullTextUrl && incoming.fullTextUrl) { existing.fullTextUrl = incoming.fullTextUrl; existing.fullTextSource = incoming.fullTextSource; }
+    if (!existing.doi && incoming.doi) existing.doi = incoming.doi;
+  }
+
   function tryAdd(p) {
     // DOI match (most reliable)
     if (p.doi) {
       var doi = p.doi.toLowerCase().trim();
-      if (seenDoi[doi]) {
-        // Merge source badge onto existing paper
-        var existing = seenDoi[doi];
-        if (existing.sources.indexOf(p.source) === -1) existing.sources.push(p.source);
-        return;
-      }
+      if (seenDoi[doi]) { mergeIntoBetter(seenDoi[doi], p); return; }
       seenDoi[doi] = p;
     }
     // PMID match
     if (p.pmid && !p.pmid.toString().startsWith('EP_') && !p.pmid.toString().startsWith('SS_')) {
-      if (seenPmid[p.pmid]) {
-        var ex = seenPmid[p.pmid];
-        if (ex.sources.indexOf(p.source) === -1) ex.sources.push(p.source);
-        return;
-      }
+      if (seenPmid[p.pmid]) { mergeIntoBetter(seenPmid[p.pmid], p); return; }
       seenPmid[p.pmid] = p;
     }
     // Fuzzy title match
     var nt = normTitle(p.title);
-    if (nt.length > 20 && seenTitle[nt]) {
-      var ex2 = seenTitle[nt];
-      if (ex2.sources.indexOf(p.source) === -1) ex2.sources.push(p.source);
-      return;
-    }
+    if (nt.length > 20 && seenTitle[nt]) { mergeIntoBetter(seenTitle[nt], p); return; }
     if (nt.length > 20) seenTitle[nt] = p;
 
     p.sources = p.sources || [p.source];
@@ -2155,15 +2690,42 @@ function fetchPubMed(query, maxResults) {
 // ══════════════════════════════════════════════
 // EUROPE PMC API (also used for Cochrane filter)
 // ══════════════════════════════════════════════
+// Translate a PubMed-syntax query to Europe PMC query syntax.
+// PubMed field tags ([tiab], [MeSH Terms] etc.) are not understood by Europe PMC —
+// passing them raw produces 0 results. This translates known tags and strips unknown ones.
+function pubmedToEuropePMC(query) {
+  var tagMap = {
+    'tiab': 'TITLE_ABS', 'ti': 'TITLE', 'ab': 'ABSTRACT',
+    'au': 'AUTH', 'fau': 'AUTH',
+    'mesh terms': 'MESH', 'mesh': 'MESH', 'mh': 'MESH',
+    'pt': 'PUB_TYPE', 'tw': null, 'all': null, 'sb': null,
+    'la': 'LANG', 'ta': 'JOURNAL', 'jour': 'JOURNAL', 'pdat': null,
+  };
+  // 1. Quoted phrases with field tags: "some phrase"[field]
+  var result = query.replace(/"([^"]+)"\[([^\]]+)\]/g, function(_, phrase, tag) {
+    var ep = tagMap[tag.trim().toLowerCase()];
+    return ep ? ep + ':"' + phrase + '"' : '"' + phrase + '"';
+  });
+  // 2. Single-word terms with field tags: word[field]
+  result = result.replace(/(\w+)\[([^\]]+)\]/g, function(_, term, tag) {
+    var ep = tagMap[tag.trim().toLowerCase()];
+    return ep ? ep + ':' + term : term;
+  });
+  // 3. Strip any remaining bare [tags]
+  result = result.replace(/\[[^\]]+\]/g, '');
+  return result.replace(/\s+/g, ' ').trim();
+}
+
 function fetchEuropePMC(query, maxResults, sourceLabel) {
   sourceLabel = sourceLabel || 'EuropePMC';
+  // Translate PubMed field tags to Europe PMC syntax before sending
+  var epQuery = pubmedToEuropePMC(query);
   var url = 'https://www.ebi.ac.uk/europepmc/webservices/rest/search?query=' +
-    encodeURIComponent(query) +
+    encodeURIComponent(epQuery) +
     '&resultType=core&pageSize=' + maxResults +
     '&format=json&sort=relevance';
 
-  return fetch(url).then(function(r) {
-    if (!r.ok) throw new Error('Europe PMC ' + r.status);
+  return fetchWithFallback(url).then(function(r) {
     return r.json();
   }).then(function(data) {
     var results = (data.resultList && data.resultList.result) || [];
@@ -2241,10 +2803,13 @@ function fetchSemanticScholar(query, maxResults, dateFrom, dateTo) {
   var fields = 'title,authors,year,abstract,externalIds,publicationTypes,journal,venue,citationCount,paperId';
   // Guard against NaN from a failed parseInt upstream
   var limit = (isNaN(maxResults) || maxResults < 1) ? 50 : Math.min(maxResults, 100);
-  var url = 'https://api.semanticscholar.org/graph/v1/paper/search?query=' +
+
+  // Use the bulk endpoint — more reliable and not deprecated unlike /paper/search
+  var url = 'https://api.semanticscholar.org/graph/v1/paper/search/bulk?query=' +
     encodeURIComponent(s2query) +
     '&limit=' + limit +
     '&fields=' + fields;
+
   // Build year range only when it forms a valid low-high pair
   var yearFrom = dateFrom ? parseInt(dateFrom, 10) : null;
   var yearTo   = dateTo   ? parseInt(dateTo,   10) : null;
@@ -2253,37 +2818,27 @@ function fetchSemanticScholar(query, maxResults, dateFrom, dateTo) {
   } else if (yearTo && !yearFrom) {
     url += '&year=1000-' + yearTo;
   } else if (yearFrom && yearTo) {
-    // Silently swap reversed dates rather than sending an invalid range
     var lo = Math.min(yearFrom, yearTo);
     var hi = Math.max(yearFrom, yearTo);
     url += '&year=' + lo + '-' + hi;
   }
 
-  // Retry on 429, use fetchWithFallback for proxy chain support
-  function fetchS2WithRetry(targetUrl) {
-    return fetchWithFallback(targetUrl).catch(function(e) {
-      var msg = (e.message || '').toLowerCase();
-      if (msg.indexOf('429') !== -1 || msg.indexOf('rate') !== -1 || msg.indexOf('too many') !== -1) {
-        return new Promise(function(resolve, reject) {
-          setTimeout(function() {
-            fetchWithFallback(targetUrl).then(resolve).catch(reject);
-          }, 2000);
-        });
-      }
-      throw e;
-    });
-  }
+  // S2 supports CORS natively — hit it directly from the browser, no proxy needed.
+  console.log('[S2] sanitised query:', s2query);
+  console.log('[S2] url:', url);
 
-  return fetchS2WithRetry(url).then(function(r) {
+  return fetch(url, { headers: { 'Accept': 'application/json' } }).then(function(r) {
+    if (r.status === 429) throw new Error('Rate limited — try again in a few seconds');
+    if (!r.ok) throw new Error('HTTP ' + r.status);
+    return r;
+  }).then(function(r) {
     return r.text();
   }).then(function(text) {
     var data;
     try {
       data = JSON.parse(text);
     } catch(e) {
-      // Detect HTML proxy error page
-      if (text.trimLeft().charAt(0) === '<') throw new Error('Semantic Scholar unavailable — proxy returned an error page');
-      throw new Error('Semantic Scholar returned unparseable response');
+      throw new Error('Unparseable response: ' + text.slice(0, 80));
     }
     // S2 occasionally returns 200 with an error body
     if (data.error) {
@@ -2291,6 +2846,10 @@ function fetchSemanticScholar(query, maxResults, dateFrom, dateTo) {
       throw new Error('Semantic Scholar: ' + msg + ' (query: "' + s2query.slice(0, 60) + '")');
     }
     var items = data.data || [];
+    if (items.length === 0 && data.total === 0) {
+      // Genuine no results — not a silent rate-limit failure
+      return [];
+    }
     var stMap = {
       'ClinicalTrial': 'Clinical Trial',
       'Review': 'Review',
@@ -2344,9 +2903,9 @@ function fetchOpenAlex(query, maxResults, dateFrom, dateTo) {
     '&mailto=evidentum@lab.tool';
 
   if (dateFrom || dateTo) {
-    var from = dateFrom ? dateFrom + '-01-01' : '1000-01-01';
-    var to   = dateTo   ? dateTo   + '-12-31' : '3000-12-31';
-    url += '&filter=publication_year:' + (dateFrom || '1000') + '-' + (dateTo || '3000');
+    var from = dateFrom || '1000';
+    var to   = dateTo   || '3000';
+    url += '&filter=publication_year:' + from + '-' + to;
   }
 
   var studyTypeEl = document.getElementById('filter-study-type');
@@ -2439,19 +2998,118 @@ function parseAbstracts(xml) {
   var result = {};
   try {
     var doc = new DOMParser().parseFromString(xml, 'text/xml');
+    // Check for XML parse error (browser returns a parseerror document)
+    if (doc.querySelector('parsererror')) {
+      console.warn('parseAbstracts: XML parse error in efetch response');
+      return result;
+    }
     doc.querySelectorAll('PubmedArticle').forEach(function(art) {
-      var pmidEl = art.querySelector('PMID');
+      // Use MedlineCitation > PMID specifically — avoids grabbing PMIDs
+      // from reference lists (ReferenceList > Reference > PMID)
+      var citationEl = art.querySelector('MedlineCitation');
+      if (!citationEl) return;
+      var pmidEl = citationEl.querySelector('PMID');
       if (!pmidEl) return;
       var pmid = pmidEl.textContent.trim();
       var parts = [];
-      art.querySelectorAll('AbstractText').forEach(function(el) {
-        var label = el.getAttribute('Label');
-        parts.push(label ? label + ': ' + el.textContent.trim() : el.textContent.trim());
+      art.querySelectorAll('Abstract AbstractText').forEach(function(el) {
+        var label = el.getAttribute('Label') || el.getAttribute('NlmCategory') || '';
+        var text = el.textContent.trim();
+        if (text) parts.push(label ? label + ': ' + text : text);
       });
-      result[pmid] = parts.join('\n\n');
+      // Also capture OtherAbstract (some journals use this)
+      art.querySelectorAll('OtherAbstract AbstractText').forEach(function(el) {
+        var text = el.textContent.trim();
+        if (text && parts.length === 0) parts.push(text);
+      });
+      if (parts.length > 0) result[pmid] = parts.join(' ');
     });
-  } catch(e) {}
+  } catch(e) {
+    console.warn('parseAbstracts exception:', e);
+  }
   return result;
+}
+
+// Enrich abstracts for papers with weak/truncated text (< 300 chars) that have a PMID.
+// Common cause: OpenAlex/Semantic Scholar return partial abstracts for paywalled papers,
+// while PubMed has the full structured abstract. Runs async; patches cards in-place.
+function enrichWeakAbstracts(paperList) {
+  // Enrich abstracts from PubMed for any paper that:
+  // (a) has a real PMID, AND
+  // (b) either has no/short abstract (<900 chars) OR did not originally come from PubMed.
+  // OpenAlex/Semantic Scholar return truncated abstracts for paywalled papers —
+  // PubMed always has the full structured abstract for indexed papers.
+  var toEnrich = paperList.filter(function(p) {
+    if (!p.pmid || String(p.pmid).startsWith('EP_') || String(p.pmid).startsWith('SS_') || String(p.pmid).startsWith('OA_')) return false;
+    var absLen = (p.abstract || '').length;
+    var fromPubMed = p.sources && p.sources.indexOf('PubMed') !== -1;
+    // Always enrich non-PubMed sources, or any paper with a short abstract
+    return !fromPubMed || absLen < 900;
+  });
+  if (toEnrich.length === 0) return;
+
+  // Batch in groups of 20 to stay within URL limits; stagger to avoid hammering eutils
+  var chunks = [];
+  for (var i = 0; i < toEnrich.length; i += 20) chunks.push(toEnrich.slice(i, i + 20));
+
+  chunks.reduce(function(chain, chunk, chunkIdx) {
+    return chain.then(function() {
+      return new Promise(function(resolve) { setTimeout(resolve, chunkIdx * 300); });
+    }).then(function() {
+      var ids = chunk.map(function(p){ return p.pmid; }).join(',');
+      var url = 'https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=pubmed&id=' + ids + '&retmode=xml&rettype=abstract';
+      return fetchWithFallback(url)
+        .then(function(r){ return r.text(); })
+        .then(function(xml) {
+          var abstracts = parseAbstracts(xml);
+          chunk.forEach(function(p) {
+            var enriched = abstracts[p.pmid];
+            if (enriched && enriched.length > (p.abstract || '').length) {
+              p.abstract = enriched;
+              // Re-scan with enriched abstract
+              var scan = scanPaper(p);
+              p.scanResults = scan.results;
+              p.score       = scan.score;
+              p.passedCriteria = scan.passed;
+              p.totalCriteria  = scan.total;
+              // Patch the card in-place
+              updateCardScore(p);
+            }
+          });
+        })
+        .catch(function(e){ console.warn('enrichWeakAbstracts chunk failed:', e); });
+    });
+  }, Promise.resolve());
+}
+
+// Update a paper card's score display and criteria chips in-place (no full re-render)
+function updateCardScore(p) {
+  var card = document.getElementById('card-' + p.pmid);
+  if (!card) return;
+  var boost = citationBoostScore(p);
+  var boostedScore = Math.min(100, p.score + boost);
+  var scoreColor = boostedScore >= 80 ? '#22c55e' : boostedScore >= 50 ? '#f59e0b' : '#ef4444';
+  var scoreLabel = card.querySelector('.score-label');
+  if (scoreLabel) scoreLabel.textContent = boost > 0 ? 'Criteria+Cit.' : 'Criteria';
+  var scoreNum = card.querySelector('.score-num');
+  if (scoreNum) { scoreNum.style.color = scoreColor; scoreNum.innerHTML = boostedScore + '<span style="font-size:11px;color:#4b5563">%</span>'; }
+  var scoreBar = card.querySelector('.score-bar');
+  if (scoreBar) { scoreBar.style.width = boostedScore + '%'; scoreBar.style.background = scoreColor; }
+  var passCount = card.querySelector('.pass-count');
+  if (passCount) passCount.textContent = p.passedCriteria + '/' + p.totalCriteria + ' pass';
+  // Rebuild criteria chips
+  if (p.scanResults) {
+    var chipHtml = p.scanResults.map(function(r) {
+      var cls = r.pass ? 'scan-chip pass' : 'scan-chip fail';
+      var icon = r.pass ? '&#10003;' : '&#10007;';
+      var tooltip = (r.type === 'must' ? 'Must contain' : 'Must NOT contain') + ': ' + esc(r.keywords.join(', ')) +
+        (r.matched && r.matched.length ? ' | Matched: ' + r.matched.slice(0,3).join(', ') : '');
+      return '<span class="' + cls + '" title="' + tooltip + '">' + icon + ' ' + esc(r.label) + '</span>';
+    }).join('');
+    // Replace first .scan-row (criteria chips row)
+    var scanRows = card.querySelectorAll('.scan-row');
+    if (scanRows[0]) scanRows[0].innerHTML = chipHtml;
+  }
 }
 
 // ══════════════════════════════════════════════
@@ -2475,6 +3133,19 @@ function renderResults() {
   fetchAndScanPDFs();
 }
 
+// Log-normalised citation boost — max 15 pts.
+// log10(1+1)=0.3, log10(10+1)=1.04, log10(100+1)=2.0, log10(1000+1)=3.0
+// Divide by log10(1001) (~3.0) to normalise 0→1, then * 15
+var CITATION_BOOST_MAX = 15;
+var CITATION_BOOST_NORM = Math.log10(1001); // normalisation denominator
+
+function citationBoostScore(p) {
+  var cb = document.getElementById('citation-boost-cb');
+  if (!cb || !cb.checked) return 0;
+  var c = typeof p.citationCount === 'number' ? p.citationCount : 0;
+  return Math.round((Math.log10(c + 1) / CITATION_BOOST_NORM) * CITATION_BOOST_MAX);
+}
+
 function getSorted() {
   var sortBy = document.getElementById('sort-by').value;
   var filterType = document.getElementById('filter-type').value;
@@ -2487,8 +3158,12 @@ function getSorted() {
     if (filterScore > 0 && p.score < filterScore) return false;
     return true;
   }).sort(function(a, b) {
-    if (sortBy === 'score') return b.score - a.score;
-    if (sortBy === 'agent_rank') return (b.agentRankScore || 0) - (a.agentRankScore || 0);
+    if (sortBy === 'score') {
+      var aScore = a.score + citationBoostScore(a);
+      var bScore = b.score + citationBoostScore(b);
+      return bScore - aScore;
+    }
+    if (sortBy === 'agent_rank') return (b.agentScore || 0) - (a.agentScore || 0);
     if (sortBy === 'citations') return (b.citationCount || 0) - (a.citationCount || 0);
     if (sortBy === 'date_new') return (parseInt(b.year)||0) - (parseInt(a.year)||0);
     if (sortBy === 'date_old') return (parseInt(a.year)||0) - (parseInt(b.year)||0);
@@ -2541,7 +3216,9 @@ function renderPapers() {
     var authors = p.authors || [];
     var authorStr = authors.slice(0,3).join(', ') + (authors.length > 3 ? ' et al.' : '');
     var expanded = expandedCards.has(p.pmid);
-    var scoreColor = p.score >= 80 ? '#22c55e' : p.score >= 50 ? '#f59e0b' : '#ef4444';
+    var boost = citationBoostScore(p);
+    var boostedScore = Math.min(100, p.score + boost);
+    var scoreColor = boostedScore >= 80 ? '#22c55e' : boostedScore >= 50 ? '#f59e0b' : '#ef4444';
 
     // Scan result chips (compact, show on card)
     var chipHtml = '';
@@ -2580,7 +3257,7 @@ function renderPapers() {
     }
 
     var agentRankBadge = '';
-    if (p.agentRankScore != null && p.scanDepth === 'agent') {
+    if (p.agentScore != null && p.scanDepth === 'agent') {
       var rob2Risk = getRob2RiskLabel(p);
       var robColour = rob2Risk ? rob2Risk.colour : '#4b5563';
       var robLabel  = rob2Risk ? rob2Risk.label.replace('RoB2: ','') : 'Not assessed';
@@ -2588,10 +3265,11 @@ function renderPapers() {
       var clSc2  = clKey2 ? checklistScore(p, clKey2) : null;
       var qColour = p.queryMatch === true ? '#4ade80' : p.queryMatch === false ? '#f87171' : '#64748b';
       var qLabel  = p.queryMatch === true ? '✓ Matches question' : p.queryMatch === false ? '✗ Off-topic' : '? Not assessed';
+      var scoreColour = p.agentScore >= 75 ? '#4ade80' : p.agentScore >= 50 ? '#f59e0b' : '#f87171';
       agentRankBadge =
         '<div style="display:flex;flex-direction:column;gap:1px;margin-top:2px">' +
-          '<span style="background:#1e3a5f;border:1px solid #3b82f6;color:#93c5fd;font-size:10px;font-weight:700;font-family:\'IBM Plex Mono\',monospace;padding:2px 8px;border-radius:10px;white-space:nowrap">&#128202; Score: ' + p.agentRankScore + '/100</span>' +
-          '<span style="font-size:9px;color:#64748b;padding-left:2px">Criteria ' + p.score + '%' + (clSc2 ? ' &middot; ' + esc(clKey2) + ' ' + clSc2.pct + '%' : '') + '</span>' +
+          '<span title="' + esc(p.agentScoreReasoning || '') + '" style="background:#0f172a;border:1px solid ' + scoreColour + '55;color:' + scoreColour + ';font-size:10px;font-weight:700;font-family:\'IBM Plex Mono\',monospace;padding:2px 8px;border-radius:10px;white-space:nowrap;cursor:default">&#128202; ' + p.agentScore + '/100</span>' +
+          (clSc2 ? '<span style="font-size:9px;color:#64748b;padding-left:2px">' + esc(clKey2) + ' ' + clSc2.pct + '%</span>' : '') +
           '<span style="font-size:9px;padding-left:2px"><span style="color:' + robColour + '">' + esc(robLabel) + '</span> &middot; <span style="color:' + qColour + '">' + qLabel + '</span></span>' +
         '</div>';
     }
@@ -2628,17 +3306,23 @@ function renderPapers() {
             '<div class="scan-row" style="margin-top:4px">'+tagHtml+'</div>' +
           '</div>' +
           '<div class="score-box">' +
-            '<div class="score-label">Criteria</div>' +
-            '<div class="score-num" style="color:'+scoreColor+'">'+p.score+'<span style="font-size:11px;color:#4b5563">%</span></div>' +
-            '<div class="score-bar-wrap"><div class="score-bar" style="width:'+p.score+'%;background:'+scoreColor+'"></div></div>' +
+            '<div class="score-label">' + (boost > 0 ? 'Criteria+Cit.' : 'Criteria') + '</div>' +
+            '<div class="score-num" style="color:'+scoreColor+'">' + boostedScore + '<span style="font-size:11px;color:#4b5563">%</span></div>' +
+            '<div class="score-bar-wrap"><div class="score-bar" style="width:'+boostedScore+'%;background:'+scoreColor+'"></div></div>' +
             '<div class="pass-count" style="font-size:10px;color:#4b5563;margin-top:2px">'+p.passedCriteria+'/'+p.totalCriteria+' pass</div>' +
+            (boost > 0 ? '<div style="font-size:9px;color:#3b82f6;margin-top:1px" title="'+p.score+'% criteria + '+boost+'pt citation boost ('+((p.citationCount||0))+' citations)">+'+boost+' cit. boost</div>' : '') +
           '</div>' +
           buildChecklistPill(p) +
           '<button class="expand-btn" onclick="toggleExpand(\''+p.pmid+'\')" title="Expand to see scan criteria detail, quality checklists, abstract and notes">'+(expanded?'&#9650; Less':'&#9660; Full criteria &amp; checklists')+'</button>' +
+          '<button class="addtoproj-btn" id="addtoproj-btn-'+p.pmid+'" onclick="openAddToProjModal(\''+p.pmid+'\',\'search\')" title="Add to a project">&#128193; Add to project</button>' +
+          (hasValidKey() && p.scanDepth !== 'agent' && p.scanDepth !== 'agent-processing'
+            ? '<button class="addtoproj-btn" id="single-agent-btn-'+p.pmid+'" onclick="analyseSinglePaper(\''+p.pmid+'\')" style="border-color:#7c3aed44;background:#1a0d35;color:#a78bfa">🤖 Analyse</button>'
+            : '') +
         '</div>' +
       '</div>' +
       '<div class="paper-body'+(expanded?' open':'')+'" id="body-'+p.pmid+'">' +
         detailHtml +
+        buildPaperSuppZone(p) +
         renderChecklistSection(p) +
         '<div style="margin-top:14px"><div class="abstract-text">'+esc(p.abstract||'No abstract available.')+'</div></div>' +
         '<div style="margin-top:10px;display:flex;gap:8px;flex-wrap:wrap">' +
@@ -3014,6 +3698,7 @@ function loadScopusKey() {
     saveScopusKey(); // update status label
   }
 }
+
 
 function fetchScopus(query, maxResults, dateFrom, dateTo) {
   if (!scopusApiKey) return Promise.reject(new Error('No Scopus API key'));
@@ -3667,8 +4352,9 @@ function fetchAndScanPDFs() {
 // PDF SCANNER
 // ══════════════════════════════════════════════
 
-var uploaderFile = null;
-var uploaderText = null;
+var uploaderFile  = null;   // primary PDF File object
+var uploaderText  = null;   // extracted text from primary PDF
+var suppFiles     = [];     // array of { file: File, text: string|null, status: 'pending'|'ready'|'error' }
 
 // Auto-select checklist when study type changes
 document.addEventListener('DOMContentLoaded', function() {
@@ -3731,30 +4417,26 @@ async function parseReferencesWithAI(refText) {
     refText.slice(0, 10000)
   ].join('\n');
 
-  var response = await fetch('https://api.openai.com/v1/responses', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + openAIKey },
-    body: JSON.stringify({
-      model: 'gpt-5',
-      max_output_tokens: 8000,
-      reasoning: { effort: 'low' },
-      input: [{ role: 'user', content: [{ type: 'input_text', text: prompt }] }]
-    })
-  });
-
-  if (!response.ok) {
-    var err = await response.json().catch(function(){ return {}; });
-    throw new Error('OpenAI ' + response.status + ': ' + ((err.error && err.error.message) || 'unknown'));
-  }
-
-  var data = await response.json();
   var raw = '';
-  if (data.output) {
-    data.output.forEach(function(block) {
-      if (block.type === 'message' && block.content) {
-        block.content.forEach(function(c) { if (c.type === 'output_text') raw += c.text; });
-      }
+  if (aiProvider === 'anthropic') {
+    var response = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'x-api-key': openAIKey, 'anthropic-version': '2023-06-01', 'anthropic-dangerous-direct-browser-access': 'true' },
+      body: JSON.stringify({ model: 'claude-sonnet-4-6', max_tokens: 8000, messages: [{ role: 'user', content: prompt }] })
     });
+    if (!response.ok) { var err = await response.json().catch(function(){ return {}; }); throw new Error('Anthropic ' + response.status + ': ' + ((err.error && err.error.message) || 'unknown')); }
+    var data = await response.json();
+    raw = (data.content && data.content[0] && data.content[0].text) || '{}';
+  } else {
+    var response = await fetch('https://api.openai.com/v1/responses', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + openAIKey },
+      body: JSON.stringify({ model: 'gpt-5', max_output_tokens: 8000, reasoning: { effort: 'low' }, input: [{ role: 'user', content: [{ type: 'input_text', text: prompt }] }] })
+    });
+    if (!response.ok) { var err = await response.json().catch(function(){ return {}; }); throw new Error('OpenAI ' + response.status + ': ' + ((err.error && err.error.message) || 'unknown')); }
+    var data = await response.json();
+    if (data.output) { data.output.forEach(function(block) { if (block.type === 'message' && block.content) { block.content.forEach(function(c) { if (c.type === 'output_text') raw += c.text; }); } }); }
+    if (!raw) raw = '{}';
   }
   raw = raw.replace(/^```json\s*/i,'').replace(/^```\s*/i,'').replace(/\s*```$/,'').trim();
   return safeParseAgentJson(raw);
@@ -3771,7 +4453,7 @@ function rankReferences(refs) {
 
 async function runReferenceScanner() {
   if (!uploaderFile) { setUploaderStatus('Please select a PDF first.', '#ef4444'); return; }
-  if (!openAIKey || !openAIKey.startsWith('sk-')) {
+  if (!hasValidKey()) {
     setUploaderStatus('An OpenAI API key is required for reference scanning.', '#ef4444');
     return;
   }
@@ -3786,8 +4468,8 @@ async function runReferenceScanner() {
   setUploaderStatus('Extracting PDF text…', '#64748b');
   setUploaderProgress(10);
 
-  // Reuse already-extracted text or re-extract
-  var getText = uploaderText
+  // Reuse already-extracted text or re-extract; merge supplementary if present
+  var getPrimary = uploaderText
     ? Promise.resolve(uploaderText)
     : new Promise(function(resolve, reject) {
         var reader = new FileReader();
@@ -3805,8 +4487,12 @@ async function runReferenceScanner() {
         reader.readAsArrayBuffer(uploaderFile);
       });
 
-  getText.then(function(text) {
-    uploaderText = text;
+  getPrimary.then(function(primaryText) {
+    uploaderText = primaryText;
+    return extractSuppTexts().then(function(suppText) {
+      return suppText ? primaryText + '\n\n--- SUPPLEMENTARY DOCUMENTS ---\n\n' + suppText : primaryText;
+    });
+  }).then(function(text) {
     setUploaderProgress(30);
     setUploaderStatus('Finding reference section…', '#64748b');
 
@@ -3885,6 +4571,7 @@ function renderRefResults() {
           '<span class="ref-badge ref-badge-score">Relevance ' + (ref.relevance_score || '?') + '/10</span>' +
         '</div>' +
         (ref.bias_reasoning ? '<div class="ref-reasoning">' + esc(ref.bias_reasoning) + '</div>' : '') +
+        '<div style="margin-top:7px"><button class="addtoproj-btn" id="addtoproj-ref-btn-' + i + '" onclick="openAddToProjModal(\'ref_' + i + '\',\'reference\')" title="Add to a project">&#128193; Add to project</button></div>' +
       '</div>' +
     '</div>';
   }).join('');
@@ -3893,6 +4580,705 @@ function renderRefResults() {
 }
 
 // ── END REFERENCE SCANNER ────────────────────────────────────────────────────
+
+// ── CITATION HELPER ──────────────────────────────────────────────────────────
+document.addEventListener('DOMContentLoaded', function() {
+  // Populate year spans
+  var yr = new Date().getFullYear();
+  document.querySelectorAll('.cite-year').forEach(function(el){ el.textContent = yr; });
+});
+
+function switchCiteTab(tab) {
+  document.querySelectorAll('.cite-tab-btn').forEach(function(b){ b.classList.remove('active'); });
+  document.querySelectorAll('.cite-panel').forEach(function(p){ p.style.display = 'none'; });
+  var btn = document.querySelector('[onclick="switchCiteTab(\'' + tab + '\')"]');
+  if (btn) btn.classList.add('active');
+  var panel = document.getElementById('cite-' + tab);
+  if (panel) panel.style.display = 'block';
+}
+
+function copyCitation() {
+  var active = document.querySelector('.cite-panel[style*="block"], .cite-panel.active:not([style])');
+  if (!active) active = document.getElementById('cite-apa');
+  var text = active.querySelector('.cite-text').innerText;
+  navigator.clipboard.writeText(text).then(function() {
+    var confirm = document.getElementById('cite-copy-confirm');
+    confirm.style.display = 'inline';
+    setTimeout(function(){ confirm.style.display = 'none'; }, 2000);
+  }).catch(function() {
+    // Fallback for non-secure contexts
+    var ta = document.createElement('textarea');
+    ta.value = active.querySelector('.cite-text').innerText;
+    document.body.appendChild(ta);
+    ta.select();
+    document.execCommand('copy');
+    document.body.removeChild(ta);
+    var confirm = document.getElementById('cite-copy-confirm');
+    confirm.style.display = 'inline';
+    setTimeout(function(){ confirm.style.display = 'none'; }, 2000);
+  });
+}
+// ── END CITATION HELPER ──────────────────────────────────────────────────────
+
+// ── PROJECTS ─────────────────────────────────────────────────────────────────
+
+var projects = [];          // [{ id, name, desc, created }]
+var projectPapers = {};     // { projectId: [paperObj, ...] }
+var currentProjectId = null;
+var pendingAddPaper = null; // { paperObj, source }
+
+var PROJ_STORE_KEY = 'evidentum_projects';
+var PROJ_PAPERS_KEY = 'evidentum_project_papers';
+
+// ── Persistence ──────────────────────────────────────────────────────────────
+function saveProjects() {
+  try {
+    localStorage.setItem(PROJ_STORE_KEY, JSON.stringify(projects));
+    localStorage.setItem(PROJ_PAPERS_KEY, JSON.stringify(projectPapers));
+  } catch(e) {
+    showToast('⚠️ Storage full — try removing some papers from projects.', '#f59e0b');
+  }
+}
+
+function loadProjects() {
+  try {
+    var p = localStorage.getItem(PROJ_STORE_KEY);
+    var pp = localStorage.getItem(PROJ_PAPERS_KEY);
+    if (p) projects = JSON.parse(p);
+    if (pp) projectPapers = JSON.parse(pp);
+  } catch(e) { projects = []; projectPapers = {}; }
+}
+
+// ── Serialise a paper for storage ───────────────────────────────────────────
+function serialisePaper(p, source) {
+  return {
+    pmid:                p.pmid || ('proj_' + Date.now() + '_' + Math.random().toString(36).slice(2)),
+    title:               p.title || '',
+    authors:             Array.isArray(p.authors) ? p.authors.slice(0,5) : (p.authors || ''),
+    year:                p.year || '',
+    journal:             p.journal || '',
+    doi:                 p.doi || '',
+    url:                 p.url || p.fullTextUrl || '',
+    studyType:           p.study_type || p.studyType || '',
+    score:               p.score || 0,
+    relevanceScore:      p.relevance_score || p.relevanceScore || null,
+    abstract:            (p.abstract || '').slice(0, 1200),
+    checklists:          p.checklists || {},
+    selectedChecklist:   p.selectedChecklist || null,
+    biasToolUsed:        p.biasToolUsed || p.bias_checklist || null,
+    biasRisk:            p.biasRisk || p.bias_risk || null,
+    agentAnalysed:       p.agentAnalysed || false,
+    agentSummary:        p.agentSummary || '',
+    agentKeyFinding:     p.agentKeyFinding || '',
+    agentSampleSize:     p.agentSampleSize || null,
+    agentPopulation:     p.agentPopulation || '',
+    queryMatch:          p.queryMatch || null,
+    queryMatchReasoning: p.queryMatchReasoning || '',
+    manualTags:          p.manualTags || [],
+    notes:               p.notes || '',
+    source:              source || 'search',
+    addedAt:             Date.now()
+  };
+}
+
+// ── Project CRUD ─────────────────────────────────────────────────────────────
+function createProject(name, desc) {
+  var id = 'proj_' + Date.now();
+  projects.push({ id: id, name: name.trim(), desc: (desc || '').trim(), picoQuestion: '', created: Date.now() });
+  projectPapers[id] = [];
+  saveProjects();
+  renderProjList();
+  return id;
+}
+
+function renameProject() {
+  if (!currentProjectId) return;
+  var proj = projects.find(function(p){ return p.id === currentProjectId; });
+  if (!proj) return;
+  var newName = prompt('Rename project:', proj.name);
+  if (newName && newName.trim()) {
+    proj.name = newName.trim();
+    saveProjects();
+    document.getElementById('proj-detail-name').textContent = proj.name;
+    renderProjList();
+  }
+}
+
+function deleteProject() {
+  if (!currentProjectId) return;
+  var proj = projects.find(function(p){ return p.id === currentProjectId; });
+  if (!proj) return;
+  if (!confirm('Delete project "' + proj.name + '" and all its papers? This cannot be undone.')) return;
+  projects = projects.filter(function(p){ return p.id !== currentProjectId; });
+  delete projectPapers[currentProjectId];
+  saveProjects();
+  closeProjDetail();
+}
+
+function addPaperToProject(projectId, paperObj, source) {
+  if (!projectPapers[projectId]) projectPapers[projectId] = [];
+  var serialised = serialisePaper(paperObj, source);
+  // Deduplicate by pmid/title
+  var exists = projectPapers[projectId].some(function(p) {
+    return (p.pmid && p.pmid === serialised.pmid) ||
+           (p.title && p.title === serialised.title && p.year === serialised.year);
+  });
+  if (exists) return false;
+  projectPapers[projectId].unshift(serialised);
+  saveProjects();
+  autoAgentReferenceIfNeeded(projectId, serialised);
+  return true;
+}
+
+function removePaperFromProject(projectId, pmid) {
+  if (!projectPapers[projectId]) return;
+  projectPapers[projectId] = projectPapers[projectId].filter(function(p){ return p.pmid !== pmid; });
+  saveProjects();
+  renderProjDetail();
+}
+
+// ── Project list view ─────────────────────────────────────────────────────────
+function renderProjList() {
+  var cards = document.getElementById('proj-cards');
+  var empty = document.getElementById('proj-empty');
+  if (!projects.length) {
+    cards.innerHTML = '';
+    empty.style.display = 'flex';
+    empty.style.flexDirection = 'column';
+    empty.style.alignItems = 'center';
+    return;
+  }
+  empty.style.display = 'none';
+  cards.innerHTML = projects.map(function(proj) {
+    var count = (projectPapers[proj.id] || []).length;
+    var date = new Date(proj.created).toLocaleDateString();
+    return '<div class="proj-card" onclick="openProjDetail(\'' + proj.id + '\')">' +
+      '<div class="proj-card-name">&#128193; ' + esc(proj.name) + '</div>' +
+      (proj.desc ? '<div class="proj-card-desc">' + esc(proj.desc) + '</div>' : '') +
+      '<div class="proj-card-meta">' +
+        '<span class="proj-card-count">' + count + ' paper' + (count !== 1 ? 's' : '') + '</span>' +
+        '<span class="proj-card-date">Created ' + date + '</span>' +
+      '</div>' +
+    '</div>';
+  }).join('');
+}
+
+function openProjDetail(projectId) {
+  currentProjectId = projectId;
+  var proj = projects.find(function(p){ return p.id === projectId; });
+  if (!proj) return;
+  document.getElementById('proj-list-view').style.display = 'none';
+  document.getElementById('proj-detail-view').style.display = 'block';
+  document.getElementById('proj-detail-name').textContent = proj.name;
+  document.getElementById('proj-detail-desc').textContent = proj.desc || '';
+  var picoInput = document.getElementById('proj-pico-input');
+  if (picoInput) picoInput.value = proj.picoQuestion || '';
+  renderProjDetail();
+}
+
+function closeProjDetail() {
+  currentProjectId = null;
+  document.getElementById('proj-detail-view').style.display = 'none';
+  document.getElementById('proj-list-view').style.display = 'block';
+  renderProjList();
+}
+
+var _picoSaveTimer = null;
+function schedulePicoSave() {
+  clearTimeout(_picoSaveTimer);
+  _picoSaveTimer = setTimeout(savePicoQuestion, 1200);
+}
+
+function savePicoQuestion() {
+  clearTimeout(_picoSaveTimer);
+  if (!currentProjectId) return;
+  var proj = projects.find(function(p){ return p.id === currentProjectId; });
+  if (!proj) return;
+  var input = document.getElementById('proj-pico-input');
+  if (!input) return;
+  proj.picoQuestion = input.value.trim();
+  saveProjects();
+  // Flash "Saved" confirmation
+  var saved = document.getElementById('proj-pico-saved');
+  if (saved) {
+    saved.style.opacity = '1';
+    setTimeout(function(){ saved.style.opacity = '0'; }, 1500);
+  }
+}
+
+function renderProjDetail() {
+  if (!currentProjectId) return;
+  var papers = (projectPapers[currentProjectId] || []).slice();
+  var sort    = document.getElementById('proj-sort').value;
+  var fType   = document.getElementById('proj-filter-type').value;
+  var fSource = document.getElementById('proj-filter-source').value;
+
+  // Populate type filter
+  var types = ['All'];
+  papers.forEach(function(p){ if (p.studyType && types.indexOf(p.studyType) === -1) types.push(p.studyType); });
+  var typeEl = document.getElementById('proj-filter-type');
+  var curType = typeEl.value;
+  typeEl.innerHTML = types.map(function(t){ return '<option value="'+t+'"'+(t===curType?' selected':'')+'>'+t+'</option>'; }).join('');
+
+  // Filter
+  if (fType !== 'All')   papers = papers.filter(function(p){ return p.studyType === fType; });
+  if (fSource !== 'All') papers = papers.filter(function(p){ return p.source === fSource; });
+
+  // Sort
+  var biasOrder = { low:0, some_concerns:1, unclear:2, high:3 };
+  if (sort === 'year-desc')  papers.sort(function(a,b){ return (b.year||0)-(a.year||0); });
+  else if (sort === 'year-asc')   papers.sort(function(a,b){ return (a.year||0)-(b.year||0); });
+  else if (sort === 'score-desc') papers.sort(function(a,b){ return (b.score||0)-(a.score||0); });
+  else if (sort === 'bias')       papers.sort(function(a,b){ return (biasOrder[a.biasRisk]||2)-(biasOrder[b.biasRisk]||2); });
+  // default: addedAt (already newest-first from unshift)
+
+  document.getElementById('proj-paper-count').textContent = papers.length + ' paper' + (papers.length !== 1 ? 's' : '');
+  document.getElementById('proj-detail-count').textContent = (projectPapers[currentProjectId]||[]).length + ' papers';
+
+  var empty = document.getElementById('proj-detail-empty');
+  var list  = document.getElementById('proj-detail-list');
+
+  if (!papers.length) { empty.style.display = 'flex'; empty.style.flexDirection = 'column'; empty.style.alignItems = 'center'; list.innerHTML = ''; return; }
+  empty.style.display = 'none';
+
+  var sourceLabel = { search:'Search', reference:'Reference Scan', upload:'PDF Upload' };
+  var sourceClass = { search:'proj-source-search', reference:'proj-source-reference', upload:'proj-source-upload' };
+  var biasLabel   = { low:'Low Bias', some_concerns:'Some Concerns', high:'High Bias', unclear:'Unclear' };
+  var biasClass   = { low:'ref-badge-bias-low', some_concerns:'ref-badge-bias-some', high:'ref-badge-bias-high', unclear:'ref-badge-bias-unclear' };
+  var BIAS_TOOLS  = { ROB2:'RoB2', ROBINS2:'ROBINS-II', NOS:'Newcastle-Ottawa', JADAD:'Jadad' };
+
+  list.innerHTML = papers.map(function(p, idx) {
+    var detailId = 'proj-detail-' + p.pmid.replace(/[^a-z0-9]/gi,'_');
+    var meta = [Array.isArray(p.authors) ? p.authors.slice(0,3).join(', ') : p.authors, p.year, p.journal].filter(Boolean).join(' · ');
+    var srcCls = sourceClass[p.source] || 'proj-source-search';
+    var srcLbl = sourceLabel[p.source] || 'Search';
+
+    // Bias badge
+    var biasBadge = '';
+    if (p.biasRisk) {
+      var bClass = biasClass[p.biasRisk] || 'ref-badge-bias-unclear';
+      var bLbl = (p.biasToolUsed && BIAS_TOOLS[p.biasToolUsed] ? BIAS_TOOLS[p.biasToolUsed] + ': ' : '') + (biasLabel[p.biasRisk] || 'Unclear');
+      biasBadge = '<span class="ref-badge ' + bClass + '">' + esc(bLbl) + '</span>';
+    }
+
+    // Quality checklist score badge
+    var qualBadge = '';
+    var qcKey = p.selectedChecklist;
+    if (!qcKey && p.checklists) { var qks = Object.keys(p.checklists).filter(function(k){ return !['ROB2','ROBINS2','NOS','JADAD'].includes(k); }); qcKey = qks[0] || null; }
+    if (qcKey && p.checklists && p.checklists[qcKey]) {
+      var qcName = (CHECKLISTS[qcKey] && CHECKLISTS[qcKey].short) || qcKey;
+      var sc = checklistScore(p, qcKey);
+      if (sc) qualBadge = '<span class="ref-badge ref-badge-quality">' + qcName + ' ' + sc.pct + '%</span>';
+    }
+
+    var scoreBadge = p.score ? '<span class="ref-badge ref-badge-score">Criteria ' + p.score + '%</span>' : '';
+    var tagBadges = (p.manualTags||[]).map(function(t){ return '<span class="ref-badge" style="background:#1e2d4a;color:#94a3b8;border:1px solid #2d3f5e">' + esc(t) + '</span>'; }).join('');
+
+    // Agent status badge
+    var agentBadge = p.agentAnalysed
+      ? '<span class="ref-badge" style="background:#1a0d35;color:#a78bfa;border:1px solid #7c3aed44">🤖 Analysed</span>'
+      : '<span class="ref-badge" style="background:#111827;color:#374151;border:1px solid #1e2d4a">Not analysed</span>';
+
+    // Links row
+    var links = '';
+    if (p.doi) links += '<a href="https://doi.org/' + esc(p.doi) + '" target="_blank" style="font-size:11px;color:#4b5563;margin-right:10px">DOI &#8599;</a>';
+    if (p.url) links += '<a href="' + esc(p.url) + '" target="_blank" style="font-size:11px;color:#4b5563">PDF / Full text &#8599;</a>';
+
+    // ── Expanded detail section ──────────────────────────────────────────
+    var detailHtml = '<div class="proj-paper-detail" id="' + detailId + '">';
+
+    // Abstract
+    if (p.abstract) {
+      detailHtml += '<div class="proj-cl-section">' +
+        '<div class="proj-cl-section-title">Abstract</div>' +
+        '<div style="font-size:11px;color:#64748b;line-height:1.6">' + esc(p.abstract) + '</div>' +
+      '</div>';
+    }
+
+    // AI analysis
+    if (p.agentSummary || p.agentKeyFinding) {
+      detailHtml += '<div class="proj-cl-section">' +
+        '<div class="proj-cl-section-title">🤖 AI Analysis</div>';
+      if (p.agentKeyFinding) detailHtml += '<div style="font-size:12px;color:#ddd6fe;margin-bottom:4px;font-weight:600">' + esc(p.agentKeyFinding) + '</div>';
+      if (p.agentSummary) detailHtml += '<div style="font-size:11px;color:#94a3b8;line-height:1.5">' + esc(p.agentSummary) + '</div>';
+      if (p.agentSampleSize) detailHtml += '<div style="font-size:11px;color:#64748b;margin-top:4px">n = ' + p.agentSampleSize + (p.agentPopulation ? ' · ' + esc(p.agentPopulation) : '') + '</div>';
+      if (p.queryMatchReasoning) detailHtml += '<div style="font-size:11px;color:' + (p.queryMatch ? '#4ade80' : '#f87171') + ';margin-top:4px">' + (p.queryMatch ? '✓' : '✗') + ' ' + esc(p.queryMatchReasoning) + '</div>';
+      detailHtml += '</div>';
+    }
+
+    // Quality checklist breakdown
+    if (qcKey && p.checklists && p.checklists[qcKey] && CHECKLISTS[qcKey]) {
+      var cl = CHECKLISTS[qcKey];
+      var clData = p.checklists[qcKey];
+      var valLabel = { yes:'✓ Yes', partial:'~ Partial', no:'✗ No', unclear:'? Unclear', na:'— N/A', ni:'NI' };
+      var valColor = { yes:'#4ade80', partial:'#fbbf24', no:'#f87171', unclear:'#6b7280', na:'#374151', ni:'#6b7280' };
+      detailHtml += '<div class="proj-cl-section">';
+      detailHtml += '<div class="proj-cl-section-title">📋 ' + cl.name + '</div>';
+      if (cl.items) {
+        // Item-based checklists: render all items as read-only
+        cl.items.forEach(function(item) {
+          var val = clData[item.id] || 'unclear';
+          var lbl = valLabel[val] || val;
+          var col = valColor[val] || '#6b7280';
+          detailHtml += '<div class="proj-cl-row"><span class="proj-cl-label">' + esc((item.num || '') + (item.label ? ' ' + item.label : '')) + '</span><span class="proj-cl-val" style="color:' + col + '">' + lbl + '</span></div>';
+        });
+      } else if (cl.domains) {
+        // Domain-based checklists: respect skip logic, show per-domain judgement + consistency note
+        var projSkipped = computeSkips(qcKey, clData);
+        var djLabel = { low:'🟢 Low', some_concerns:'🟡 Some concerns', high:'🔴 High', unclear:'⬜ Unclear' };
+        var djColor = { low:'#4ade80', some_concerns:'#fbbf24', high:'#f87171', unclear:'#6b7280' };
+        cl.domains.forEach(function(d) {
+          detailHtml += '<div style="margin-bottom:8px;padding:6px 8px;background:#0a0e1a;border:1px solid #1e2d4a;border-radius:6px">';
+          detailHtml += '<div style="font-size:10px;font-weight:700;color:#64748b;margin-bottom:4px">' + esc(d.title) + '</div>';
+          // Questions — skip conditionally inapplicable ones
+          d.questions.forEach(function(q) {
+            if (projSkipped.has(q.id)) return; // don't show skipped questions
+            var val = clData[q.id] || 'unclear';
+            var lbl = valLabel[val] || val;
+            var col = valColor[val] || '#6b7280';
+            var qNum = q.id.replace('rob','').replace('_','.');
+            detailHtml += '<div class="proj-cl-row"><span class="proj-cl-label" style="font-size:10px">' + esc(qNum + ' — ' + q.text.slice(0,70)) + '</span><span class="proj-cl-val" style="color:' + col + '">' + lbl + '</span></div>';
+          });
+          // Domain judgement
+          var dj = (clData['__domain_judgements__'] && clData['__domain_judgements__'][d.id]) || 'unclear';
+          detailHtml += '<div style="margin-top:5px;padding-top:5px;border-top:1px solid #1e2d4a;display:flex;align-items:center;gap:8px">';
+          detailHtml += '<span style="font-size:10px;color:#64748b">Judgement:</span>';
+          detailHtml += '<span style="font-size:11px;font-weight:700;color:' + (djColor[dj]||'#6b7280') + '">' + (djLabel[dj]||dj) + '</span>';
+          // Consistency note inline
+          var domSugg = (suggestRob2Judgements(clData, projSkipped)[d.id]) || {};
+          var note = buildRob2ConsistencyNote(dj, domSugg);
+          if (note) detailHtml += note;
+          detailHtml += '</div></div>';
+        });
+        // Overall judgement
+        if (clData['__overall_judgement__'] || clData['__domain_judgements__']) {
+          var oj = clData['__overall_judgement__'] || '';
+          var ojColor = oj==='low'?'#22c55e':oj==='high'?'#ef4444':oj==='some_concerns'?'#f59e0b':'#9ca3af';
+          detailHtml += '<div class="proj-cl-row" style="border-top:2px solid #1e2d4a;margin-top:4px;padding-top:4px"><span class="proj-cl-label" style="font-weight:700;color:#f1f5f9">Overall judgement</span><span class="proj-cl-val" style="color:' + ojColor + '">' + (djLabel[oj]||'❓ Not assessed') + '</span></div>';
+        }
+      }
+      detailHtml += '</div>';
+    }
+
+    // Bias tool breakdown
+    if (p.biasToolUsed && p.checklists && p.checklists[p.biasToolUsed] && CHECKLISTS[p.biasToolUsed]) {
+      var bt = CHECKLISTS[p.biasToolUsed];
+      var btData = p.checklists[p.biasToolUsed];
+      var btValLabel = { yes:'✓ Yes', no:'✗ No', unclear:'? Unclear', ni:'NI', na:'N/A', low:'🟢 Low', some_concerns:'🟡 Some concerns', high:'🔴 High' };
+      var btValColor = { yes:'#4ade80', no:'#f87171', unclear:'#6b7280', ni:'#6b7280', na:'#374151', low:'#4ade80', some_concerns:'#fbbf24', high:'#f87171' };
+      detailHtml += '<div class="proj-cl-section">';
+      detailHtml += '<div class="proj-cl-section-title" style="color:#a78bfa">⚖ ' + bt.name + ' (Risk of Bias)</div>';
+      if (bt.domains) {
+        var dj2 = btData['__domain_judgements__'] || {};
+        bt.domains.forEach(function(d) {
+          var jv = dj2[d.id] || 'unclear';
+          detailHtml += '<div class="proj-cl-row"><span class="proj-cl-label">' + esc(d.title) + '</span><span class="proj-cl-val" style="color:' + (btValColor[jv]||'#6b7280') + '">' + (btValLabel[jv]||jv) + '</span></div>';
+        });
+        if (btData['__overall_judgement__']) {
+          var oj2 = btData['__overall_judgement__'];
+          var oj2Color = oj2==='low'?'#22c55e':oj2==='high'?'#ef4444':'#f59e0b';
+          detailHtml += '<div class="proj-cl-row" style="border-top:2px solid #1e2d4a;margin-top:4px;padding-top:4px"><span class="proj-cl-label" style="font-weight:700;color:#f1f5f9">Overall</span><span class="proj-cl-val" style="color:' + oj2Color + '">' + (btValLabel[oj2]||oj2) + '</span></div>';
+        }
+      } else if (bt.items) {
+        bt.items.forEach(function(item) {
+          var val = btData[item.id] || 'unclear';
+          detailHtml += '<div class="proj-cl-row"><span class="proj-cl-label">' + esc(item.num + ' ' + item.label) + '</span><span class="proj-cl-val" style="color:' + (btValColor[val]||'#6b7280') + '">' + (btValLabel[val]||val) + '</span></div>';
+        });
+      }
+      detailHtml += '</div>';
+    }
+
+    // Notes
+    detailHtml += '<div class="proj-cl-section">' +
+      '<div class="proj-cl-section-title">Notes</div>' +
+      '<textarea style="width:100%;box-sizing:border-box;background:#0a0e1a;border:1px solid #1e2d4a;border-radius:6px;color:#e2e8f0;font-family:IBM Plex Mono,monospace;font-size:11px;padding:7px 10px;resize:vertical;min-height:60px" ' +
+        'placeholder="Research notes…" ' +
+        'onchange="updateProjPaperNotes(\'' + esc(currentProjectId) + '\',\'' + esc(p.pmid) + '\',this.value)">' + esc(p.notes || '') + '</textarea>' +
+    '</div>';
+
+    detailHtml += '</div>'; // end proj-paper-detail
+
+    // Agent run button for non-analysed papers
+    var agentBtn = !p.agentAnalysed && hasValidKey()
+      ? '<button class="proj-agent-btn" id="proj-agent-btn-' + esc(p.pmid) + '" onclick="runProjPaperAgent(\'' + esc(currentProjectId) + '\',\'' + esc(p.pmid) + '\')">🤖 Run AI Analysis</button> '
+      : '';
+
+    return '<div class="proj-paper-card" id="proj-card-' + esc(p.pmid) + '">' +
+      '<button class="proj-remove-btn" onclick="removePaperFromProject(\'' + esc(currentProjectId) + '\',\'' + esc(p.pmid) + '\')" title="Remove from project">&#10005; Remove</button>' +
+      '<div class="proj-paper-title">' + esc(p.title || '(Untitled)') + '</div>' +
+      (meta ? '<div class="proj-paper-meta">' + esc(meta) + '</div>' : '') +
+      '<div class="proj-paper-badges">' +
+        '<span class="proj-source-badge ' + srcCls + '">' + srcLbl + '</span>' +
+        (p.studyType ? '<span class="ref-badge ref-badge-type">' + esc(p.studyType) + '</span>' : '') +
+        biasBadge + qualBadge + scoreBadge + agentBadge + tagBadges +
+      '</div>' +
+      (links ? '<div style="margin-top:5px">' + links + '</div>' : '') +
+      '<div style="margin-top:6px;display:flex;align-items:center;gap:8px;flex-wrap:wrap">' +
+        agentBtn +
+        '<button class="proj-paper-expand-btn" onclick="toggleProjPaperDetail(\'' + detailId + '\',this)">&#9660; Show details</button>' +
+      '</div>' +
+      detailHtml +
+    '</div>';
+  }).join('');
+}
+
+// ── New project modal ─────────────────────────────────────────────────────────
+function showNewProjectModal() {
+  document.getElementById('proj-modal-name').value = '';
+  document.getElementById('proj-modal-desc').value = '';
+  var overlay = document.getElementById('proj-modal-overlay');
+  overlay.style.display = 'flex';
+  setTimeout(function(){ document.getElementById('proj-modal-name').focus(); }, 50);
+}
+
+function hideProjModal() {
+  document.getElementById('proj-modal-overlay').style.display = 'none';
+}
+
+function confirmNewProject() {
+  var name = document.getElementById('proj-modal-name').value.trim();
+  if (!name) { document.getElementById('proj-modal-name').focus(); return; }
+  var desc = document.getElementById('proj-modal-desc').value.trim();
+  var id = createProject(name, desc);
+  hideProjModal();
+  showToast('📁 Project "' + name + '" created', '#22c55e');
+  // If we had a pending paper, add it now
+  if (pendingAddPaper) {
+    var pending = pendingAddPaper;
+    var added = addPaperToProject(id, pending.paperObj, pending.source);
+    hideAddToProjModal(); // clears pendingAddPaper
+    if (added) {
+      showToast('📄 Paper added to "' + name + '"', '#3b82f6');
+      updateAddBtnState(pending);
+    }
+  }
+}
+
+// ── Add to project modal ──────────────────────────────────────────────────────
+function openAddToProjModal(paperId, source) {
+  // Resolve the paper object
+  var paperObj = null;
+  if (source === 'search') {
+    paperObj = papers.find(function(p){ return p.pmid === paperId; });
+  } else if (source === 'reference') {
+    var idx = parseInt(paperId.replace('ref_', ''));
+    if (!isNaN(idx) && refScannerResults[idx]) paperObj = refScannerResults[idx];
+  } else if (source === 'upload') {
+    paperObj = uploaderPapers[paperId];
+  }
+  if (!paperObj) return;
+
+  pendingAddPaper = { paperObj: paperObj, source: source };
+
+  var titleEl = document.getElementById('addtoproj-paper-title');
+  titleEl.textContent = (paperObj.title || '(Untitled)').slice(0, 120);
+
+  var listEl = document.getElementById('addtoproj-list');
+  document.getElementById('addtoproj-new-name').value = '';
+
+  if (!projects.length) {
+    listEl.innerHTML = '<div style="font-size:12px;color:#4b5563;padding:8px 0">No projects yet — create one below.</div>';
+  } else {
+    var serialised = serialisePaper(paperObj, source);
+    listEl.innerHTML = projects.map(function(proj) {
+      var count = (projectPapers[proj.id] || []).length;
+      var alreadyAdded = (projectPapers[proj.id] || []).some(function(p) {
+        return (p.pmid && p.pmid === serialised.pmid) ||
+               (p.title && p.title === serialised.title && p.year === serialised.year);
+      });
+      if (alreadyAdded) {
+        return '<div class="addtoproj-proj-row already-added">' +
+          '<span class="addtoproj-proj-name">&#128193; ' + esc(proj.name) + '</span>' +
+          '<span style="font-size:10px;color:#4ade80">&#10003; Already added</span>' +
+        '</div>';
+      }
+      return '<div class="addtoproj-proj-row" onclick="addToExistingProject(\'' + proj.id + '\')">' +
+        '<span class="addtoproj-proj-name">&#128193; ' + esc(proj.name) + '</span>' +
+        '<span class="addtoproj-proj-count">' + count + ' papers</span>' +
+      '</div>';
+    }).join('');
+  }
+
+  document.getElementById('addtoproj-modal-overlay').style.display = 'flex';
+}
+
+function hideAddToProjModal() {
+  document.getElementById('addtoproj-modal-overlay').style.display = 'none';
+  pendingAddPaper = null;
+}
+
+function addToExistingProject(projectId) {
+  if (!pendingAddPaper) return;
+  var proj = projects.find(function(p){ return p.id === projectId; });
+  var pending = pendingAddPaper; // capture before hideAddToProjModal clears it
+  var added = addPaperToProject(projectId, pending.paperObj, pending.source);
+  hideAddToProjModal();
+  if (added) {
+    showToast('📄 Added to "' + (proj ? proj.name : 'project') + '"', '#3b82f6');
+    updateAddBtnState(pending);
+  } else {
+    showToast('Already in that project', '#f59e0b');
+  }
+}
+
+function addToNewProjectInline() {
+  var name = document.getElementById('addtoproj-new-name').value.trim();
+  if (!name) { document.getElementById('addtoproj-new-name').focus(); return; }
+  var pending = pendingAddPaper; // capture before hideAddToProjModal clears it
+  var id = createProject(name, '');
+  if (pending) {
+    addPaperToProject(id, pending.paperObj, pending.source);
+    showToast('📁 Project "' + name + '" created & paper added', '#22c55e');
+    updateAddBtnState(pending);
+  }
+  hideAddToProjModal();
+}
+
+function updateAddBtnState(pending) {
+  // Mark the button green to signal it's been added
+  if (!pending) return;
+  var btn = null;
+  if (pending.source === 'search') btn = document.getElementById('addtoproj-btn-' + pending.paperObj.pmid);
+  else if (pending.source === 'reference') {
+    var idx = refScannerResults.indexOf(pending.paperObj);
+    if (idx >= 0) btn = document.getElementById('addtoproj-ref-btn-' + idx);
+  }
+  if (btn) { btn.classList.add('added'); btn.textContent = '✓ Added'; }
+}
+
+// ── Export project CSV ────────────────────────────────────────────────────────
+function exportProjectCSV() {
+  if (!currentProjectId) return;
+  var proj = projects.find(function(p){ return p.id === currentProjectId; });
+  var papers = projectPapers[currentProjectId] || [];
+  if (!papers.length) { showToast('No papers to export', '#f59e0b'); return; }
+
+  var BIAS_TOOLS = { ROB2:'RoB2', ROBINS2:'ROBINS-II', NOS:'Newcastle-Ottawa', JADAD:'Jadad' };
+  var rows = [['Title','Authors','Year','Journal','DOI','Study Type','Source','Score %','Bias Tool','Bias Risk','Tags','Notes','Key Finding','Summary']];
+  papers.forEach(function(p) {
+    rows.push([
+      p.title || '',
+      (Array.isArray(p.authors) ? p.authors.join('; ') : p.authors) || '',
+      p.year || '',
+      p.journal || '',
+      p.doi || '',
+      p.studyType || '',
+      p.source || '',
+      p.score || '',
+      (p.biasToolUsed && BIAS_TOOLS[p.biasToolUsed]) || '',
+      p.biasRisk || '',
+      (p.manualTags || []).join('; '),
+      p.notes || '',
+      p.agentKeyFinding || '',
+      p.agentSummary || ''
+    ]);
+  });
+
+  var csv = rows.map(function(r){ return r.map(function(c){ return '"' + String(c).replace(/"/g,'""') + '"'; }).join(','); }).join('\n');
+  var blob = new Blob([csv], { type: 'text/csv' });
+  var a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = (proj ? proj.name.replace(/[^a-z0-9]/gi,'_') : 'project') + '_papers.csv';
+  a.click();
+}
+
+// ── Init ──────────────────────────────────────────────────────────────────────
+document.addEventListener('DOMContentLoaded', function() {
+  loadProjects();
+  renderProjList();
+});
+
+function toggleProjPaperDetail(detailId, btn) {
+  var el = document.getElementById(detailId);
+  if (!el) return;
+  var open = el.classList.toggle('open');
+  btn.innerHTML = open ? '&#9650; Hide details' : '&#9660; Show details';
+}
+
+function updateProjPaperNotes(projectId, pmid, val) {
+  var papers = projectPapers[projectId];
+  if (!papers) return;
+  var p = papers.find(function(x){ return x.pmid === pmid; });
+  if (p) { p.notes = val; saveProjects(); }
+}
+
+// ── Per-paper agent analysis within a project ─────────────────────────────────
+async function runProjPaperAgent(projectId, pmid) {
+  if (!hasValidKey()) {
+    showToast('⚠️ OpenAI API key required — set it in Settings', '#f59e0b');
+    return;
+  }
+  var papers = projectPapers[projectId];
+  if (!papers) return;
+  var p = papers.find(function(x){ return x.pmid === pmid; });
+  if (!p) return;
+
+  var btn = document.getElementById('proj-agent-btn-' + pmid);
+  if (btn) { btn.disabled = true; btn.textContent = '🤖 Analysing…'; }
+
+  // Build a fake paper object compatible with analyseOneWithAgent
+  var fakePaper = {
+    pmid: p.pmid,
+    title: p.title,
+    authors: Array.isArray(p.authors) ? p.authors : [p.authors],
+    year: p.year,
+    journal: p.journal,
+    doi: p.doi,
+    abstract: p.abstract || (p.title + '. ' + p.journal + ' ' + p.year),
+    studyType: p.studyType,
+    fullText: p.abstract || '',
+    fullTextUrl: p.url || '',
+    checklists: p.checklists || {},
+    selectedChecklist: p.selectedChecklist,
+    biasToolUsed: p.biasToolUsed,
+    score: p.score || 0,
+    scanResults: [],
+    passedCriteria: 0,
+    totalCriteria: 0,
+    manualTags: p.manualTags || [],
+    notes: p.notes || '',
+    scanDepth: 'abstract'
+  };
+
+  var proj = projects.find(function(x){ return x.id === projectId; });
+  var picoQuestion = (proj && proj.picoQuestion) ? proj.picoQuestion : (proj ? proj.name : '');
+
+  try {
+    await analyseOneWithAgent(fakePaper, picoQuestion);
+    // Copy results back into the stored paper
+    p.agentAnalysed    = true;
+    p.agentSummary     = fakePaper.agentSummary || '';
+    p.agentKeyFinding  = fakePaper.agentKeyFinding || '';
+    p.agentSampleSize  = fakePaper.agentSampleSize || null;
+    p.agentPopulation  = fakePaper.agentPopulation || '';
+    p.queryMatch       = fakePaper.queryMatch;
+    p.queryMatchReasoning = fakePaper.queryMatchReasoning || '';
+    p.studyType        = fakePaper.studyType || p.studyType;
+    p.checklists       = fakePaper.checklists || {};
+    p.selectedChecklist = fakePaper.selectedChecklist || p.selectedChecklist;
+    p.biasToolUsed     = fakePaper.biasToolUsed || p.biasToolUsed;
+    p.score            = fakePaper.score || p.score;
+    saveProjects();
+    showToast('🤖 Analysis complete for "' + (p.title || 'paper').slice(0,40) + '…"', '#a78bfa');
+    renderProjDetail(); // re-render to show results
+  } catch(e) {
+    showToast('⚠️ Agent failed: ' + (e.message || 'unknown error'), '#f59e0b');
+    if (btn) { btn.disabled = false; btn.textContent = '🤖 Run AI Analysis'; }
+  }
+}
+
+// ── Auto-run agent on reference papers added to a project ─────────────────────
+function autoAgentReferenceIfNeeded(projectId, serialisedPaper) {
+  if (!hasValidKey()) return;
+  if (serialisedPaper.source !== 'reference') return;
+  if (serialisedPaper.agentAnalysed) return;
+  // Small delay to let the UI settle
+  setTimeout(function() {
+    runProjPaperAgent(projectId, serialisedPaper.pmid);
+  }, 600);
+}
+
+// ── END PROJECTS ──────────────────────────────────────────────────────────────
 
 function uclToggleBox(which) {
   var grid = document.getElementById('ucl-checklist-grid-' + which);
@@ -3951,12 +5337,88 @@ function handleUploaderFile(file) {
   if (!file) return;
   uploaderFile = file;
   uploaderText = null;
-  // Update drop zone to show file name
+  // Reset supplementary files when a new primary is loaded
+  suppFiles = [];
+  renderSuppFileList();
   var zone = document.getElementById('upload-zone');
   zone.innerHTML = '<div class="upload-zone-icon">&#9989;</div>' +
-    '<div class="upload-zone-title">' + file.name + '</div>' +
+    '<div class="upload-zone-title">' + esc(file.name) + '</div>' +
     '<div class="upload-zone-sub">' + (file.size / 1024).toFixed(0) + ' KB — click to change</div>';
-  setUploaderStatus('PDF loaded. Set study type and click Run Checklist.', '#4ade80');
+  setUploaderStatus('PDF loaded. Add any supplementary documents below, then click Run Checklists.', '#4ade80');
+}
+
+function handleSuppFiles(files) {
+  Array.from(files).forEach(function(file) {
+    if (!file.name.match(/\.pdf$/i)) return;
+    // Avoid duplicates by name
+    if (suppFiles.some(function(s){ return s.file.name === file.name; })) return;
+    suppFiles.push({ file: file, text: null, status: 'pending' });
+  });
+  // Reset the input so same file can be re-added after removal
+  document.getElementById('supp-file-input').value = '';
+  renderSuppFileList();
+}
+
+function removeSuppFile(idx) {
+  suppFiles.splice(idx, 1);
+  renderSuppFileList();
+}
+
+function renderSuppFileList() {
+  var el = document.getElementById('supp-file-list');
+  if (!el) return;
+  if (suppFiles.length === 0) {
+    el.innerHTML = '';
+    return;
+  }
+  el.innerHTML = suppFiles.map(function(s, i) {
+    var statusIcon = s.status === 'ready' ? '<span style="color:#4ade80">&#9989;</span>'
+                   : s.status === 'error' ? '<span style="color:#ef4444">&#10007;</span>'
+                   : '<span style="color:#64748b">&#128196;</span>';
+    return '<div style="display:flex;align-items:center;gap:8px;padding:5px 8px;background:#0a0e1a;border:1px solid #1e2d4a;border-radius:6px">' +
+      statusIcon +
+      '<span style="font-size:11px;color:#94a3b8;flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">' + esc(s.file.name) + '</span>' +
+      '<span style="font-size:10px;color:#4b5563">' + (s.file.size / 1024).toFixed(0) + ' KB</span>' +
+      '<button onclick="removeSuppFile(' + i + ')" style="padding:1px 6px;font-size:10px;border:1px solid #374151;border-radius:4px;background:transparent;color:#6b7280;cursor:pointer">✕</button>' +
+    '</div>';
+  }).join('');
+}
+
+// Extract text from all supplementary PDFs — returns a Promise
+function extractSuppTexts() {
+  if (suppFiles.length === 0) return Promise.resolve('');
+  var promises = suppFiles.map(function(s, idx) {
+    if (s.text) return Promise.resolve(s.text);
+    return new Promise(function(resolve) {
+      var reader = new FileReader();
+      reader.onload = function(e) {
+        if (typeof pdfjsLib === 'undefined') { s.status = 'error'; renderSuppFileList(); resolve(''); return; }
+        pdfjsLib.getDocument({ data: e.target.result, verbosity: 0 }).promise.then(function(pdf) {
+          var pages = [];
+          for (var i = 1; i <= pdf.numPages; i++) {
+            pages.push(pdf.getPage(i).then(function(pg) {
+              return pg.getTextContent().then(function(tc) { return tc.items.map(function(it){ return it.str; }).join(' '); });
+            }));
+          }
+          return Promise.all(pages).then(function(ps) { return ps.join(' ').replace(/\s+/g,' ').trim(); });
+        }).then(function(text) {
+          s.text = text;
+          s.status = text.length > 50 ? 'ready' : 'error';
+          renderSuppFileList();
+          resolve(text);
+        }).catch(function() {
+          s.status = 'error';
+          renderSuppFileList();
+          resolve('');
+        });
+      };
+      reader.onerror = function(){ s.status = 'error'; renderSuppFileList(); resolve(''); };
+      reader.readAsArrayBuffer(s.file);
+    });
+  });
+  return Promise.all(promises).then(function(texts) {
+    return texts.filter(Boolean).join('\n\n--- SUPPLEMENTARY DOCUMENT ---\n\n');
+  });
 }
 
 function setUploaderStatus(msg, color) {
@@ -3988,58 +5450,59 @@ function runUploaderChecklist() {
   var titleInput = uploaderFile.name.replace(/\.pdf$/i, '');
   var studyType = 'RCT';
 
-  setUploaderStatus('Reading PDF…', '#64748b');
+  var suppCount = suppFiles.length;
+  setUploaderStatus('Reading PDF' + (suppCount > 0 ? ' + ' + suppCount + ' supplementary document' + (suppCount > 1 ? 's' : '') : '') + '…', '#64748b');
   setUploaderProgress(20);
 
-  // If we already extracted text for this file, skip re-extraction
-  if (uploaderText) {
-    runUploaderWithText(uploaderText, clKey, alsoRob2, titleInput, studyType);
-    return;
-  }
+  // Extract primary PDF text (use cached if available)
+  var getPrimary = uploaderText
+    ? Promise.resolve(uploaderText)
+    : new Promise(function(resolve, reject) {
+        var reader = new FileReader();
+        reader.onload = function(e) {
+          if (typeof pdfjsLib === 'undefined') { reject(new Error('PDF.js not loaded')); return; }
+          pdfjsLib.getDocument({ data: e.target.result, verbosity: 0 }).promise.then(function(pdf) {
+            var pagePromises = [];
+            for (var i = 1; i <= pdf.numPages; i++) {
+              pagePromises.push(pdf.getPage(i).then(function(page) {
+                return page.getTextContent().then(function(tc) {
+                  return tc.items.map(function(item) { return item.str; }).join(' ');
+                });
+              }));
+            }
+            return Promise.all(pagePromises).then(function(pages) { return pages.join(' ').replace(/\s+/g, ' ').trim(); });
+          }).then(resolve).catch(reject);
+        };
+        reader.onerror = function(){ reject(new Error('File read failed')); };
+        reader.readAsArrayBuffer(uploaderFile);
+      });
 
-  // Read file as ArrayBuffer then pass to PDF.js
-  var reader = new FileReader();
-  reader.onload = function(e) {
-    setUploaderProgress(50);
-    setUploaderStatus('Extracting text from PDF…', '#64748b');
-
-    if (typeof pdfjsLib === 'undefined') {
-      setUploaderStatus('PDF.js not loaded. Please check your connection.', '#ef4444');
+  getPrimary.then(function(primaryText) {
+    if (!primaryText || primaryText.length < 100) {
+      setUploaderStatus('Could not extract readable text from this PDF. It may be scanned/image-based.', '#ef4444');
       setUploaderProgress(0);
       return;
     }
+    uploaderText = primaryText;
+    setUploaderProgress(50);
 
-    pdfjsLib.getDocument({ data: e.target.result, verbosity: 0 }).promise.then(function(pdf) {
-      var pagePromises = [];
-      for (var i = 1; i <= pdf.numPages; i++) {
-        pagePromises.push(pdf.getPage(i).then(function(page) {
-          return page.getTextContent().then(function(tc) {
-            return tc.items.map(function(item) { return item.str; }).join(' ');
-          });
-        }));
-      }
-      return Promise.all(pagePromises).then(function(pages) {
-        return pages.join(' ').replace(/\s+/g, ' ').trim();
-      });
-    }).then(function(text) {
+    if (suppCount > 0) setUploaderStatus('Extracting supplementary documents…', '#64748b');
+
+    // Extract all supplementary PDFs then concatenate
+    extractSuppTexts().then(function(suppText) {
       setUploaderProgress(80);
-      if (!text || text.length < 100) {
-        setUploaderStatus('Could not extract readable text from this PDF. It may be scanned/image-based.', '#ef4444');
-        setUploaderProgress(0);
-        return;
+      var combinedText = suppText
+        ? primaryText + '\n\n--- SUPPLEMENTARY DOCUMENTS ---\n\n' + suppText
+        : primaryText;
+      if (suppText) {
+        setUploaderStatus('Combined ' + (suppCount + 1) + ' documents (' + Math.round(combinedText.length / 1000) + 'k chars). Running checklists…', '#a78bfa');
       }
-      uploaderText = text;
-      runUploaderWithText(text, clKey, alsoRob2, titleInput, studyType);
-    }).catch(function(err) {
-      setUploaderStatus('Failed to read PDF: ' + (err.message || 'unknown error'), '#ef4444');
-      setUploaderProgress(0);
+      runUploaderWithText(combinedText, clKey, alsoRob2, titleInput, studyType);
     });
-  };
-  reader.onerror = function() {
-    setUploaderStatus('Failed to read file.', '#ef4444');
+  }).catch(function(err) {
+    setUploaderStatus('Failed to read PDF: ' + (err.message || 'unknown error'), '#ef4444');
     setUploaderProgress(0);
-  };
-  reader.readAsArrayBuffer(uploaderFile);
+  });
 }
 
 function renderUploaderResults(p, clKey, alsoRob2, title) {
@@ -4109,7 +5572,7 @@ function renderUploaderResults(p, clKey, alsoRob2, title) {
 
     html += '<button class="btn btn-green ucl-export-btn" onclick="exportUploaderCSV(' + JSON.stringify(ck) + ')">&#8595; Export CSV</button>';
     html += '</div></div>';
-    html += renderUploaderChecklistItems(p, ck);
+    html += '<div class="ucl-items">' + renderUploaderChecklistItems(p, ck) + '</div>';
     html += '</div>';
   });
 
@@ -4121,36 +5584,43 @@ function renderUploaderChecklistItems(p, ck) {
   if (!cl) return '';
   var clData = (p.checklists && p.checklists[ck]) ? p.checklists[ck] : {};
 
-  // ── Domain-based tools: RoB2, ROBINS2 ───────────────────────────────────
+  // ── Domain-based tools: RoB2, ROBINS2 ───────────────────────────────────────
   if (cl.domains) {
+    var skipped = computeSkips(ck, clData);
     var html = '';
     cl.domains.forEach(function(domain) {
       html += '<div class="rob-domain">';
       html += '<div class="rob-domain-title">' + domain.title + '</div>';
       domain.questions.forEach(function(q) {
-        var val = clData[q.id] || 'unclear';
-        var isRob2 = ck === 'ROB2';
-        var opts = isRob2
-          ? [['yes','Yes (Y/PY)'],['no','No (N/PN)'],['ni','No information'],['na','Not applicable'],['unclear','Unclear']]
-          : [['low','Low risk'],['some_concerns','Some concerns'],['high','High risk'],['unclear','Unclear']];
+        if (skipped.has(q.id)) {
+          html += '<div class="cl-item-row cl-item-skipped">';
+          html += '<span class="cl-item-text" style="opacity:0.38"><b>' + q.text + '</b></span>';
+          html += '<span class="cl-item-status"><span class="cl-skip-badge">N/A — skipped</span></span>';
+          html += '</div>';
+          return;
+        }
+        var val = clData[q.id] || 'ni';
+        var opts = ROB2_STATUSES.map(function(o){
+          return '<option value="' + o.val + '"' + (val===o.val?' selected':'') + '>' + o.label + '</option>';
+        }).join('');
+        var stClass = (val==='Y'||val==='yes')?'cl-status-yes':(val==='PY')?'cl-status-partial':(val==='PN'||val==='N'||val==='no')?'cl-status-no':val==='na'?'cl-status-na':'cl-status-unclear';
         html += '<div class="cl-item-row">';
-        html += '<span class="cl-item-num">Q</span>';
         html += '<span class="cl-item-text"><b>' + q.text + '</b></span>';
-        html += '<span class="cl-item-status"><select class="cl-status-select cl-status-' + val + '" onchange="updateUploaderItem(' + JSON.stringify(p.pmid) + ',' + JSON.stringify(ck) + ',' + JSON.stringify(q.id) + ',this)">';
-        opts.forEach(function(opt) {
-          html += '<option value="' + opt[0] + '"' + (val===opt[0]?' selected':'') + '>' + opt[1] + '</option>';
-        });
-        html += '</select></span></div>';
+        html += '<span class="cl-item-status"><select class="cl-status-select ' + stClass + '" onchange="updateUploaderItem(' + JSON.stringify(p.pmid) + ',' + JSON.stringify(ck) + ',' + JSON.stringify(q.id) + ',this)">' + opts + '</select></span>';
+        html += '</div>';
       });
       var dj = (clData['__domain_judgements__'] && clData['__domain_judgements__'][domain.id]) || 'unclear';
-      var djCls = dj==='low'?'low':dj==='high'?'high':dj==='some_concerns'?'some_concerns':'na';
-      html += '<div class="rob-judgement-row"><span class="rob-judgement-label">Domain judgement:</span>';
-      html += '<select class="rob-judgement-select rob-' + djCls + '" onchange="updateUploaderDomainJudgement(' + JSON.stringify(p.pmid) + ',' + JSON.stringify(domain.id) + ',this)">';
+      var djCls = dj==='low'?'low':dj==='high'?'high':dj==='some_concerns'?'some_concerns':'unclear';
+      html += '<div class="rob-judgement-row"><span class="rob-judgement-label">Judgement:</span>';
+      html += '<select class="rob-judgement-select rob-' + djCls + '" onchange="updateUploaderDomainJudgement(' + JSON.stringify(p.pmid) + ',' + JSON.stringify(ck) + ',' + JSON.stringify(domain.id) + ',this)">';
       ['low','some_concerns','high','unclear'].forEach(function(opt) {
-        var label = opt==='low'?'🟢 Low risk':opt==='some_concerns'?'🟡 Some concerns':opt==='high'?'🔴 High risk':'❓ Unclear';
-        html += '<option value="' + opt + '"' + (dj===opt?' selected':'') + '>' + label + '</option>';
+        var lbl = opt==='low'?'🟢 Low risk':opt==='some_concerns'?'🟡 Some concerns':opt==='high'?'🔴 High risk':'❓ Unclear';
+        html += '<option value="' + opt + '"' + (dj===opt?' selected':'') + '>' + lbl + '</option>';
       });
       html += '</select></div>';
+      // Consistency note — same as main results tab
+      var domSugg = (suggestRob2Judgements(clData, skipped)[domain.id]) || {};
+      html += buildRob2ConsistencyNote(dj, domSugg);
       html += '</div>';
     });
     // Overall judgement
@@ -4210,7 +5680,7 @@ function runUploaderWithText(text, clKey, alsoRob2, title, studyType) {
   };
 
   // Use AI agent if key available, otherwise fall back to keyword scan
-  if (openAIKey && openAIKey.startsWith('sk-')) {
+  if (hasValidKey()) {
     setUploaderStatus('🤖 Running AI agent analysis…', '#a78bfa');
     analyseOneWithAgent(fakePaper).then(function() {
       uploaderPapers[pmid] = fakePaper;
@@ -4240,19 +5710,33 @@ function updateUploaderItem(pmid, ck, itemId, selectEl) {
   if (!p) return;
   if (!p.checklists[ck]) p.checklists[ck] = {};
   p.checklists[ck][itemId] = selectEl.value;
-  selectEl.className = 'cl-status-select cl-status-' + selectEl.value;
+  // Domain-based checklists: re-render entire items section so skip states cascade
+  var cl = CHECKLISTS[ck];
+  if (cl && cl.domains) {
+    var card = document.getElementById('ucl-card-' + ck);
+    if (card) {
+      var itemsEl = card.querySelector('.ucl-items');
+      if (itemsEl) itemsEl.innerHTML = renderUploaderChecklistItems(p, ck);
+    }
+  } else {
+    selectEl.className = 'cl-status-select cl-status-' + selectEl.value;
+  }
   refreshUploaderScore(pmid, ck);
 }
 
-function updateUploaderDomainJudgement(pmid, domainId, selectEl) {
+function updateUploaderDomainJudgement(pmid, ck, domainId, selectEl) {
   var p = uploaderPapers[pmid];
   if (!p) return;
-  if (!p.checklists['ROB2']) p.checklists['ROB2'] = {};
-  if (!p.checklists['ROB2']['__domain_judgements__']) p.checklists['ROB2']['__domain_judgements__'] = {};
-  p.checklists['ROB2']['__domain_judgements__'][domainId] = selectEl.value;
-  var cls = selectEl.value === 'low' ? 'low' : selectEl.value === 'high' ? 'high' : selectEl.value === 'some_concerns' ? 'some_concerns' : 'na';
-  selectEl.className = 'rob-judgement-select rob-' + cls;
-  refreshUploaderScore(pmid, 'ROB2');
+  if (!p.checklists[ck]) p.checklists[ck] = {};
+  if (!p.checklists[ck]['__domain_judgements__']) p.checklists[ck]['__domain_judgements__'] = {};
+  p.checklists[ck]['__domain_judgements__'][domainId] = selectEl.value;
+  // Re-render so consistency note updates
+  var card = document.getElementById('ucl-card-' + ck);
+  if (card) {
+    var itemsEl = card.querySelector('.ucl-items');
+    if (itemsEl) itemsEl.innerHTML = renderUploaderChecklistItems(p, ck);
+  }
+  refreshUploaderScore(pmid, ck);
 }
 
 function refreshUploaderScore(pmid, ck) {
@@ -4317,7 +5801,26 @@ renderHomeCriteriaTable();
 // PRO: OPENAI API KEY MANAGEMENT
 // ══════════════════════════════════════════════
 
-var openAIKey = '';
+var openAIKey  = '';
+var aiProvider = 'openai'; // 'openai' | 'anthropic'
+
+// Returns true if the currently stored key looks valid for the active provider
+function hasValidKey() {
+  if (aiProvider === 'anthropic') return !!(openAIKey && openAIKey.startsWith('sk-ant-'));
+  return !!(openAIKey && openAIKey.startsWith('sk-'));
+}
+
+function activeModel() {
+  return aiProvider === 'anthropic' ? 'claude-sonnet-4-6' : 'gpt-5';
+}
+
+function setAiProvider(provider) {
+  aiProvider = provider;
+  localStorage.setItem('pla_ai_provider', provider);
+  // Activate the stored key for this provider
+  openAIKey = localStorage.getItem(provider === 'anthropic' ? 'pla_anthropic_key' : 'pla_openai_key') || '';
+  updateKeyBanner();
+}
 
 function toggleSettings() {
   var overlay = document.getElementById('settings-overlay');
@@ -4331,38 +5834,63 @@ function closeSettings() {
 
 function saveOpenAIKey() {
   var val = (document.getElementById('openai-key-input').value || '').trim();
-  openAIKey = val;
   localStorage.setItem('pla_openai_key', val);
-  updateKeyBanner();
+  if (aiProvider === 'openai') { openAIKey = val; updateKeyBanner(); }
+}
+
+function saveAnthropicKey() {
+  var val = (document.getElementById('anthropic-key-input').value || '').trim();
+  localStorage.setItem('pla_anthropic_key', val);
+  if (aiProvider === 'anthropic') { openAIKey = val; updateKeyBanner(); }
 }
 
 function loadOpenAIKey() {
-  var stored = localStorage.getItem('pla_openai_key') || '';
-  openAIKey = stored;
-  var inp = document.getElementById('openai-key-input');
-  if (inp && stored) inp.value = stored;
+  // Load provider preference and both keys
+  aiProvider = localStorage.getItem('pla_ai_provider') || 'openai';
+  var oaiStored = localStorage.getItem('pla_openai_key') || '';
+  var antStored = localStorage.getItem('pla_anthropic_key') || '';
+  openAIKey = aiProvider === 'anthropic' ? antStored : oaiStored;
+  var oaiInp = document.getElementById('openai-key-input');
+  var antInp = document.getElementById('anthropic-key-input');
+  if (oaiInp && oaiStored) oaiInp.value = oaiStored;
+  if (antInp && antStored) antInp.value = antStored;
   updateKeyBanner();
 }
 
 function updateKeyBanner() {
-  var hasKey = openAIKey && openAIKey.startsWith('sk-');
+  var hasKey = hasValidKey();
+  var isAnthropic = aiProvider === 'anthropic';
 
-  // Update settings panel key indicator
+  // Update header provider toggle buttons
+  var btnOai = document.getElementById('header-provider-btn-openai');
+  var btnAnt = document.getElementById('header-provider-btn-anthropic');
+  if (btnOai) {
+    btnOai.style.background = !isAnthropic ? '#1e3a5f' : 'transparent';
+    btnOai.style.color      = !isAnthropic ? '#93c5fd' : '#4b5563';
+  }
+  if (btnAnt) {
+    btnAnt.style.background = isAnthropic ? '#2a1500' : 'transparent';
+    btnAnt.style.color      = isAnthropic ? '#fb923c' : '#4b5563';
+  }
+
+  // Key status dot + label
   var dot = document.getElementById('settings-key-dot');
   var lbl = document.getElementById('settings-key-label');
+  var mdl = document.getElementById('settings-model-label');
   var btn = document.querySelector('.settings-btn');
   if (dot) dot.style.background = hasKey ? '#4ade80' : '#f59e0b';
   if (lbl) { lbl.textContent = hasKey ? 'API key active' : 'Not set'; lbl.style.color = hasKey ? '#4ade80' : '#f59e0b'; }
+  if (mdl) mdl.textContent = 'model: ' + activeModel();
   if (btn) { btn.style.color = hasKey ? '#4ade80' : '#64748b'; btn.style.borderColor = hasKey ? '#16a34a55' : '#1e2d4a'; }
 
-  // Show/hide the unlock notice on the search tab
+  // Search tab unlock notice
   var notice = document.getElementById('api-key-notice');
   if (notice) notice.style.display = hasKey ? 'none' : 'flex';
   var agentBtn = document.getElementById('agent-run-btn');
   if (agentBtn) {
     var canRun = hasKey && papers.length > 0 && !agentRunning;
     agentBtn.disabled = !canRun;
-    agentBtn.title = !hasKey ? 'Add your OpenAI API key in Settings to enable'
+    agentBtn.title = !hasKey ? 'Add your API key in Settings to enable'
       : agentRunning ? 'Agent appears to be running — click to force reset'
       : 'Run AI agent analysis on all results';
   }
@@ -4385,7 +5913,7 @@ var searchInProgress = false;  // true while search + background PDF fetching ac
 var agentStats = { done: 0, failed: 0, skipped: 0, total: 0 };
 
 function startAgentAnalysis() {
-  if (!openAIKey || !openAIKey.startsWith('sk-')) {
+  if (!hasValidKey()) {
     showToast('⚠️ Please enter your OpenAI API key in Settings (⚙ top right) first.', '#f59e0b');
     return;
   }
@@ -4528,12 +6056,10 @@ function runAgentQueue(index) {
     agentStats.done++;
     updateAgentCounters();
     if (activeCard) activeCard.classList.remove('agent-processing-card');
-    // Compute rank score and update badge in-place
+    // Update badge in-place and progressively re-sort
     try {
-      p.agentRankScore = computeAgentRankScore(p);
-      // Update the rank badge directly on the card
       var card = document.getElementById('card-' + p.pmid);
-      if (card) {
+      if (card && p.agentScore != null) {
         var rob2Risk = getRob2RiskLabel(p);
         var robColour = rob2Risk ? rob2Risk.colour : '#4b5563';
         var robLabel  = rob2Risk ? rob2Risk.label.replace('RoB2: ','') : 'Not assessed';
@@ -4541,13 +6067,13 @@ function runAgentQueue(index) {
         var clSc2  = clKey2 ? checklistScore(p, clKey2) : null;
         var qColour2 = p.queryMatch === true ? '#4ade80' : p.queryMatch === false ? '#f87171' : '#64748b';
         var qLabel2  = p.queryMatch === true ? '✓ Matches question' : p.queryMatch === false ? '✗ Off-topic' : '? Not assessed';
+        var scoreColour2 = p.agentScore >= 75 ? '#4ade80' : p.agentScore >= 50 ? '#f59e0b' : '#f87171';
         var badgeHtml =
           '<div id="agent-rank-badge-' + p.pmid + '" style="display:flex;flex-direction:column;gap:1px;margin-top:2px">' +
-            '<span style="background:#1e3a5f;border:1px solid #3b82f6;color:#93c5fd;font-size:10px;font-weight:700;font-family:\'IBM Plex Mono\',monospace;padding:2px 8px;border-radius:10px;white-space:nowrap">&#128202; Score: ' + p.agentRankScore + '/100</span>' +
-            '<span style="font-size:9px;color:#64748b;padding-left:2px">Criteria ' + p.score + '%' + (clSc2 ? ' &middot; ' + esc(clKey2) + ' ' + clSc2.pct + '%' : '') + '</span>' +
+            '<span title="' + esc(p.agentScoreReasoning || '') + '" style="background:#0f172a;border:1px solid ' + scoreColour2 + '55;color:' + scoreColour2 + ';font-size:10px;font-weight:700;font-family:\'IBM Plex Mono\',monospace;padding:2px 8px;border-radius:10px;white-space:nowrap;cursor:default">&#128202; ' + p.agentScore + '/100</span>' +
+            (clSc2 ? '<span style="font-size:9px;color:#64748b;padding-left:2px">' + esc(clKey2) + ' ' + clSc2.pct + '%</span>' : '') +
             '<span style="font-size:9px;padding-left:2px"><span style="color:' + robColour + '">' + esc(robLabel) + '</span> &middot; <span style="color:' + qColour2 + '">' + qLabel2 + '</span></span>' +
           '</div>';
-        // Replace existing badge or insert after type badge
         var existing = card.querySelector('[id^="agent-rank-badge-"]');
         if (existing) {
           existing.outerHTML = badgeHtml;
@@ -4556,12 +6082,12 @@ function runAgentQueue(index) {
           if (typeBadge) typeBadge.insertAdjacentHTML('afterend', badgeHtml);
         }
       }
-      // Stable agent sort: analysed papers at top sorted by rank, unanalysed below in original order
+      // Stable progressive sort: analysed papers at top sorted by agentScore, unanalysed below
       var list = document.getElementById('papers-list');
       if (list) {
         var analysed   = papers.filter(function(pp){ return pp.scanDepth === 'agent'; });
         var unanalysed = papers.filter(function(pp){ return pp.scanDepth !== 'agent'; });
-        analysed.sort(function(a, b){ return (b.agentRankScore || 0) - (a.agentRankScore || 0); });
+        analysed.sort(function(a, b){ return (b.agentScore || 0) - (a.agentScore || 0); });
         var ordered = analysed.concat(unanalysed);
         ordered.forEach(function(pp) {
           var c = document.getElementById('card-' + pp.pmid);
@@ -4713,7 +6239,7 @@ function runRetractionSweep() {
   var papersWithDoi = papers.filter(function(p) { return p.doi; });
   if (!papersWithDoi.length) {
     if (btn) { btn.disabled = false; btn.textContent = '⚠️ Check Retractions'; }
-    showToast('⚠️ No DOIs found in current results — cannot check Retraction Watch.', '#f59e0b'); return;
+    showToast('⚠️ No DOIs found in current results — cannot check Retraction Watch.', '#f59e0b');
     return;
   }
 
@@ -4769,40 +6295,51 @@ function runRetractionSweep() {
 
 
 function buildChecklistBlock(key) {
+  // Returns item IDs plus, for domain-based tools, the conditional skip rules
+  // so the AI knows which questions to skip rather than filling in guesses.
   var cl = CHECKLISTS[key];
   if (!cl) return '';
-  var text = '\n\n=== ' + cl.name.toUpperCase() + ' [checklist_key: ' + key + '] ===\n';
+  var lines = [];
   if (cl.items) {
-    cl.items.forEach(function(item, i) {
-      text += (i+1) + '. [' + item.id + '] ' + item.label + (item.text ? ' — ' + item.text : '') + '\n';
-    });
+    var ids = cl.items.map(function(item){ return item.id; });
+    lines.push(key + ' item IDs: ' + ids.join(', '));
   } else if (cl.domains) {
+    var ids = [];
+    var skipRules = [];
     cl.domains.forEach(function(domain) {
-      text += '\n' + domain.title + ':\n';
       domain.questions.forEach(function(q) {
-        text += '  [' + q.id + '] ' + q.text + '\n';
+        ids.push(q.id);
+        if (q.skipIf) {
+          var deps = (q.skipIf.all || q.skipIf.any || []).join('/');
+          var mode = q.skipIf.all ? 'all' : 'any';
+          skipRules.push(q.id + ': skip (set na) if ' + mode + ' of [' + deps + '] in [' + q.skipIf.values.join(',') + ']');
+        }
       });
-      text += '  [' + domain.id + '_judgement] Overall domain judgement: low / some_concerns / high\n';
+      ids.push(domain.id + '_judgement');
     });
+    ids.push('overall_judgement');
+    lines.push(key + ' item IDs: ' + ids.join(', '));
+    if (skipRules.length) {
+      lines.push(key + ' conditional skip rules (MUST follow — set skipped questions to "na"):');
+      skipRules.forEach(function(r){ lines.push('  ' + r); });
+    }
   }
-  return text;
+  return '\n' + lines.join('\n');
 }
 
-function buildAnalysisPrompts(p) {
-  var criteriaText = scanCriteria.map(function(c, i) {
-    return (i+1) + '. ' + c.label + ' [' + c.type + ']: ' + c.keywords.join(', ');
-  }).join('\n');
-
-  // Build all checklists — agent picks the right one based on study type
-  var allChecklistsText =
-    '\n\nAVAILABLE QUALITY CHECKLISTS — select ONE based on study type:\n' +
-    '  • RCT / Clinical Trial         → quality: CONSORT,  bias: ROB2\n' +
-    '  • Systematic Review / Meta-analysis → quality: PRISMA,  bias: none\n' +
-    '  • Cohort / Cross-Sectional / Registry / Observational → quality: STROBE, bias: ROBINS2\n' +
-    '  • Case-Control                 → quality: STROBE,  bias: NOS\n' +
-    '  • Case Report / Case Series    → quality: CARE,    bias: none\n' +
-    '  • Guideline / Consensus        → quality: AGREE,   bias: none\n' +
-    '  • Other / Unclear / Review     → quality: none,    bias: none\n' +
+function buildAnalysisPrompts(p, questionOverride) {
+  // Always send ALL checklist ID blocks — the model selects the right one from paper content.
+  // Do NOT pre-select or bias based on metadata study type: PubMed pub types are unreliable
+  // (e.g. "Journal Article" for RCTs, cohort studies, everything). Let the model decide.
+  var allChecklistIds =
+    '\nCHECKLIST MAPPING — select based on paper content, not metadata:\n' +
+    '  RCT/Clinical Trial         → checklist_used: CONSORT,  bias_tool_used: ROB2\n' +
+    '  Systematic Review/Meta-Analysis → checklist_used: PRISMA,   bias_tool_used: none\n' +
+    '  Cohort/Cross-Sectional/Observational/Registry → checklist_used: STROBE, bias_tool_used: ROBINS2\n' +
+    '  Case-Control               → checklist_used: STROBE,  bias_tool_used: NOS\n' +
+    '  Case Report/Series         → checklist_used: CARE,    bias_tool_used: none\n' +
+    '  Guideline/Consensus        → checklist_used: AGREE,   bias_tool_used: none\n' +
+    '  Narrative Review/Other     → checklist_used: none,    bias_tool_used: none\n' +
     buildChecklistBlock('CONSORT') +
     buildChecklistBlock('PRISMA') +
     buildChecklistBlock('STROBE') +
@@ -4810,138 +6347,133 @@ function buildAnalysisPrompts(p) {
     buildChecklistBlock('AGREE') +
     buildChecklistBlock('ROB2') +
     buildChecklistBlock('ROBINS2') +
-    buildChecklistBlock('NOS') +
-    buildChecklistBlock('JADAD');
+    buildChecklistBlock('NOS');
 
-  // Trim prompt: only include bias tool blocks relevant to the paper's likely study type
-  // This avoids sending all 9 checklist blocks for every paper
-  var st = (p.studyType || '').toLowerCase();
-  var isRct = st.includes('rct') || st.includes('randomis') || st.includes('randomiz') || st.includes('clinical trial');
-  var isObs = st.includes('cohort') || st.includes('cross-sectional') || st.includes('observ') || st.includes('registry');
-  var isCc  = st.includes('case-control') || st.includes('case control');
-  var isSr  = st.includes('systematic') || st.includes('meta');
-  var isCr  = st.includes('case report') || st.includes('case series');
-  var isGl  = st.includes('guideline') || st.includes('consensus');
-
-  // Only include bias blocks for plausible study types — reduces token load significantly
-  if (!isRct && !isCc) allChecklistsText = allChecklistsText.replace(buildChecklistBlock('JADAD'), '');
-  if (!isCc)           allChecklistsText = allChecklistsText.replace(buildChecklistBlock('NOS'), '');
-  if (!isObs && !isCc) allChecklistsText = allChecklistsText.replace(buildChecklistBlock('ROBINS2'), '');
-  if (!isRct && !isObs && !isCc) allChecklistsText = allChecklistsText.replace(buildChecklistBlock('ROB2'), '');
-  if (!isRct)          allChecklistsText = allChecklistsText.replace(buildChecklistBlock('CONSORT'), '');
-  if (!isSr)           allChecklistsText = allChecklistsText.replace(buildChecklistBlock('PRISMA'), '');
-  if (!isCr)           allChecklistsText = allChecklistsText.replace(buildChecklistBlock('CARE'), '');
-  if (!isGl)           allChecklistsText = allChecklistsText.replace(buildChecklistBlock('AGREE'), '');
-  // Always keep STROBE as it covers many study types
-
-  var systemPrompt = 'You are an expert systematic review methodologist analysing a biomedical research paper.\n' +
-    'Your task: (1) identify the study type, (2) select and fill the appropriate quality checklist, (3) fill the appropriate bias tool, (4) assess every screening criterion.\n' +
-    'Respond ONLY with a valid JSON object — absolutely no prose, no markdown, no backticks.\n\n' +
-    'Required JSON structure:\n' +
+  var systemPrompt =
+    'You are an expert systematic review methodologist. Analyse the provided biomedical paper and return ONLY a valid JSON object — no prose, no markdown, no backticks.\n\n' +
+    'JSON structure:\n' +
     '{\n' +
-    '  "study_type": "<RCT|Clinical Trial|Systematic Review|Meta-Analysis|Cohort|Case-Control|Cross-Sectional|Registry Study|Observational|Case Report|Case Series|Guideline|Consensus|Review|Preprint|Other>",\n' +
+    '  "study_type": "<RCT|Clinical Trial|Systematic Review|Meta-Analysis|Cohort|Case-Control|Cross-Sectional|Registry Study|Observational|Case Report|Case Series|Guideline|Consensus|Review|Other>",\n' +
     '  "checklist_used": "<CONSORT|PRISMA|STROBE|CARE|AGREE|none>",\n' +
-    '  "checklist": { "<item_id>": "yes"|"partial"|"no"|"unclear"|"na" },\n' +
-    '  "bias_tool_used": "<ROB2|ROBINS2|NOS|JADAD|none>",\n' +
-    '  "bias_tool_data": { "<item_or_domain_id>": "<value>" },\n' +
-    '  "criteria": { "<exact criterion label>": true|false },\n' +
-    '  "summary": "<2-3 sentences>",\n' +
-    '  "key_finding": "<one sentence>",\n' +
+    '  "checklist": { "<item_id>": "yes"|"partial"|"no"|"na" },\n' +
+    '  "bias_tool_used": "<ROB2|ROBINS2|NOS|none>",\n' +
+    '  "bias_tool_data": { "<item_or_domain_id>": "<value>", "<domain_id>_judgement": "low"|"some_concerns"|"high", "overall_judgement": "low"|"some_concerns"|"high" },\n' +
+    '  "summary": "<2-3 sentences: study design, key result, clinical relevance>",\n' +
+    '  "key_finding": "<one sentence primary result>",\n' +
     '  "sample_size": <integer or null>,\n' +
-    '  "population": "<brief>",\n' +
+    '  "population": "<brief patient/setting description>",\n' +
+    '  "score": <integer 0-100>,\n' +
+    '  "score_reasoning": "<one sentence justifying the score>",\n' +
     '  "query_match": true|false,\n' +
     '  "query_match_reasoning": "<one sentence>"\n' +
     '}\n\n' +
     'Rules:\n' +
-    '- Determine study_type from the paper content, not the metadata\n' +
-    '- checklist_used: CONSORT for RCT, PRISMA for SR/MA, STROBE for observational/cohort/case-control, CARE for case reports, AGREE for guidelines, none otherwise\n' +
-    '- Fill checklist items ONLY for the selected checklist\n' +
-    '- bias_tool_used: ROB2 for RCT, ROBINS2 for cohort/cross-sectional/observational, NOS for case-control, none for SR/MA/case-report/guideline/other\n' +
-    '- bias_tool_data values for ROB2/ROBINS2: "yes", "no", "ni", "na", "unclear"; domain judgements as <domain_id>_judgement: "low"|"some_concerns"|"high"; include overall_judgement\n' +
-    '- bias_tool_data values for NOS/JADAD: "yes", "no", "unclear"\n' +
+    '- Determine study_type strictly from paper content — ignore the metadata study type provided below, it is often wrong\n' +
+    '- Select checklist_used and bias_tool_used from the mapping below based on your study_type determination\n' +
+    '- Fill ALL checklist items for the selected checklist using the IDs listed below\n' +
+    '- Fill ALL bias tool items for the selected bias tool using the IDs listed below\n' +
+    '- ROB2/ROBINS2 CONDITIONAL SKIP RULES: follow the skip rules listed under each tool exactly — set skipped questions to "na" instead of guessing\n' +
+    '- bias_tool_data ROB2/ROBINS2: values = "yes"|"no"|"ni"|"na"; include <domain_id>_judgement and overall_judgement\n' +
+    '- bias_tool_data NOS: values = "yes"|"no"\n' +
+    '- ROB2 overall: HIGH if any domain HIGH; SOME_CONCERNS if any SOME_CONCERNS and none HIGH; LOW if all LOW\n' +
     '- If bias_tool_used is none, set bias_tool_data to {}\n' +
-    '- RoB2 CONDITIONAL LOGIC — only answer these if their trigger condition is met:\n' +
-    '    rob2_3: only answer if rob2_1 OR rob2_2 = "yes" or "ni"\n' +
-    '    rob2_4: only answer if rob2_3 = "yes"\n' +
-    '    rob2_5: only answer if rob2_4 = "yes" or "ni"\n' +
-    '    rob2_7: only answer if rob2_6 = "no" or "ni"\n' +
-    '    rob3_2: only answer if rob3_1 = "no" or "ni"\n' +
-    '    rob3_3: only answer if rob3_2 = "no"\n' +
-    '    rob3_4: only answer if rob3_3 = "yes" or "ni"\n' +
-    '    rob4_3: only answer if rob4_1 = "no" AND rob4_2 = "no"\n' +
-    '    rob4_4: only answer if rob4_3 = "yes" or "ni"\n' +
-    '    rob4_5: only answer if rob4_4 = "yes" or "ni"\n' +
-    '- RoB2 DOMAIN JUDGEMENT ALGORITHMS (use these EXACTLY to set <domain_id>_judgement):\n' +
-    '    D1 (rob_randomisation_judgement): HIGH if rob1_2="no"; HIGH if rob1_2="ni" AND rob1_3="yes"; SOME_CONCERNS if rob1_2="ni"; SOME_CONCERNS if rob1_3="yes" with adequate concealment; LOW otherwise\n' +
-    '    D2 (rob_deviations_judgement): Part1=LOW if both 2.1&2.2="no", or deviations not from trial context; Part1=HIGH if deviations from trial context, affected outcome, unbalanced; Part2=LOW if rob2_6="yes"; Part2=HIGH if rob2_6="no" AND rob2_7="yes"; Domain=HIGH if either part HIGH, SOME_CONCERNS if either Some concerns, LOW if both LOW\n' +
-    '    D3 (rob_missing_judgement): LOW if rob3_1="yes"; LOW if rob3_2="yes"; LOW if rob3_3="no"; SOME_CONCERNS if rob3_3="yes/ni" AND rob3_4="no"; HIGH if rob3_4="yes/ni"\n' +
-    '    D4 (rob_measurement_judgement): HIGH if rob4_1="yes" OR rob4_2="yes" OR rob4_5="yes/ni"; SOME_CONCERNS if rob4_4="yes/ni" AND rob4_5="no"; LOW otherwise\n' +
-    '    D5 (rob_reporting_judgement): HIGH if rob5_2="yes" OR rob5_3="yes"; SOME_CONCERNS if rob5_1="no/ni" with no selective reporting, or no information available; LOW if rob5_1="yes" AND rob5_2="no" AND rob5_3="no"\n' +
-    '- Overall RoB2 judgement: HIGH if any domain=HIGH; SOME_CONCERNS if any domain=SOME_CONCERNS and none=HIGH; LOW only if ALL domains=LOW\n' +
-    '- "yes" = explicitly present, "partial" = partially reported, "no" = explicitly absent, "unclear" = cannot determine, "na" = not applicable\n' +
-    '- criteria: true = criterion clearly met, false = not met or cannot determine\n' +
-    '- Use full paper text (methods, results, discussion) — not just abstract\n' +
-    '- query_match: true if this paper directly and substantively addresses the SEARCH QUESTION provided; false if it is tangential, background-only, or does not address the question';
+    '- score (0-100): composite quality score for inclusion in a systematic review.\n' +
+    '    Weight: methodological rigour 40pts (design appropriateness, bias risk, confounding control),\n' +
+    '    reporting quality 25pts (checklist adherence — % items yes/partial),\n' +
+    '    relevance to search question 20pts,\n' +
+    '    recency & journal quality 15pts.\n' +
+    '    Anchor: 90-100=landmark low-bias RCT/SR directly answering question; 70-89=good quality relevant study; 50-69=moderate quality or indirect; 30-49=high bias or tangential; 0-29=poor quality or irrelevant\n' +
+    '- query_match: true only if paper directly and substantively addresses the search question\n' +
+    allChecklistIds;
 
-  var userHeader = 'SEARCH QUESTION: ' + (currentQuery || 'Not specified') + '\n\n' +
+  var userHeader =
+    'SEARCH QUESTION: ' + (questionOverride || currentQuery || 'Not specified') + '\n\n' +
     'PAPER: ' + (p.title || 'Unknown') + '\n' +
     'AUTHORS: ' + ((p.authors || []).slice(0,3).join(', ') || 'Unknown') + '\n' +
     'YEAR: ' + (p.year || 'Unknown') + ' | JOURNAL: ' + (p.journal || 'Unknown') + '\n' +
-    'METADATA STUDY TYPE (may be wrong — use paper content): ' + (p.studyType || 'Unknown') + '\n\n' +
-    'SCREENING CRITERIA:\n' + criteriaText +
-    allChecklistsText;
+    'METADATA STUDY TYPE (unreliable — determine from content): ' + (p.studyType || 'Unknown') + '\n';
 
   return { systemPrompt: systemPrompt, userHeader: userHeader };
 }
 
 // Core function: analyse one paper using OpenAI Responses API
-async function analyseOneWithAgent(p) {
+async function analyseOneWithAgent(p, questionOverride) {
   // Mark as processing in UI
   p.scanDepth = 'agent-processing';
   refreshCardChecklist(p);
 
-  var prompts = buildAnalysisPrompts(p);
-  var pdfUrl = p.fullTextUrl || null;
-
-  // ── PATH A: Already have locally-extracted full text (PMC or pdf.js) ──────
-  // This is the most reliable path — text is already in hand
-  var hasFullText = p.fullText && p.fullText.length > 300;
-  if (hasFullText) {
-    var textSource = p.scanDepth === 'full' ? 'PMC full text' : 'PDF (extracted)';
+  // ── PATH A: Already have locally-extracted full text (PMC XML or pdf.js) ──
+  // Check this BEFORE overwriting scanDepth so the label is accurate
+  if (p.fullText && p.fullText.length > 300) {
+    var textSource = p.agentTextSource || (p.pmcid ? 'PMC full text' : 'PDF (extracted)');
+    var prompts = buildAnalysisPrompts(p, questionOverride);
     var result = await callOpenAIWithText(p.fullText, prompts, p, textSource);
     try { applyAgentResults(p, result, p.fullText, textSource); } catch(e) { console.warn('applyAgentResults error (PATH A):', e); }
     return;
   }
 
-  // ── PATH B: No local text but have a PDF URL — try to extract locally first ─
-  if (pdfUrl && pdfUrl.length > 10) {
+  var prompts = buildAnalysisPrompts(p, questionOverride);
+
+  // ── PATH B: Paper has a PMCID — fetch structured XML full text ───────────
+  // This is the best fallback: CORS-safe, structured, complete paper text.
+  // Covers papers where background PMC fetch hasn't completed yet.
+  var pmcid = p.pmcid || extractPmcIdFromUrl(p.fullTextUrl || '');
+  if (pmcid) {
+    try {
+      var pmcText = await fetchPMCFullText(pmcid);
+      if (pmcText && pmcText.length > 300) {
+        p.fullText = pmcText;
+        p.pmcid = p.pmcid || pmcid;
+        var result = await callOpenAIWithText(pmcText, prompts, p, 'PMC full text');
+        try { applyAgentResults(p, result, pmcText, 'PMC full text'); } catch(e) { console.warn('applyAgentResults error (PATH B - PMC):', e); }
+        return;
+      }
+    } catch(e) {
+      console.warn('PMC XML fetch failed, continuing to PDF paths:', e.message);
+    }
+  }
+
+  // ── PATH C: Have a fullTextUrl that looks like a real PDF (not a PubMed HTML page) ──
+  // Only attempt PDF.js if the URL ends in .pdf or contains /pdf — avoids wasting
+  // time trying to parse HTML journal landing pages with pdf.js.
+  var pdfUrl = p.fullTextUrl || null;
+  var looksLikePdf = pdfUrl && (
+    /\.pdf(\?|$)/i.test(pdfUrl) ||
+    /\/pdf\//i.test(pdfUrl) ||
+    /\/pdfs?\//i.test(pdfUrl) ||
+    /europepmc\.org\/backend/i.test(pdfUrl) ||
+    /biorxiv\.org\/content.*\.full\.pdf/i.test(pdfUrl) ||
+    /medrxiv\.org\/content.*\.full\.pdf/i.test(pdfUrl)
+  );
+
+  if (looksLikePdf) {
     try {
       var extracted = await extractPdfText(pdfUrl);
       if (extracted && extracted.length > 300) {
         p.fullText = extracted;
         var result = await callOpenAIWithText(extracted, prompts, p, 'PDF (extracted)');
-        try { applyAgentResults(p, result, extracted, 'PDF (extracted)'); } catch(e) { console.warn('applyAgentResults error (PATH B):', e); }
+        try { applyAgentResults(p, result, extracted, 'PDF (extracted)'); } catch(e) { console.warn('applyAgentResults error (PATH C - pdf.js):', e); }
         return;
       }
     } catch(e) {
-      console.warn('Local pdf.js extraction failed, trying OpenAI direct fetch:', e.message);
+      console.warn('Local pdf.js extraction failed:', e.message);
     }
 
-    // ── PATH C: Local extraction failed — let OpenAI fetch the PDF directly ──
+    // ── PATH D: pdf.js failed — let OpenAI fetch the PDF directly ────────
     try {
       var result = await callOpenAIWithPdfUrl(pdfUrl, prompts);
-      try { applyAgentResults(p, result, p.abstract || '', 'PDF (OpenAI)'); } catch(e) { console.warn('applyAgentResults error (PATH C):', e); }
+      try { applyAgentResults(p, result, p.abstract || '', 'PDF (OpenAI)'); } catch(e) { console.warn('applyAgentResults error (PATH D - OpenAI PDF):', e); }
       return;
     } catch(e) {
       console.warn('OpenAI PDF fetch also failed, falling back to abstract:', e.message);
     }
   }
 
-  // ── PATH D: No PDF available — use abstract only ──────────────────────────
+  // ── PATH E: No full text available — use abstract only ───────────────────
   var abstract = p.abstract || '';
   if (!abstract) throw new Error('No text available for analysis');
   var result = await callOpenAIWithText(abstract, prompts, p, 'abstract');
-  try { applyAgentResults(p, result, abstract, 'abstract'); } catch(e) { console.warn('applyAgentResults error (PATH D):', e); }
+  try { applyAgentResults(p, result, abstract, 'abstract'); } catch(e) { console.warn('applyAgentResults error (PATH E - abstract):', e); }
 }
 
 // Robustly parse agent JSON — handles truncation by closing open structures
@@ -4966,13 +6498,15 @@ function safeParseAgentJson(raw) {
 }
 
 // Call OpenAI Responses API with a PDF URL (OpenAI fetches the PDF server-side)
+// Anthropic does not support server-side PDF URL fetching — caller falls back to abstract.
 async function callOpenAIWithPdfUrl(pdfUrl, prompts) {
+  if (aiProvider === 'anthropic') {
+    throw new Error('Anthropic provider does not support server-side PDF fetch — using abstract fallback');
+  }
+
   var response = await fetch('https://api.openai.com/v1/responses', {
     method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      'Authorization': 'Bearer ' + openAIKey
-    },
+    headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + openAIKey },
     body: JSON.stringify({
       model: 'gpt-5',
       max_output_tokens: 4000,
@@ -4980,14 +6514,8 @@ async function callOpenAIWithPdfUrl(pdfUrl, prompts) {
         {
           role: 'user',
           content: [
-            {
-              type: 'input_file',
-              file_url: pdfUrl
-            },
-            {
-              type: 'input_text',
-              text: prompts.systemPrompt + '\n\n' + prompts.userHeader
-            }
+            { type: 'input_file', file_url: pdfUrl },
+            { type: 'input_text', text: prompts.systemPrompt + '\n\n' + prompts.userHeader }
           ]
         }
       ]
@@ -5000,14 +6528,11 @@ async function callOpenAIWithPdfUrl(pdfUrl, prompts) {
   }
 
   var data = await response.json();
-  // Responses API returns output as array of content blocks
   var raw = '';
   if (data.output) {
     data.output.forEach(function(block) {
       if (block.type === 'message' && block.content) {
-        block.content.forEach(function(c) {
-          if (c.type === 'output_text') raw += c.text;
-        });
+        block.content.forEach(function(c) { if (c.type === 'output_text') raw += c.text; });
       }
     });
   }
@@ -5015,52 +6540,62 @@ async function callOpenAIWithPdfUrl(pdfUrl, prompts) {
   return safeParseAgentJson(raw);
 }
 
-// Call OpenAI Responses API with text content
+// Call AI provider with text content — routes to OpenAI or Anthropic based on aiProvider
 async function callOpenAIWithText(text, prompts, p, textSource) {
   var userPrompt = prompts.userHeader + '\n\nTEXT (' + textSource.toUpperCase() + '):\n' + text.slice(0, 14000);
-
-  var response = await fetch('https://api.openai.com/v1/responses', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      'Authorization': 'Bearer ' + openAIKey
-    },
-    body: JSON.stringify({
-      model: 'gpt-5',
-      max_output_tokens: 8000,
-      reasoning: { effort: 'medium' },
-      input: [
-        {
-          role: 'user',
-          content: [
-            {
-              type: 'input_text',
-              text: prompts.systemPrompt + '\n\n' + userPrompt
-            }
-          ]
-        }
-      ]
-    })
-  });
-
-  if (!response.ok) {
-    var errData = await response.json().catch(function(){ return {}; });
-    throw new Error('OpenAI ' + response.status + ': ' + ((errData.error && errData.error.message) || 'unknown'));
-  }
-
-  var data = await response.json();
-  // Responses API: extract text from output array
   var raw = '';
-  if (data.output) {
-    data.output.forEach(function(block) {
-      if (block.type === 'message' && block.content) {
-        block.content.forEach(function(c) {
-          if (c.type === 'output_text') raw += c.text;
-        });
-      }
+
+  if (aiProvider === 'anthropic') {
+    // ── Anthropic Messages API ──────────────────────────────────────────
+    var response = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'x-api-key': openAIKey,
+        'anthropic-version': '2023-06-01',
+        'anthropic-dangerous-direct-browser-access': 'true'
+      },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-6',
+        max_tokens: 8000,
+        system: prompts.systemPrompt,
+        messages: [{ role: 'user', content: userPrompt }]
+      })
     });
+    if (!response.ok) {
+      var errData = await response.json().catch(function(){ return {}; });
+      throw new Error('Anthropic ' + response.status + ': ' + ((errData.error && errData.error.message) || 'unknown'));
+    }
+    var data = await response.json();
+    raw = (data.content && data.content[0] && data.content[0].text) || '{}';
+
+  } else {
+    // ── OpenAI Responses API ────────────────────────────────────────────
+    var response = await fetch('https://api.openai.com/v1/responses', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + openAIKey },
+      body: JSON.stringify({
+        model: 'gpt-5',
+        max_output_tokens: 8000,
+        reasoning: { effort: 'medium' },
+        input: [{ role: 'user', content: [{ type: 'input_text', text: prompts.systemPrompt + '\n\n' + userPrompt }] }]
+      })
+    });
+    if (!response.ok) {
+      var errData = await response.json().catch(function(){ return {}; });
+      throw new Error('OpenAI ' + response.status + ': ' + ((errData.error && errData.error.message) || 'unknown'));
+    }
+    var data = await response.json();
+    if (data.output) {
+      data.output.forEach(function(block) {
+        if (block.type === 'message' && block.content) {
+          block.content.forEach(function(c) { if (c.type === 'output_text') raw += c.text; });
+        }
+      });
+    }
+    if (!raw) raw = '{}';
   }
-  if (!raw) raw = '{}';
+
   raw = raw.replace(/^```json\s*/i,'').replace(/^```\s*/i,'').replace(/\s*```$/,'').trim();
   return safeParseAgentJson(raw);
 }
@@ -5074,13 +6609,13 @@ function applyAgentResults(p, result, fullText, textSource) {
   p.agentKeyFinding = result.key_finding || '';
   if (result.sample_size) p.agentSampleSize = result.sample_size;
   if (result.population) p.agentPopulation = result.population;
-  p.queryMatch = (result.query_match === true || result.query_match === 'true');
+  p.queryMatch = (result.query_match === true || result.query_match === 'true') ? true
+               : (result.query_match === false || result.query_match === 'false') ? false
+               : null;
   p.queryMatchReasoning = result.query_match_reasoning || '';
 
-  if (result.study_type && !p.studyType) p.studyType = result.study_type;
-
-  // If agent detected a different/better study type, update it and the badge
-  if (result.study_type && result.study_type !== p.studyType) {
+  // If agent detected a study type, always use it (model is more reliable than metadata)
+  if (result.study_type) {
     p.studyType = result.study_type;
   }
   if (result.study_type) {
@@ -5094,19 +6629,10 @@ function applyAgentResults(p, result, fullText, textSource) {
     }
   }
 
-  // Criteria — GPT-4o judgement overrides keyword scan
-  if (result.criteria) {
-    p.scanResults = scanCriteria.map(function(c) {
-      var agentAnswer = result.criteria[c.label];
-      if (agentAnswer === undefined) {
-        return { label: c.label, pass: checkCriterion(c, p.fullText || p.abstract || ''), agent: false };
-      }
-      return { label: c.label, pass: !!agentAnswer, agent: true };
-    });
-    var passed = p.scanResults.filter(function(r){ return r.pass; }).length;
-    p.passedCriteria = passed;
-    p.totalCriteria = p.scanResults.length;
-    p.score = p.totalCriteria > 0 ? Math.round((passed / p.totalCriteria) * 100) : 0;
+  // Agent quality score (0-100) — direct from model assessment
+  if (result.score != null && !isNaN(parseInt(result.score))) {
+    p.agentScore = Math.min(100, Math.max(0, parseInt(result.score)));
+    p.agentScoreReasoning = result.score_reasoning || '';
   }
 
   // Checklist — use the key the agent selected, not guessChecklistFromType
@@ -5227,9 +6753,6 @@ function applyAgentResults(p, result, fullText, textSource) {
 
   addAgentBadge(p.pmid);
   maybeShowRob2VizBtn();
-
-  // Recompute rank score — full re-render happens once at end via reRankAfterAgent()
-  p.agentRankScore = computeAgentRankScore(p);
 }
 
 function refreshCardChecklist(p) {
