@@ -2371,7 +2371,9 @@ function doSearch() {
   if (dateTo)   pubmedQuery += ' AND ("1000"[PDAT] : "' + dateTo + '"[PDAT])';
 
   // Cochrane: Europe PMC with journal filter
-  var cochraneQuery = q + ' JOURNAL:"Cochrane Database of Systematic Reviews"';
+  // Europe PMC indexes journals by ISO-4 abbreviation, not full title.
+  // "Cochrane Database of Systematic Reviews" returns 0; "Cochrane Database Syst Rev" matches.
+  var cochraneQuery = q + ' JOURNAL:"Cochrane Database Syst Rev"';
   if (dateFrom) cochraneQuery += ' AND FIRST_PDATE:[' + dateFrom + '-01-01 TO 3000-12-31]';
   if (dateTo)   cochraneQuery += ' AND FIRST_PDATE:[1000-01-01 TO ' + dateTo + '-12-31]';
 
@@ -2711,8 +2713,9 @@ function pubmedToEuropePMC(query) {
     var ep = tagMap[tag.trim().toLowerCase()];
     return ep ? ep + ':' + term : term;
   });
-  // 3. Strip any remaining bare [tags]
-  result = result.replace(/\[[^\]]+\]/g, '');
+  // 3. Strip remaining PubMed-style bracketed tags ONLY (short, no spaces, no colons).
+  //    Preserves EuropePMC native ranges like [2020-01-01 TO 3000-12-31].
+  result = result.replace(/\[([^\]\s:]{1,20})\]/g, '');
   return result.replace(/\s+/g, ' ').trim();
 }
 
@@ -2720,14 +2723,33 @@ function fetchEuropePMC(query, maxResults, sourceLabel) {
   sourceLabel = sourceLabel || 'EuropePMC';
   // Translate PubMed field tags to Europe PMC syntax before sending
   var epQuery = pubmedToEuropePMC(query);
-  var url = 'https://www.ebi.ac.uk/europepmc/webservices/rest/search?query=' +
-    encodeURIComponent(epQuery) +
+  // format=json placed FIRST so it survives any proxy that truncates trailing params.
+  // (Europe PMC defaults to XML when format is unspecified — a dropped &format=json
+  //  is the root cause of the "hitCount: undefined" silent failure through proxies.)
+  var url = 'https://www.ebi.ac.uk/europepmc/webservices/rest/search?format=json' +
     '&resultType=core&pageSize=' + maxResults +
-    '&format=json&sort=relevance';
+    '&sort=relevance&query=' + encodeURIComponent(epQuery);
 
   return fetchWithFallback(url).then(function(r) {
-    return r.json();
-  }).then(function(data) {
+    // Read as text first so we can handle three proxy failure modes:
+    //   1. Clean Europe PMC JSON            -> parse directly
+    //   2. Proxy envelope {contents:"..."}  -> unwrap then parse
+    //   3. XML returned (format param lost) -> detect and reject cleanly
+    return r.text();
+  }).then(function(raw) {
+    var data;
+    try {
+      data = JSON.parse(raw);
+    } catch (e) {
+      throw new Error('EuropePMC returned non-JSON (likely XML via proxy)');
+    }
+    // Unwrap allorigins-style envelope: { contents: "<json string>", status: {...} }
+    if (data && typeof data.contents === 'string' && data.resultList === undefined) {
+      try { data = JSON.parse(data.contents); } catch (e) { /* leave as-is */ }
+    }
+    if (!data || data.resultList === undefined) {
+      throw new Error('EuropePMC response missing resultList (hitCount=' + (data && data.hitCount) + ')');
+    }
     var results = (data.resultList && data.resultList.result) || [];
     return results.map(function(item) {
       var authors = [];
@@ -3931,7 +3953,7 @@ function checkAlertForNew(i, btn) {
   var useOpenAlex = dbEnabled('openalex');
 
   var pubmedQuery = alert.query;
-  var cochraneQuery = alert.query + ' JOURNAL:"Cochrane Database of Systematic Reviews"';
+  var cochraneQuery = alert.query + ' JOURNAL:"Cochrane Database Syst Rev"';
   var epQuery = alert.query;
 
   var promises = [
